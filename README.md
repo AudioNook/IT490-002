@@ -3,4 +3,4 @@
 - Carlos Segarra
 - Jaylin Cabrera
 - 
-- 
+- John Pearson
