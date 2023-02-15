@@ -1,24 +1,204 @@
+
 <?php
 require(__DIR__ . "/partials/nav.php");
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Bootstrap Example</title>
-</head>
-<body>
-  
-<div class="container-fluid justify-center text-center">    
-  <div class="row content">
-    <div class="col-sm-8 text-left"> 
-      <h1>Welcome</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      <hr>
-      <h3>Test</h3>
-      <p>Lorem ipsum...</p>
-    </div>
-  </div>
+<div class="container-fluid">
+    <h1>Login</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label" for="username">Username</label>
+            <input class="form-control" type="text" id="username" name="username"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="pw">Password</label>
+            <input class="form-control" type="password" id="password" name="password"/>
+        </div>
+        <input type="submit" name="submit" class="mt-3 btn btn-primary" value="Login" />
+    </form>
 </div>
 
-</body>
-</html>
+<!-- validation script to be added -->
+
+<?php
+//check if the form is submitted
+if (isset($_POST['submit'])){
+    // if we have in input for username && password get the DB
+    // and select the associated record where the username matched in the DB
+
+// $response = "unsupported request type, politely FUCK OFF";
+    
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Rabbit MQ Client Connection
+    $rbMQc = get_rbMQc();
+
+    $msg = "Sending login request";
+
+    $login_req = array();
+    $login_req['type'] = 'login';
+    $login_req['username'] = $username;
+    $login_req['password'] = $password;
+    $login_req['response'] = $msg;
+
+    $response = $rbMQc->send_request($login_req);
+    //echo($response);
+
+    switch($response){
+        case "valid":
+            redirect(get_url("home.php"));
+            break;
+        case "invalid_pass":
+            echo '<script language="javascript">';
+            echo 'alert("Wrong paswword. Politely FUCK OFF")';
+            echo '</script>';
+            break;
+        case "invalid_user":
+            echo '<script language="javascript">';
+            echo 'alert("Username not not found. Politely FUCK OFF")';
+            echo '</script>';
+            break;
+        default:
+            echo($response);
+
+    }
+    
+    
+    //print_r($response);
+
+    /* Get Database
+    $db = getDB();
+
+    $stmt = $db->prepare("SELECT id, username, password FROM testusers WHERE username = :username");
+
+        try{
+            $r = $stmt->execute([":username" => $username]);
+            if($r){
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($user){
+                    $pass = $user["password"];
+                    if($pass == $password){
+                        redirect(get_url("home.php"));
+                        exit(0);
+                    } else {
+                        echo '<script language="javascript">';
+                        echo 'alert("Wrong paswword. Politely FUCK OFF")';
+                        echo '</script>';
+                    } 
+                }else {
+                    echo '<script language="javascript">';
+                    echo 'alert("Username not not found. Politely FUCK OFF")';
+                    echo '</script>';
+                }
+            }
+        }
+        catch (Exception $e){
+            echo '<script language="javascript">';
+            echo 'alert("<pre>" . var_export($e, true) . "</pre>")';
+            echo '</script>';
+        }*/
+    }
+
+?>
+
+<?php
+require(__DIR__ . "/partials/nav.php");
+?>
+<div class="container-fluid">
+    <h1>Login</h1>
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label" for="username">Username</label>
+            <input class="form-control" type="text" id="username" name="username"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label" for="pw">Password</label>
+            <input class="form-control" type="password" id="password" name="password"/>
+        </div>
+        <input type="submit" name="submit" class="mt-3 btn btn-primary" value="Login" />
+    </form>
+</div>
+
+<!-- validation script to be added -->
+
+<?php
+//check if the form is submitted
+if (isset($_POST['submit'])){
+    // if we have in input for username && password get the DB
+    // and select the associated record where the username matched in the DB
+
+// $response = "unsupported request type, politely FUCK OFF";
+    
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Rabbit MQ Client Connection
+    $rbMQc = get_rbMQc();
+
+    $msg = "Sending login request";
+
+    $login_req = array();
+    $login_req['type'] = 'login';
+    $login_req['username'] = $username;
+    $login_req['password'] = $password;
+    $login_req['response'] = $msg;
+
+    $response = $rbMQc->send_request($login_req);
+    //echo($response);
+
+    switch($response){
+        case "valid":
+            redirect(get_url("home.php"));
+            break;
+        case "invalid_pass":
+            echo '<script language="javascript">';
+            echo 'alert("Wrong paswword. Politely FUCK OFF")';
+            echo '</script>';
+            break;
+        case "invalid_user":
+            echo '<script language="javascript">';
+            echo 'alert("Username not not found. Politely FUCK OFF")';
+            echo '</script>';
+            break;
+        default:
+            echo($response);
+
+    }
+    
+    
+    //print_r($response);
+
+    /* Get Database
+    $db = getDB();
+
+    $stmt = $db->prepare("SELECT id, username, password FROM testusers WHERE username = :username");
+
+        try{
+            $r = $stmt->execute([":username" => $username]);
+            if($r){
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                if($user){
+                    $pass = $user["password"];
+                    if($pass == $password){
+                        redirect(get_url("home.php"));
+                        exit(0);
+                    } else {
+                        echo '<script language="javascript">';
+                        echo 'alert("Wrong paswword. Politely FUCK OFF")';
+                        echo '</script>';
+                    } 
+                }else {
+                    echo '<script language="javascript">';
+                    echo 'alert("Username not not found. Politely FUCK OFF")';
+                    echo '</script>';
+                }
+            }
+        }
+        catch (Exception $e){
+            echo '<script language="javascript">';
+            echo 'alert("<pre>" . var_export($e, true) . "</pre>")';
+            echo '</script>';
+        }*/
+    }
+
+?>
