@@ -15,8 +15,14 @@ function getDB(){
 
 		try{
             
-            require_once(__DIR__ . "/config.php"); // grabbing credentials
+            //require_once(__DIR__ . "/config.php"); // grabbing credentials
             
+			// DB Credentials
+			$dbhost = '127.0.0.1';
+			$dbuser = 'testuser';
+			$dbpass = '12345';
+			$dbdatabase = 'testdb';
+
             // builds connection string from our variables host & database
 			$connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
 
