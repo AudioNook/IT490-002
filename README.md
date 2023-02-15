@@ -2,5 +2,5 @@
 ## Group Members:
 - Carlos Segarra
 - 
-- 
+- Luanda Silva 
 - 
