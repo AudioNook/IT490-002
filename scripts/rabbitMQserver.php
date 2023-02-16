@@ -17,15 +17,12 @@ function requestProcessor($request)
     {
         case "login":
             //passing in username and password from the request array
-            $response = handleLogin($request["username"],$request["password"]);
+            return handleLogin($request["username"],$request["password"]);
             // handleLogin() taks a username and password then queries the DB
-            return $response;
             
         case "register":
             //passing in username and password from the request array
-            $response = handleRegister($request["username"],$request["password"]);
-            return $response;
-            
+            return handleRegister($request["username"],$request["password"]);
 
     }
     return array("returnCode" => '0', 'response'=>"Server received request and processed");
