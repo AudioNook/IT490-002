@@ -4,7 +4,7 @@
 function handleRegister($username,$password){
         require_once(__DIR__ . "/functions.php");
         $db = getDB();
-        $stmt = $db->prepare('INSERT INTO testusers (username, password) VALUES(:username, :pass)');
+        $stmt = $db->prepare('INSERT INTO testusers (username, password) VALUES(:username, :password)');
 
             try{ // maps username to username and password to password
                 $stmt->execute([":username" => $username, ":password" => $password]);
