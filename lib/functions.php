@@ -14,5 +14,6 @@ require(__DIR__ . "/rbMQclient.php");
 require(__DIR__ . "/rbMQserver.php");
 
 require(__DIR__ . "/handleLogin.php");
+require(__DIR_ . "/handleRegister.php")
 
 
