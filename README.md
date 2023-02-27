@@ -25,13 +25,13 @@
 
 # Relevant Branches
 
-- [Main]()
+- [Main](https://github.com/Carlomos7/IT490-002)
   - Main github page, to be updated to contain:
     - Project Name
     - Project Proposal/Summary
     - Links to additional markdown files
     - etc.
-- [Development]()
+- [Development](https://github.com/Carlomos7/IT490-002/tree/dev)
   - Our working development branch
-- [Production]()
+- [Production](https://github.com/Carlomos7/IT490-002/tree/prod)
   - Our branch to have our finished and ploshied features
