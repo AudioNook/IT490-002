@@ -68,7 +68,7 @@ if (isset($_POST['submit'])){
         //checking whether or not resgister was processed successfully/unsuccessfully
         switch($response){
             case "valid":
-                redirect(get_url("home.php"));
+                redirect(get_url("login.php"));
                 break;
 
             case "duplicate":
