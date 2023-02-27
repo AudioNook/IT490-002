@@ -17,7 +17,7 @@
 - [Luanda Silva](https://github.com/LuandaS)
 - [John Pearson](https://github.com/jmpearson135)
 
-## Project Deliverables: [Documentation Tasks](https://github.com/users/Carlomos6/projects/4/)
+## Project Deliverables: [Documentation Tasks](https://github.com/users/Carlomos7/projects/4)
 
 - [Midterm Milestone](https://github.com/Carlomos6/IT490-002/milestone/1)
 -
