@@ -47,7 +47,7 @@ if (isset($_POST['submit'])){
     switch($response){
         case "valid":
             //?? redirect to login.php??
-            redirect(get_url("login.php"));
+            redirect(get_url("home.php"));
             break;
         case "invalid_pass":
             echo '<script language="javascript">';
