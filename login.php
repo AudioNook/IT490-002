@@ -6,11 +6,11 @@ require(__DIR__ . "/partials/nav.php");
     <h1>Login</h1>
     <form method="POST">
         <div class="mb-3">
-            <label class="form-label" for="username">Username</label>
+            <label class="form-label" for="username"><small class="text-muted">Username</small></label>
             <input class="form-control" type="text" id="username" name="username"/>
         </div>
         <div class="mb-3">
-            <label class="form-label" for="pw">Password</label>
+            <label class="form-label" for="pw"><small class="text-muted">Password</small></label>
             <input class="form-control" type="password" id="password" name="password"/>
         </div>
         <input type="submit" name="submit" class="mt-3 btn btn-primary" value="Login" />
@@ -46,8 +46,7 @@ if (isset($_POST['submit'])){
 
     switch($response){
         case "valid":
-            //?? redirect to login.php??
-            redirect(get_url("login.php"));
+            redirect(get_url("home.php"));
             break;
         case "invalid_pass":
             echo '<script language="javascript">';
@@ -101,3 +100,4 @@ if (isset($_POST['submit'])){
     }
 
 ?>
+
