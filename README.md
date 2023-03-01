@@ -10,4 +10,3 @@
 - ## [partials](https://github.com/Carlomos7/IT490-002/tree/dev/partials) - Templates to be included across different pages
 - ## [scripts](https://github.com/Carlomos7/IT490-002/tree/dev/scripts) - Scripts to be called (currently just our RabbitMQServer)
 - ## Everything else is our public html (to be moved into a sub folder and labeled as such)
-
