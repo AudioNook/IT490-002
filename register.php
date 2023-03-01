@@ -10,6 +10,10 @@ require(__DIR__ . "/partials/nav.php");
             <input class="form-control" type="text" id="username" name="username"/>
         </div>
         <div class="mb-3">
+            <label class="form-label" for="email">Email</label>
+            <input class="form-control" type="text" id="email" name="email"/>
+        </div>
+        <div class="mb-3">
             <label class="form-label" for="password">Password</label>
             <input class="form-control" type="password" id="password" name="password"/>
             <label class="form-label" for="confirm">Password</label>
@@ -26,6 +30,7 @@ if (isset($_POST['submit'])){
     //grabbing username, password, and confirm password fields from form
     $hasError = false;
     $username = $_POST['username'];
+    $email = $_POST['email'];
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm'];
 
@@ -34,6 +39,12 @@ if (isset($_POST['submit'])){
         $hasError = true;
         echo '<script language="javascript">';
             echo 'alert("Username is empty.")';
+            echo '</script>';
+    }
+    if(empty($email)){
+        $hasError = true;
+        echo '<script language="javascript">';
+            echo 'alert("Email is empty.")';
             echo '</script>';
     }
     if(empty($password)){
