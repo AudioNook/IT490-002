@@ -1,37 +1,13 @@
-# IT490-002 Project
-
-## Project Summary: <Place Holder>
-
-## GitHub Link: [Prod Branch Project](#)
-
-## Website Link: [Project Website](#)
-
-## Instructor:
-
-- Professor Donald Kehoe
-
+# IT490-002 Dev Branch
 ## Group Members:
+- Carlos Segarra
+- Jaylin Cabrera
+- Luanda Silva 
+- John Pearson
+## To be merged into [Production](https://github.com/Carlomos7/IT490-002/tree/prod) branch upon refining and finalizing development changes
+# Current File Structure
+- ## [lib](https://github.com/Carlomos7/IT490-002/tree/dev/lib) - Library folder of our functions and configurations
+- ## [partials](https://github.com/Carlomos7/IT490-002/tree/dev/partials) - Templates to be included across different pages
+- ## [scripts](https://github.com/Carlomos7/IT490-002/tree/dev/scripts) - Scripts to be called (currently just our RabbitMQServer)
+- ## Everything else is our public html (to be moved into a sub folder and labeled as such)
 
-- [Carlos Segarra](https://github.com/Carlomos7)
-- [Jaylin Cabrera](https://github.com/jaylincabrera10)
-- [Luanda Silva](https://github.com/LuandaS)
-- [John Pearson](https://github.com/jmpearson135)
-
-## Project Deliverables: [Documentation Tasks](https://github.com/users/Carlomos7/projects/4)
-
-- [Midterm Milestone](https://github.com/Carlomos6/IT490-002/milestone/1)
--
--
-
-# Relevant Branches
-
-- [Main](https://github.com/Carlomos7/IT490-002)
-  - Main github page, to be updated to contain:
-    - Project Name
-    - Project Proposal/Summary
-    - Links to additional markdown files
-    - etc.
-- [Development](https://github.com/Carlomos7/IT490-002/tree/dev)
-  - Our working development branch
-- [Production](https://github.com/Carlomos7/IT490-002/tree/prod)
-  - Our branch to have our finished and ploshied features
