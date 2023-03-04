@@ -1,7 +1,7 @@
 ---
-name: Bug Namr
+name: Bug Name
 about: Create a report to help to fix a problem
-title: bug-<issue>
+title: bug-<issue-name>
 labels: bug
 assignees: ''
 
