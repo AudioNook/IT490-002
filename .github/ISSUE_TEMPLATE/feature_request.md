@@ -1,7 +1,7 @@
 ---
 name: Feature
 about: Describe the Feature for this project
-title: feat-<issue_name>
+title: feat <issue_name>
 labels: enhancement
 assignees: ''
 
