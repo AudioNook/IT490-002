@@ -9,7 +9,7 @@ assignees: ''
 
 ### Description:
 
-### Goal:
+### Goal(s):
 
 ### Tasks:
 - [ ] Task 1
