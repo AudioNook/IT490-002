@@ -9,3 +9,5 @@ CREATE TABLE IF NOT EXISTS `Users` (
     PRIMARY KEY (`username`),
     UNIQUE (`email`)
 )
+
+/*
