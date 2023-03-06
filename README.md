@@ -1,5 +1,5 @@
 # IT490-002 Dev Branch
-## Group Members:
+## Group Members: AudioNook
 - Carlos Segarra
 - Jaylin Cabrera
 - Luanda Silva 
