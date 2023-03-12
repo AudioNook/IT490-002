@@ -12,11 +12,11 @@ function handleRegister($username,$password){
                 return "valid";        
                 
             }
-            catch (Exception $e){
+            catch (PDOException $e){
                 //$e = json_decode($e,true);
                 // checks for error num for duplicate
-                if ($e[1] === 1062){ 
-                    preg_match("/testusers.(\w+)/", $e[2], $matches); 
+                if ($e->getCode() === "23000"){ 
+                    preg_match("/testusers.(\w+)/", $e->getMessage(), $matches);
                     if (isset($matches[1])) { // if duplicate error look for username
                     echo $matches[1]  . " is already in use!";
                     return "duplicate";

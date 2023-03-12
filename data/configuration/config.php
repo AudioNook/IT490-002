@@ -8,6 +8,11 @@ $dbdatabase = 'testdb';
 
 // Rabbit MQ Configs
 
-$rabbit_ini = "testRabbitMQ.ini";
+$rabbit_ini = "rabbitMQ.ini";
 $rabbit_server = "testServer";
+
+
+echo "rabbit_ini = $rabbit_ini<br>";
+echo "rabbit_server = $rabbit_server<br>";
+
 ?>
