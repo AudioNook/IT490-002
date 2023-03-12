@@ -1,7 +1,7 @@
 #!/usr/bin/php
 <?php
 // my functions
-require(__DIR__ . "/../lib/functions.php");
+require(__DIR__ . "/../src/lib/functions.php");
 
 
 
