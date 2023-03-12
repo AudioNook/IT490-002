@@ -1,0 +1,2 @@
+### Scripts Dir
+Currentlycontains any scripts that are used to perform various tasks for the application, such as running a server or deploying the application. These files are typically run from the command line.
