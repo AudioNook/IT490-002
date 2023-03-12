@@ -1,0 +1,4 @@
+### SQL Structure
+This directory contains any structural/setup SQL files used by the application to create or modify database tables, indexes, and other database objects. These files should be executed in a specific order, which can be controlled by the filename prefix. The SQL files should have a .sql extension and be sorted in the exact order they should execute. Recommend left padding is 3-digit numbers to ensure the correct execution order (e.g., 001_file.sql, 002_file.sql, etc.).
+
+To execute the SQL files, navigate to init_db.php in the browser. This file requires the /path/to/db.php file to properly access the database. Make sure to add new files to the directory only after they have been successfully executed, as this tool is meant to replicate the exact steps in the exact order they were done, and editing previous files may cause issues. If you must make changes, use "alter" or "drop" statements.
