@@ -2,7 +2,7 @@
 <?php
 
 //Helps redirect.php find our base project dir path sincce 
-$BASE_PATH = 'sample';
+$BASE_PATH = '/src/public';
 
 
 require(__DIR__ . "/get_url.php");

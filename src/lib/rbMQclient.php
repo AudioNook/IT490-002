@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . "/path.inc");
-require_once(__DIR__ . "/get_host_info.inc");
-require_once('rabbitMQLib.inc');
+require_once(__DIR__ . "/../../data/configuration/path.inc");
+require_once(__DIR__ . "/../../data/configuration/get_host_info.inc");
+require_once(__DIR__ . "/../../data/RabbitMQ/rabbitMQLib.inc");
 
 function get_rbMQc(){
     global $rbMQc;
