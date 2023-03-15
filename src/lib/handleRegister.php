@@ -9,7 +9,11 @@ function handleRegister($username,$password){
             try{ // maps username to username and password to password
                 $stmt->execute([":username" => $username, ":password" => $password]);
                 echo "User registered: $username";
-                return "valid";        
+                return [
+                    'code' => 200,
+                    'status' => 'success',
+                    'message' => 'Valid login credentials.'
+                ];        
                 
             }
             catch (PDOException $e){
@@ -19,11 +23,19 @@ function handleRegister($username,$password){
                     preg_match("/testusers.(\w+)/", $e->getMessage(), $matches);
                     if (isset($matches[1])) { // if duplicate error look for username
                     echo $matches[1]  . " is already in use!";
-                    return "duplicate";
+                    return [
+                        'code' => 409,
+                        'status' => 'error',
+                        'message' => $matches[1]  . " is already in use!"
+                    ];
                     }
-                } else { // else we dont know what happened but maybe this'll give us a hint
-                    echo error_log(var_export($e, true));
-                    return "error";
+                } else { 
+                    $error_message = var_export($e, true);
+                    return [
+                        'code' => 500,
+                        'status' => 'error',
+                        'message' => $error_message,
+                    ];
                 }
                 
             }
