@@ -7,30 +7,42 @@ require(__DIR__ . "/../src/lib/functions.php");
 
 function requestProcessor($request)
 {
-    echo "received request".PHP_EOL;
-    var_dump($request);
+    echo "========================".PHP_EOL;
+    echo "RECEIVED ".$request['type'] . " REQUEST". PHP_EOL;
+    echo json_encode($request, JSON_PRETTY_PRINT) . PHP_EOL;
     if(!isset($request['type']))
     {
         return "ERROR: unsupported message type";
     }
-    switch ($request['type'])
-    {
-        case "login":
-            //passing in username and password from the request array
-            return handleLogin($request["username"],$request["password"]);
-            // handleLogin() taks a username and password then queries the DB
-            
-        case "register":
-            //passing in username and password from the request array
-            return handleRegister($request["username"],$request["password"]);
 
+    switch ($request['type']) {
+        case "login":
+            $response = handleLogin($request["username"],$request["password"]);
+            break;
+        case "register":
+            $response = handleRegister($request["username"],$request["password"]);
+            break;
+        case "validate_jwt":
+            //$response = validateJWT($request['token']);
+            break;
+        case "logout":
+            //$response = handleLogout($request['token']);
+            break;
+        default:
+            $response = array("code" => '204',"status" => "success", 'message' => "Server received request and processed");
+            break;
     }
-    return array("returnCode" => '0', 'response'=>"Server received request and processed");
+
+    echo "\n";
+    echo "SENT RESPONSE" . PHP_EOL;
+    echo json_encode($response, JSON_PRETTY_PRINT) . PHP_EOL;
+
+    return json_encode($response);
 }
 $rbMQS = get_rbMQs();
 
-echo "testRabbitMQServer BEGIN".PHP_EOL;
+echo "RabbitMQServer BEGIN".PHP_EOL;
 $rbMQs->process_requests('requestProcessor');
-echo "testRabbitMQServer END".PHP_EOL;
+echo "RabbitMQServer END".PHP_EOL;
 exit();
 ?>

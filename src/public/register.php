@@ -63,7 +63,7 @@ if (isset($_POST['submit'])){
     //IF there are no validation errors
     if(!$hasError){
         //opening a rabbitMQclient connection
-        $rbMQc = get_rbMQc();
+        global $rbMQc;
         $msg = "Sending register request";
 
         //creating a register array to store values
@@ -74,28 +74,22 @@ if (isset($_POST['submit'])){
         $register_req['response'] = $msg;
     
         //sending received form responses to rabbitMQ
-        $response = $rbMQc->send_request($register_req);
+        $response = json_decode($rbMQc->send_request($$register_req), true);
 
         //checking whether or not resgister was processed successfully/unsuccessfully
-        switch($response){
-            case "valid":
+        switch($response['code']){
+            case 200:
                 redirect(get_url("login.php"));
                 break;
-
-            case "duplicate":
+            case 409:
                 echo '<script language="javascript">';
-                echo 'alert("Username already exists.")';
-                echo '</script>';
-                break;
-
-            case "error":
-                echo '<script language="javascript">';
-                echo 'alert("Error")'; //handleRegister.php does not specify what this error is, could be used as a mismatch in password/confirm password
+                echo 'alert("' . $response['message'] . '")';
                 echo '</script>';
                 break;
             default:
-                echo($response);
-            }
+                echo($response['message']);
+    
+          }
         }
 }
 ?>
