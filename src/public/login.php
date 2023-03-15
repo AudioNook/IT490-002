@@ -45,9 +45,9 @@ if (isset($_POST['submit'])){
 
     switch($response['code']){
         case 200:
-            /*$token = $response['token'];
+            $token = $response['token'];
             $expiry = $response['expiry'];
-            setcookie("jwt", $token, $expiry, "/");*/
+            setcookie("jwt", $token, $expiry, "/");
             redirect(get_url("profile.php"));
             break;
         case 401:

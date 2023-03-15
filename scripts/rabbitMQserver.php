@@ -17,16 +17,16 @@ function requestProcessor($request)
 
     switch ($request['type']) {
         case "login":
-            $response = handleLogin($request["username"],$request["password"]);
+            $response = handle_login($request["username"],$request["password"]);
             break;
         case "register":
-            $response = handleRegister($request["username"],$request["password"]);
+            $response = handle_register($request["username"],$request["password"]);
             break;
         case "validate_jwt":
-            //$response = validateJWT($request['token']);
+            $response = validate_jWT($request['token']);
             break;
         case "logout":
-            //$response = handleLogout($request['token']);
+            $response = handle_logout($request['token']);
             break;
         default:
             $response = array("code" => '204',"status" => "success", 'message' => "Server received request and processed");
