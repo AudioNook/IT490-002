@@ -4,16 +4,19 @@
 //Helps redirect.php find our base project dir path sincce 
 $BASE_PATH = '/src/public';
 
+// Utility functions
+require(__DIR__. "/utils/util_functions.php"); 
 
-require(__DIR__ . "/get_url.php");
-require(__DIR__ . "/redirect.php");
-require(__DIR__ . "/db.php");
+// User functions
+require(__DIR__ . "/user/user_functions.php");
 
-// Rabbit MQ
-require(__DIR__ . "/rbMQclient.php");
-require(__DIR__ . "/rbMQserver.php");
+// Rabbit MQ functions
+require(__DIR__ . "/rbMQ/rabbitmq_functions.php");
 
-require(__DIR__ . "/handleLogin.php");
-require(__DIR__ . "/handleRegister.php");
+// Request Handling functions
+require(__DIR__ . "/request_handling/request_functions.php");
 
+
+// JWT session functions
+require(__DIR__ . "/jwt_handling/jwt_functions.php");
 
