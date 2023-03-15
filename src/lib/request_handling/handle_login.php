@@ -12,13 +12,13 @@ function handle_login($username,$password){
                     if($user){
                         $pass = $user["password"];
                         if($pass == $password){
-                            //$jwt = generate_jwt($db,$user);
+                            $jwt = generate_jwt($db,$user);
                             return [
                                 'code' => 200,
                                 'status' => 'success',
                                 'message' => 'Valid login credentials.',
-                                /*'token' => $jwt['token'],
-                                'expiry' => $jwt['expiry']*/
+                                'token' => $jwt['token'],
+                                'expiry' => $jwt['expiry']
                                     ];
                         } else {
                             return [
