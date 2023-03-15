@@ -1,8 +1,7 @@
 <?php
-
+require_once(__DIR__ . "/functions.php");
 
 function handleLogin($username,$password){
-        require_once(__DIR__ . "/functions.php");
         $db = getDB();
         $stmt = $db->prepare("SELECT id, username, password FROM testusers WHERE username = :username");
 
@@ -13,21 +12,37 @@ function handleLogin($username,$password){
                     if($user){
                         $pass = $user["password"];
                         if($pass == $password){
-                            $p_user = print_r($user, true);
-                            echo "User found: \n" . $p_user;
-                            return "valid";
+                            $jwt = generate_jwt($db,$user);
+                            return [
+                                'code' => 200,
+                                'status' => 'success',
+                                'message' => 'Valid login credentials.',
+                                'token' => $jwt['token'],
+                                'expiry' => $jwt['expiry']
+                                    ];
                         } else {
-                            echo "Wrong paswword. Politely FUCK OFF";
-                            return "invalid_pass";
+                            return [
+                                'code' => 401,
+                                'status' => 'error',
+                                'message' => 'Wrong password'
+                            ];
                         } 
                     }else {
-                        echo "Username not not found. Politely FUCK OFF";
-                        return "invalid_user";
+                        return [
+                            'code' => 401,
+                            'status' => 'error',
+                            'message' => 'Username not found'
+                        ];
                     }
                 }
             }
             catch (Exception $e){
-                return 'var_export($e, true)';
+                $error_message = var_export($e, true);
+                return [
+                    'code' => 500,
+                    'status' => 'error',
+                    'message' => $error_message,
+                ];
             }
 }
 
