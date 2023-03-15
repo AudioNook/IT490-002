@@ -31,7 +31,7 @@ if (isset($_POST['submit'])){
     $password = $_POST['password'];
 
     // Rabbit MQ Client Connection
-    $rbMQc = get_rbMQc();
+    global $rbMQc;
 
     $msg = "Sending login request";
 
@@ -41,63 +41,25 @@ if (isset($_POST['submit'])){
     $login_req['password'] = $password;
     $login_req['response'] = $msg;
 
-    $response = $rbMQc->send_request($login_req);
-    //echo($response);
+    $response = json_decode($rbMQc->send_request($login_req), true);
 
-    switch($response){
-        case "valid":
-            //?? redirect to login.php??
-            redirect(get_url("home.php"));
+    switch($response['code']){
+        case 200:
+            /*$token = $response['token'];
+            $expiry = $response['expiry'];
+            setcookie("jwt", $token, $expiry, "/");*/
+            redirect(get_url("profile.php"));
             break;
-        case "invalid_pass":
+        case 401:
             echo '<script language="javascript">';
-            echo 'alert("Wrong paswword. Politely FUCK OFF")';
-            echo '</script>';
-            break;
-        case "invalid_user":
-            echo '<script language="javascript">';
-            echo 'alert("Username not not found. Politely FUCK OFF")';
+            echo 'alert("' . $response['message'] . '")';
             echo '</script>';
             break;
         default:
-            echo($response);
+            echo($response['message']);
 
     }
     
-    
-    //print_r($response);
-
-    /* Get Database
-    $db = getDB();
-
-    $stmt = $db->prepare("SELECT id, username, password FROM testusers WHERE username = :username");
-
-        try{
-            $r = $stmt->execute([":username" => $username]);
-            if($r){
-                $user = $stmt->fetch(PDO::FETCH_ASSOC);
-                if($user){
-                    $pass = $user["password"];
-                    if($pass == $password){
-                        redirect(get_url("home.php"));
-                        exit(0);
-                    } else {
-                        echo '<script language="javascript">';
-                        echo 'alert("Wrong paswword. Politely FUCK OFF")';
-                        echo '</script>';
-                    } 
-                }else {
-                    echo '<script language="javascript">';
-                    echo 'alert("Username not not found. Politely FUCK OFF")';
-                    echo '</script>';
-                }
-            }
-        }
-        catch (Exception $e){
-            echo '<script language="javascript">';
-            echo 'alert("<pre>" . var_export($e, true) . "</pre>")';
-            echo '</script>';
-        }*/
     }
 
 ?>
