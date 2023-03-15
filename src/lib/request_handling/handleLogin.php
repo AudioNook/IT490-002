@@ -1,7 +1,7 @@
 <?php
-require_once(__DIR__ . "/functions.php");
+require_once(__DIR__ . "/../functions.php");
 
-function handleLogin($username,$password){
+function handle_login($username,$password){
         $db = getDB();
         $stmt = $db->prepare("SELECT id, username, password FROM testusers WHERE username = :username");
 
@@ -16,8 +16,8 @@ function handleLogin($username,$password){
                             return [
                                 'code' => 200,
                                 'status' => 'success',
-                                'message' => 'Valid login credentials.'/*,
-                                'token' => $jwt['token'],
+                                'message' => 'Valid login credentials.',
+                                /*'token' => $jwt['token'],
                                 'expiry' => $jwt['expiry']*/
                                     ];
                         } else {

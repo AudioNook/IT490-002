@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../data/RabbitMQ/rbMQconfig.php");
+require_once(__DIR__ . "/../../../data/RabbitMQ/rbMQconfig.php");
 
 global $rbMQc;
 global $rabbit_ini;

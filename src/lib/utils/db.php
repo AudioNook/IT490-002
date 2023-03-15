@@ -15,16 +15,9 @@ function getDB(){
 
 		try{
             
-            require_once(__DIR__ . "/config.php");// grabbing credentials
-			$dbhost = '127.0.0.1';
-$dbuser = 'testuser';
-$dbpass = '12345';
-$dbdatabase = 'testdb';
-
+            require_once(__DIR__ . "/../config.php");// grabbing credentials
             // builds connection string from our variables host & database
-			$connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
-
-
+			global $connection_string, $dbuser, $dbpass;
             // PDO creates a new connection to the DB
 			$db = new PDO($connection_string, $dbuser, $dbpass);
 

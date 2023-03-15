@@ -1,12 +1,12 @@
 <?php
-require_once(__DIR__ . "/../../data/RabbitMQ/rbMQconfig.php");
-
+require_once(__DIR__ . "/../../../data/RabbitMQ/rbMQconfig.php");
 function get_rbMQs(){
     global $rbMQs;
 
     if(!isset($rbMQs)){
         try{
-            require_once(__DIR__ . "/config.php");
+            global $rabbit_ini;
+            global $rabbit_server;
             $rbMQs = new rabbitMQServer($rabbit_ini,$rabbit_server);
         }
         catch(Exception $e){

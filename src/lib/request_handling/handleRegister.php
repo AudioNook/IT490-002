@@ -1,18 +1,16 @@
 <?php
-
-
-function handleRegister($username,$password){
-        require_once(__DIR__ . "/functions.php");
+require_once(__DIR__ . "/../functions.php");
+function handle_register($username,$password){
         $db = getDB();
         $stmt = $db->prepare('INSERT INTO testusers (username, password) VALUES(:username, :password)');
 
             try{ // maps username to username and password to password
                 $stmt->execute([":username" => $username, ":password" => $password]);
-                echo "User registered: $username";
+                //echo "User registered: $username";
                 return [
                     'code' => 200,
                     'status' => 'success',
-                    'message' => 'Valid login credentials.'
+                    'message' => 'Registered user: ' .  $username
                 ];        
                 
             }
