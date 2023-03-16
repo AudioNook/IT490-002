@@ -10,8 +10,9 @@ function handle_login($username,$password){
                 if($r){
                     $user = $stmt->fetch(PDO::FETCH_ASSOC);
                     if($user){
-                        $pass = $user["password"];
-                        if($pass == $password){
+                        $hash = $user["password"];
+                        unset($user["password"]);
+                        if (password_verify($password, $hash)) {
                             $jwt = generate_jwt($db,$user);
                             return [
                                 'code' => 200,
