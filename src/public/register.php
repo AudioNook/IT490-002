@@ -63,7 +63,7 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
 
     //If there are no validation errors
     if(!$hasError){
-        
+        $hash = password_hash($password, PASSWORD_BCRYPT);
         //opening a rabbitMQclient connection
         global $rbMQc;
         $msg = "Sending register request";
@@ -72,11 +72,11 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         $register_req = array();
         $register_req['type'] = 'register';
         $register_req['username'] = $username;
-        $register_req['password'] = $password;
+        $register_req['password'] = $hash;
         $register_req['response'] = $msg;
     
         //sending received form responses to rabbitMQ
-        $response = json_decode($rbMQc->send_request($$register_req), true);
+        $response = json_decode($rbMQc->send_request($register_req), true);
 
         //checking whether or not resgister was processed successfully/unsuccessfully
         switch($response['code']){
