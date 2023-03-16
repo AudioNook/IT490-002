@@ -76,7 +76,7 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         $register_req['response'] = $msg;
     
         //sending received form responses to rabbitMQ
-        $response = json_decode($rbMQc->send_request($$register_req), true);
+        $response = json_decode($rbMQc->send_request($register_req), true);
 
         //checking whether or not resgister was processed successfully/unsuccessfully
         switch($response['code']){
