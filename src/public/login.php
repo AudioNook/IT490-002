@@ -21,15 +21,35 @@ require(__DIR__ . "/../partials/nav.php");
 
 <?php
 //check if the form is submitted
-if (isset($_POST['submit'])){
+if (isset($_POST["username"]) && isset($_POST["password"])){
     // if we have in input for username && password get the DB
     // and select the associated record where the username matched in the DB
-
-// $response = "unsupported request type, politely FUCK OFF";
     
+    //Grabbing username and password
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $email;
 
+    // add check for username contains '@'
+        // if so, sanitze the email
+
+    //Server Validation
+    $hasError = false;
+    switch (true){
+        case empty($username):
+            $hasError = true;
+            $errorMsg = "Username cannot be empty.";
+            break;
+        // add check for valid username
+        case empty($password):
+            $hasError = true;
+            $errorMsg = "Password cannot be empty.";
+            break;
+        // add case for checking valid password
+    }
+
+    //If there are no validation errors
+    if(!$hasError){
     // Rabbit MQ Client Connection
     global $rbMQc;
 
@@ -60,6 +80,12 @@ if (isset($_POST['submit'])){
 
     }
     
+    }else {
+        echo '<script language="javascript">';
+        echo 'alert("' . $errorMsg . '")';
+        echo '</script>';
+    }
+
     }
 
 ?>
