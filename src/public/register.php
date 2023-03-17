@@ -28,7 +28,7 @@ require(__DIR__ . "/../partials/nav.php");
 <?php
 if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm"])){
     
-    //grabbing username, password, and confirm password fields from form
+    //grabbing email, username, password, and confirm password fields from form
     
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -71,6 +71,7 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         //creating a register array to store values
         $register_req = array();
         $register_req['type'] = 'register';
+        $register_req['email'] = $email;
         $register_req['username'] = $username;
         $register_req['password'] = $hash;
         $register_req['response'] = $msg;
