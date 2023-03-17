@@ -1,3 +1,4 @@
+/*
 CREATE TABLE IF NOT EXISTS `Ratings`(
     `id` int AUTO_INCREMENT PRIMARY KEY,
     `product_id` int,
@@ -10,3 +11,4 @@ CREATE TABLE IF NOT EXISTS `Ratings`(
     FOREIGN KEY (`product_id`) REFERENCES Products(`id`),
     UNIQUE KEY (`user_id`, `product_id`)
 )
+*/

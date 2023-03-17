@@ -1,4 +1,5 @@
 
+/*
 CREATE TABLE IF NOT EXISTS `Products` (
     `id` int AUTO_INCREMENT,
     `name` varchar(30), 
@@ -14,3 +15,4 @@ CREATE TABLE IF NOT EXISTS `Products` (
     check (`cost` >= 0), -- don't allow negative costs
     check (`stock` >= 0) -- don't allow negative stock
 )
+*/

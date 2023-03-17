@@ -1,3 +1,4 @@
+/*
 CREATE TABLE IF NOT EXISTS `Cart`(
     `id` int AUTO_INCREMENT,
     `quantity` int,
@@ -13,3 +14,4 @@ CREATE TABLE IF NOT EXISTS `Cart`(
     FOREIGN KEY (`product_id`) REFERENCES Products(`id`),
     UNIQUE KEY (`user_id`, `product_id`)
 )
+*/
