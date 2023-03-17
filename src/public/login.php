@@ -4,7 +4,8 @@ require(__DIR__ . "/../partials/nav.php");
 ?>
 <div class="container-fluid">
     <h1>Login</h1>
-    <form method="POST">
+    <!-- <form method="POST"> -->
+    <form onsubmit="return validate(this)" method="POST">
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" id="username" name="username"/>
@@ -17,7 +18,34 @@ require(__DIR__ . "/../partials/nav.php");
     </form>
 </div>
 
-<!-- validation script to be added -->
+<!-- validation script added in utilities.js  -->
+
+
+<script>
+    function validate(form){
+        //TODO 1: implement JavaScript validation
+        //ensure it returns false for an error and true for success
+        let isValid = true;
+        let username = form.username.value;
+        let password = form.password.value;
+
+        if(!isValidUserame(username)){
+            isValid = false;
+            flash("Invalid Username","warning");
+        }
+        return isValid;
+  
+        if(!isValidPassword(password)){
+            isValid = false;
+            flash("Invalid password","warning");
+        }
+        return isValid;
+    }
+</script>
+
+
+
+
 
 <?php
 //check if the form is submitted

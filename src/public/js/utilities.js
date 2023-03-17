@@ -23,3 +23,17 @@ function validate_jwt() {
     console.log("Token is all good");
   }
   
+function isValidUsername(username){
+  const reUser = new RegExp('^[a-z0-9_-]{3,16}$');
+  return reUser.test(username);
+}
+function isValidPassword(password){
+  const rePass = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$');
+  return rePass.test(password);
+  return password.length >= 8;
+}
+
+function valiate(){
+  isValidPassword()
+  isValidUsername()
+}
