@@ -20,7 +20,7 @@ function requestProcessor($request)
             $response = handle_login($request["username"],$request["password"]);
             break;
         case "register":
-            $response = handle_register($request["username"],$request["password"]);
+            $response = handle_register($request["email"],$request["username"],$request["password"]);
             break;
         case "validate_jwt":
             $response = validate_jWT($request['token']);
