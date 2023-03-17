@@ -4,7 +4,9 @@ require_once(__DIR__ . "/../../../vendor/autoload.php");
 
 function handle_logout($jwt){
     $db = $db = getDB();
-    $stmt = $db->prepare("DELETE FROM jwt_sessions WHERE token = :token");
+    $table_name= 'JWT_Sessions';
+    $query= "DELETE FROM $table_name WHERE token = :token";
+    $stmt = $db->prepare($query);
     try{
     $stmt->execute([
         ':token' => $jwt
