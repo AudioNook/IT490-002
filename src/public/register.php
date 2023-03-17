@@ -6,7 +6,7 @@ require(__DIR__ . "/../partials/nav.php");
     <h1>Register</h1>
     <!-- <form method="POST"> -->
     <!-- validation script to be added for onsubmitt-->
-        <form onsubmit="return validate(this)" method="POST">
+        <form onsubmit="return validate_register(this)" method="POST">
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" id="username" name="username"/>
@@ -27,27 +27,6 @@ require(__DIR__ . "/../partials/nav.php");
 </div>
 
 
-<script>
-    function validate(form){
-        //TODO 1: implement JavaScript validation
-        //ensure it returns false for an error and true for success
-        let isValid = true;
-        let username = form.username.value;
-        let password = form.password.value;
-
-        if(!isValidUserame(username)){
-            isValid = false;
-            flash("Invalid Username","warning");
-        }
-        return isValid;
-  
-        if(!isValidPassword(password)){
-            isValid = false;
-            flash("Invalid password","warning");
-        }
-        return isValid;
-    }
-</script>
 
 <?php
 if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm"])){
