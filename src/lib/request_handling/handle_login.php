@@ -4,7 +4,8 @@ require_once(__DIR__ . "/../functions.php");
 function handle_login($username,$password){
         $db = getDB();
         $table_name = 'Users';
-        $stmt = $db->prepare("SELECT id, username, password FROM $table_name WHERE username = :username");
+        $query = "SELECT id, username, password FROM $table_name WHERE username = :username";
+        $stmt = $db->prepare($query);
 
             try{
                 $r = $stmt->execute([":username" => $username]);

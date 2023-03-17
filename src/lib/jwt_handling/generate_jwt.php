@@ -8,7 +8,8 @@ use Firebase\JWT\JWT;
 function generate_jwt($db, $user){
     // Revoke older token if one exists
     $table_name= 'jwt_sessions';
-    $stmt = $db->prepare("DELETE FROM $table_name WHERE user_id = :user_id AND expires_at > NOW()");
+    $delete_query = "DELETE FROM $table_name WHERE user_id = :user_id AND expires_at > NOW()";
+    $stmt = $db->prepare($delete_query);
     $stmt->execute([":user_id" => $user['id']]);
 
     // Password matches, generate JWT token
@@ -23,7 +24,8 @@ function generate_jwt($db, $user){
     $token = JWT::encode($payload, $key, 'HS256');
 
     // Store the JWT session in the database
-    $stmt = $db->prepare("INSERT INTO $table_name (user_id, token, expires_at, issued_at) VALUES (:user_id, :token, :expires_at, :issued_at)");
+    $insert_query = "INSERT INTO $table_name (user_id, token, expires_at, issued_at) VALUES (:user_id, :token, :expires_at, :issued_at)";
+    $stmt = $db->prepare($insert_query);
     try{
         $stmt->execute([
             ':user_id' => $user['id'],
