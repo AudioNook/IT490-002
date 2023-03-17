@@ -7,7 +7,7 @@ use Firebase\JWT\JWT;
 
 function generate_jwt($db, $user){
     // Revoke older token if one exists
-    $table_name= 'jwt_sessions';
+    $table_name= 'JWT_Sessions';
     $delete_query = "DELETE FROM $table_name WHERE user_id = :user_id AND expires_at > NOW()";
     $stmt = $db->prepare($delete_query);
     $stmt->execute([":user_id" => $user['id']]);
