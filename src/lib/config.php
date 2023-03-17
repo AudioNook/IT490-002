@@ -1,5 +1,5 @@
 <?php
-// JWT Secret
+/// JWT Secret
 define('JWT_SECRET', 'this-is-the-secret');
 
 // DB Credentials
@@ -7,11 +7,11 @@ define('JWT_SECRET', 'this-is-the-secret');
 $dotenv = @parse_ini_file(__DIR__ . "/.env");
 
 // load local .env file
-//$dbhost = $dotenv["DB_HOST"];
-//$dbuser = $dotenv["DB_USER"];
-//dbpass = $dotenv["DB_PASS"];
-//$dbdatabase = $dotenv["DB_DATABASE"];
-//$connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
+$dbhost = $dotenv["DB_HOST"];
+$dbuser = $dotenv["DB_USER"];
+$dbpass = $dotenv["DB_PASS"];
+$dbdatabase = $dotenv["DB_DATABASE"];
+$connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
 
 // Rabbit MQ Configs
 
