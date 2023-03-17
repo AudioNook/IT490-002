@@ -5,6 +5,7 @@ require(__DIR__ . "/../partials/nav.php");
 <div class="container-fluid">
     <h1>Register</h1>
     <form method="POST">
+        <!-- validation script to be added for onsubmitt-->
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" id="username" name="username"/>
@@ -16,7 +17,7 @@ require(__DIR__ . "/../partials/nav.php");
         <div class="mb-3">
             <label class="form-label" for="password">Password</label>
             <input class="form-control" type="password" id="password" name="password"/>
-            <label class="form-label" for="confirm">Password</label>
+            <label class="form-label" for="confirm">Confirm Password</label>
             <input class="form-control" type="password" id="confirm" name="confirm"/>
 
         </div>
@@ -25,43 +26,44 @@ require(__DIR__ . "/../partials/nav.php");
 </div>
 
 <?php
-if (isset($_POST['submit'])){
-
-    //grabbing username, password, and confirm password fields from form
-    $hasError = false;
+if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm"])){
+    
+    //grabbing email, username, password, and confirm password fields from form
+    
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $confirmPassword = $_POST['confirm'];
+    $confirm = $_POST['confirm'];
 
+    // sanitize email here
+    
     //Server Validation
-    if(empty($username)){
-        $hasError = true;
-        echo '<script language="javascript">';
-            echo 'alert("Username is empty.")';
-            echo '</script>';
-    }
-    if(empty($email)){
-        $hasError = true;
-        echo '<script language="javascript">';
-            echo 'alert("Email is empty.")';
-            echo '</script>';
-    }
-    if(empty($password)){
-        $hasError = true;
-        echo '<script language="javascript">';
-            echo 'alert("Password is empty.")';
-            echo '</script>';
-    }
-    if(empty($confirmPassword)|| $confirmPassword !== $password){
-        $hasError = true;
-        echo '<script language="javascript">';
-        echo 'alert("Confirm password is empty or does not match password.")';
-        echo '</script>';   
+    $hasError = false;
+    switch (true){
+        case empty($username):
+            $hasError = true;
+            $errorMsg = "Username cannot be empty.";
+            break;
+        // add case for checking valid username
+        case empty($email):
+            $hasError = true;
+            $errorMsg = "Email cannot be empty.";
+            break;
+        //add case for checking valid email
+        case empty($password):
+            $hasError = true;
+            $errorMsg = "Password cannot be empty.";
+            break;
+        // add case for checking valid password
+        case (empty($confirm) || $confirm !== $password):
+            $hasError = true;
+            $errorMsg = "Passwords do not match.";
+            break;
     }
 
-    //IF there are no validation errors
+    //If there are no validation errors
     if(!$hasError){
+        $hash = password_hash($password, PASSWORD_BCRYPT);
         //opening a rabbitMQclient connection
         global $rbMQc;
         $msg = "Sending register request";
@@ -69,12 +71,13 @@ if (isset($_POST['submit'])){
         //creating a register array to store values
         $register_req = array();
         $register_req['type'] = 'register';
+        $register_req['email'] = $email;
         $register_req['username'] = $username;
-        $register_req['password'] = $password;
+        $register_req['password'] = $hash;
         $register_req['response'] = $msg;
     
         //sending received form responses to rabbitMQ
-        $response = json_decode($rbMQc->send_request($$register_req), true);
+        $response = json_decode($rbMQc->send_request($register_req), true);
 
         //checking whether or not resgister was processed successfully/unsuccessfully
         switch($response['code']){
@@ -90,6 +93,11 @@ if (isset($_POST['submit'])){
                 echo($response['message']);
     
           }
+        } else {
+            echo '<script language="javascript">';
+            echo 'alert("' . $errorMsg . '")';
+            echo '</script>';
         }
+
 }
 ?>

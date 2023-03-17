@@ -1,11 +1,13 @@
 <?php
 require_once(__DIR__ . "/../functions.php");
-function handle_register($username,$password){
+function handle_register($email,$username,$password){
         $db = getDB();
-        $stmt = $db->prepare('INSERT INTO testusers (username, password) VALUES(:username, :password)');
+        $table_name= 'Users';
+        $query= "INSERT INTO $table_name (email, username, password) VALUES(:email, :username, :password)";
+        $stmt = $db->prepare($query);
 
             try{ // maps username to username and password to password
-                $stmt->execute([":username" => $username, ":password" => $password]);
+                $stmt->execute([":email" => $email, ":username" => $username, ":password" => $password]);
                 //echo "User registered: $username";
                 return [
                     'code' => 200,
@@ -18,7 +20,7 @@ function handle_register($username,$password){
                 //$e = json_decode($e,true);
                 // checks for error num for duplicate
                 if ($e->getCode() === "23000"){ 
-                    preg_match("/testusers.(\w+)/", $e->getMessage(), $matches);
+                    preg_match("/Users.(\w+)/", $e->getMessage(), $matches);
                     if (isset($matches[1])) { // if duplicate error look for username
                     echo $matches[1]  . " is already in use!";
                     return [
