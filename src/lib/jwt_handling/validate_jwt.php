@@ -9,7 +9,7 @@ use Firebase\JWT\Key;
 function validate_jwt($jwt) {
     $key = JWT_SECRET;
     $db = getDB();
-    $table_name = "jwt_sessions";
+    $table_name = "JWT_Sessions";
     $query = "SELECT * FROM $table_name WHERE token = :token AND user_id = :user_id AND expires_at > NOW()";
     $stmt = $db->prepare($query);
     try {
