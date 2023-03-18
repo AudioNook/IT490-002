@@ -17,5 +17,22 @@ function get_rbMQs(){
 
     return $rbMQs;
 }
+function get_logServer($logServer){
+    global $rbMQLs;
+
+    if(!isset($rbMQLs)){
+        try{
+            global $rabbit_ini2;
+            require_once(__DIR__ . "/../config.php");
+            $rbMQLs = new rabbitMQServer($rabbit_ini2,$logServer);
+        }
+        catch(Exception $e){
+            error_log("get_rbMQC() error: " . var_export($e,true));
+			$rbMQs = null;
+        }
+    }
+
+    return $rbMQLs;
+}
 
 ?>

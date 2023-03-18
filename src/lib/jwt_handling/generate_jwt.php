@@ -24,8 +24,7 @@ function generate_jwt($db, $user){
     $token = JWT::encode($payload, $key, 'HS256');
 
     // Store the JWT session in the database
-    $insert_query = "INSERT INTO $table_name (user_id, token, expires_at, issued_at) VALUES (:user_id, :token, :expires_at, :issued_at)";
-    $stmt = $db->prepare($insert_query);
+    $stmt = $db->prepare("INSERT INTO jwt_sessions (user_id, token, expires_at, issued_at) VALUES (:user_id, :token, :expires_at, :issued_at)");
     try{
         $stmt->execute([
             ':user_id' => $user['id'],
