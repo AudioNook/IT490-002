@@ -16,7 +16,7 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current pa
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">Sample Web :)</a>
+  <a class="navbar-brand" href="#">AudioNook</a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -30,15 +30,26 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current pa
       <li class="nav-item">
         <a class="nav-link" href="<?php echo get_url('register.php'); ?>">Register</a>
       </li>
+
       <?php endif; ?>
+
       <?php if ($is_logged_in) : ?>
         <li class="nav-item">
-        <a class="nav-link" href="#">Profile</a>
+        <a class="nav-link" href="<?php echo get_url('home.php'); ?>">Home</a>
       </li>
+
+        <li class="nav-item">
+        <a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo get_url('forum.php'); ?>">Forum<a>
+      </li>
+      
       <li class="nav-item">
         <a class="nav-link" href="<?php echo get_url('logout.php'); ?>">Logout</a>
       </li>
       <?php endif; ?>
     </ul>
-  </div>
-</nav>
+  </div> 
+      </nav>
