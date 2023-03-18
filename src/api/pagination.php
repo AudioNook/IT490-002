@@ -13,7 +13,7 @@ function persistQueryString($page)
 {
     //set the query param for easily building
     $_GET["page"] = $page;
-    //https://www.php.net/manual/en/function.http-build-query.php
+    // Need to change
     return http_build_query($_GET);
 }
 function check_apply_disabled_prev($page)
