@@ -24,21 +24,21 @@ function requestProcessor($error)
     {
         case "frontend":
             //uses logError function to write the errors to the file frontEndErrors
-             logError($error, '/var/www/sample/data/logs/frontendErrors');
+             logError($error, __DIR__ . "/../data/logs/frontendErrors");
              break;
                        
         case "db":
             //uses logError function to write the errors to the file dbErrors
-             logError($error, '/var/www/sample/data/logs/dbErrors');
+             logError($error, __DIR__ . "/../data/logs/dbErrors");
              break;
         case "api":
             //uses logError function to write the errors to the file apiErrors    
-             logError($error, '/var/www/sample/data/logs/apiErrors');
+             logError($error, __DIR__ . "/../data/logs/api");
              break;
         default:
             //uses logError function to write any errors that do not fall under the above types to a 
             // miscErrors file.    
-            logError($error, '/var/www/sample/data/logs/miscErrors');
+            logError($error, __DIR__ . "/../data/logs/miscErrors");
             break;
     }
     return array("returnCode" => '0', 'response'=>"Server received request and processed");
