@@ -40,14 +40,16 @@ function validate_register(form){
 
   if(!isValidUsername(username)){
       isValid = false;
-      console.log("Invalid Username");
+      display_msg("Invalid Username", "warning");
+      
   }
-
+  
   if(!isValidPassword(password)){
       isValid = false;
-      console.log("Invalid password");
+      display_msg("Invalid Password", "warning");
   }
   return isValid;
+
 }
 
 function validate_login(form){
@@ -57,12 +59,50 @@ function validate_login(form){
 
   if(!isValidUsername(username)){
       isValid = false;
-      console.log("Invalid Username","warning");
+      display_msg("Invalid Username", "warning");
   }
 
   if(!isValidPassword(password)){
       isValid = false;
-      console.log("Invalid password","warning");
+      display_msg("Invalid Password", "warning");
   }
   return isValid;
 }
+
+const classes = {
+  'success': 'alert-success',
+  'info': 'alert-info',
+  'warning': 'alert-warning',
+  'danger': 'alert-danger'
+};
+
+function display_msg(message, type = 'info') {
+  const alert_msg = document.getElementById('alert_msg');
+  const innerDiv = document.createElement('div');
+
+  innerDiv.className = `alert ${classes[type]}`;
+  innerDiv.innerText = message;
+
+  alert_msg.appendChild(innerDiv);
+  clear_msg();
+}
+
+let msg_timeout = null;
+
+function clear_msgs() {
+  const alert_msg = document.getElementById('alert_msg');
+  if (!msg_timeout && alert_msg) {
+    msg_timeout = setTimeout(() => {
+      console.log('Removing message');
+      if (alert_msg.children.length > 0) {
+        alert_msg.children[0].remove();
+      }
+      msg_timeout = null;
+      if (alert_msg.children.length > 0) {
+        clear_msgs();
+      }
+    }, 3000);
+  }
+}
+
+window.addEventListener('load', () => setTimeout(clear_msgs, 100));
