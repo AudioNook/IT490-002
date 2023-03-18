@@ -33,7 +33,7 @@ function requestProcessor($error)
              break;
         case "api":
             //uses logError function to write the errors to the file apiErrors    
-             logError($error, __DIR__ . "/../data/logs/api");
+             logError($error, __DIR__ . "/../data/logs/apiErrors");
              break;
         default:
             //uses logError function to write any errors that do not fall under the above types to a 
