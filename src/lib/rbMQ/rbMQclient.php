@@ -1,10 +1,28 @@
 <?php
-require_once(__DIR__ . "/../../../data/RabbitMQ/rbMQconfig.php");
 
+require_once(__DIR__ . "/../../../data/RabbitMQ/rbMQconfig.php");
 global $rbMQc;
 global $rabbit_ini;
 global $rabbit_server;
 
+function get_rbMQLc(){
+    global $rbMQLc;
+
+    if(!isset($rbMQLc)){
+        try{
+            require_once(__DIR__ . "/../config.php");
+            global $rabbit_ini2;
+            global $rabbit_johnLogServer;
+            $rbMQLc = new rabbitMQClient($rabbit_ini2,$rabbit_johnLogServer);
+        }
+        catch(Exception $e){
+            error_log("get_rbMQC() error: " . var_export($e,true));
+			$rbMQLc = null;
+        }
+    }
+
+    return $rbMQLc;
+}
 if (!isset($rbMQc) || $rbMQc === null) {
     $rbMQc = new rabbitMQClient($rabbit_ini,$rabbit_server);
 }
@@ -28,6 +46,7 @@ if (!isset($rbMQc) || $rbMQc === null) {
 
     return $rbMQc;
 }
+
 class RabbitMQClientSingleton extends rabbitMQClient
 {
     private static $instance = null;

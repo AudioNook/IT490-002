@@ -12,19 +12,21 @@ function delete_jwt() {
     $logout_req['type'] = 'logout';
     $logout_req['token'] = $jwt;
     $response = json_decode($rbMQc->send_request($logout_req), true);
-    switch($response['code']){
-        case 200:
-            // Remove JWT cookie
-            unset($_COOKIE["jwt"]);
-            setcookie("jwt", "", -1, "/");
-            // Redirect to login page
-            redirect("login.php");
-            break;
-        case 500:
-            error_log($response['message']);
-            break;
-        default:
-            echo "idk what happened bro";
+    if($response['type'] == 'logut'){
+        switch($response['code']){
+            case 200:
+                // Remove JWT cookie
+                unset($_COOKIE["jwt"]);
+                setcookie("jwt", "", -1, "/");
+                // Redirect to login page
+                redirect("login.php");
+                break;
+            case 500:
+                error_log($response['message']);
+                break;
+            default:
+                echo "idk what happened bro";
+        }
     }
 }
 ?>
