@@ -17,12 +17,7 @@ $connection_string = "mysql:host=$dbhost;dbname=$dbdatabase;charset=utf8mb4";
 
 
 $rabbit_ini = "rabbitMQ.ini";
-$rabbit_ini2 = "rabbitMQ.ini";
 $rabbit_server = "testServer";
-$rabbit_johnLogServer = "johnLogServer";
-$rabbit_carlosLogServer = "johnLogServer";
-$rabbit_luandaLogServer = "johnLogServer";
-$rabbit_jaylinLogServer = "johnLogServer";
 
 //echo "rabbit_ini = $rabbit_ini \n";
 //echo "rabbit_server = $rabbit_server \n";
