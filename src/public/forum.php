@@ -27,7 +27,7 @@ if ($response['type'] == 'topics') {
 
 <head>
   <script>
-    validateJWT();
+    //validateJWT();
   </script>
   <title>AudioNook Forums</title>
 </head>
