@@ -20,3 +20,6 @@ require(__DIR__ . "/request_handling/request_functions.php");
 // JWT session functions
 require(__DIR__ . "/jwt_handling/jwt_functions.php");
 
+// Forum Handling functions
+require(__DIR__ . "/forum_handling/forum_functions.php");
+

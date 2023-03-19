@@ -1,3 +1,6 @@
+<?php/*This page will host the search if a user is signed in.*/?>
+
+
 <?php
 require(__DIR__ . "/../partials/nav.php");
 ?>
@@ -19,6 +22,5 @@ require(__DIR__ . "/../partials/nav.php");
     </div>
   </div>
 </div>
-
 </body>
 </html>

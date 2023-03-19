@@ -1,22 +1,41 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
 
+global $rbMQc;
 
-// Check if user is logged in
+$msg = "Sending discussion topic request";
 
-logged_in(true);
+$topic_req = array();
+$topic_req['type'] = 'topics';
 
-// User is logged in, show the profile page
+$response = json_decode($rbMQc->send_request($login_req), true);
+
+switch($response['code']){
+    case 200:
+        $token = $response['token'];
+        $expiry = $response['expiry'];
+        setcookie("jwt", $token, $expiry, "/");
+        redirect(get_url("profile.php"));
+        break;
+    case 401:
+        echo '<script language="javascript">';
+        echo 'alert("' . $response['message'] . '")';
+        echo '</script>';
+        break;
+    default:
+        echo($response['message']);
+    }
+
 ?>
 <html>
 <head>
 <script>
   //validateJWT();
 </script>
-    <title>Forum</title>
+    <title>Audio Nook Forums</title>
 </head>
 <body>
-    <h1>Welcome to the Forum!</h1>
-    <p>Here you can particpate in discussions, sharing your thoughts and opinions on music with the AudioNook community.</p>
+    <h1>Forums</h1>
+    <p>Here, you can participate in discussions, sharing your thoughts and opinions on music with the AudioNook community.</p>
 </body>
 </html>

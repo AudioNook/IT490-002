@@ -16,13 +16,13 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current pa
 </head>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">AudioNook</a>
   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
     <?php if (!$is_logged_in) : ?>
+      <a class="navbar-brand" href="<?php echo get_url('landing.php'); ?>">AudioNook</a>
       <li class="nav-item">
         <a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a>
       </li>
@@ -34,6 +34,7 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current pa
       <?php endif; ?>
 
       <?php if ($is_logged_in) : ?>
+        <a class="navbar-brand" href="#">AudioNook</a>
         <li class="nav-item">
         <a class="nav-link" href="<?php echo get_url('home.php'); ?>">Home</a>
       </li>

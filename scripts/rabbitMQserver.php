@@ -16,6 +16,7 @@ function requestProcessor($request)
     }
 
     switch ($request['type']) {
+        // Handling User Sessions
         case "login":
             $response = handle_login($request["username"],$request["password"]);
             break;
@@ -27,6 +28,10 @@ function requestProcessor($request)
             break;
         case "logout":
             $response = handle_logout($request['token']);
+            break;
+        // Handling forums
+        case "topics":
+            $response = handle_topics();
             break;
         default:
             $response = array("code" => '204',"status" => "success", 'message' => "Server received request and processed");
