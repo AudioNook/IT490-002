@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 // my functions
 require_once(__DIR__ . "/../functions.php");
