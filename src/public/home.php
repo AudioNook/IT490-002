@@ -4,7 +4,7 @@ require(__DIR__ . "/../partials/nav.php");
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Home</title>
 </head>
 <body>
   
