@@ -1,7 +1,7 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
 ?>
-<div id="alert_msg"></div>
+        <div id="alert_msg"></div>
 <div class="container-fluid">
     <h1>Register</h1>
     <!-- <form method="POST"> -->
