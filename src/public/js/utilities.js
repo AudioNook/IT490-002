@@ -24,47 +24,63 @@ function validate_jwt() {
 }
 
 function isValidUsername(username){
-  const reUser = new RegExp('^[a-z0-9_-]{3,16}$');
+  const reUser = new RegExp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$");
   return reUser.test(username);
 }
 
 function isValidPassword(password){
-  const rePass = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$');
+  const rePass = new RegExp("^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$");
   return rePass.test(password);
 }
+
+function isValidEmail(email) {
+  const reEmail = new RegExp('^.+@.+\..+$');
+  return reEmail.test(email);
+}
+
 
 function validate_register(form){
   let isValid = true;
   let username = form.username.value;
   let password = form.password.value;
+  let confirm = form.confirm.value;
+  let email = form.email.value;
+
+  if (!email || !username || !password || !confirm) {
+    display_msg('Please fill in all required fields.','warning');
+    return false;
+  }
 
   if(!isValidUsername(username)){
       isValid = false;
-      display_msg("Invalid Username", "warning");
+      display_msg("Invalid Username: \n Minimum five characters, at least one letter and one number.", "warning");
       
   }
   
-  if(!isValidPassword(password)){
+  if (confirm == password){
+    if(!isValidPassword(password)){
       isValid = false;
-      display_msg("Invalid Password", "warning");
-  }
-  return isValid;
+      display_msg("Invalid Password: \n Minimum eight characters, at least one letter, one number and one special character", "warning");
+      }
+    }
+
+  if(!isValidEmail(email)){
+    isValid = false;
+    display_msg("Invalid Email", "warning");
+    }
+return isValid;
 
 }
+
+
 
 function validate_login(form){
   let isValid = true;
   let username = form.username.value;
   let password = form.password.value;
 
-  if(!isValidUsername(username)){
-      isValid = false;
-      display_msg("Invalid Username", "warning");
-  }
-
-  if(!isValidPassword(password)){
-      isValid = false;
-      display_msg("Invalid Password", "warning");
+  if ( !username || !password) {
+    display_msg('Please fill in all required fields.','warning');
   }
   return isValid;
 }
