@@ -35,13 +35,12 @@
                <div class="search">
                   <i class="fa fa-search"></i>
                   <input type="text" class="form-control" placeholder="Search...">
-                  <button class="btn btn-primary ml-auto">Search</button>
+                  <button class="btn btn-primary ml-auto" style="background-color: #28a745; border-color: #28a745;">Search</button>
                </div>
             </div>
          </div>
       </div>
       <!-- Search-->
-      <!-- Section-->
       <!-- Section-->
       <section class="py-5">
          <div class="container px-4 px-lg-5 mt-5">
@@ -124,6 +123,13 @@
                </div>
             </div>
          </div>
+         <style>
+            .btn-outline-dark {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+            }
+         </style>
       </section>
       <!-- Bootstrap core JS-->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
