@@ -1,11 +1,12 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
 ?>
-
+<div id="alert_msg"></div>
 <div class="container-fluid">
     <h1>Register</h1>
-    <form method="POST">
-        <!-- validation script to be added for onsubmitt-->
+    <!-- <form method="POST"> -->
+    <!-- validation script to be added for onsubmitt-->
+        <form onsubmit="return validate_register(this)" method="POST">
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" id="username" name="username"/>
@@ -24,6 +25,8 @@ require(__DIR__ . "/../partials/nav.php");
         <input type="submit" name="submit" class="mt-3 btn btn-primary" value="register" />
     </form>
 </div>
+
+
 
 <?php
 if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm"])){
