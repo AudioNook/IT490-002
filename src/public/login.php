@@ -2,9 +2,11 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
 ?>
+<div id="alert_msg"></div>
 <div class="container-fluid">
     <h1>Login</h1>
-    <form method="POST">
+    <!-- <form method="POST"> -->
+    <form onsubmit="return validate_login(this)" method="POST">
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
             <input class="form-control" type="text" id="username" name="username"/>
@@ -17,7 +19,8 @@ require(__DIR__ . "/../partials/nav.php");
     </form>
 </div>
 
-<!-- validation script to be added -->
+<!-- validation script added in utilities.js  -->
+
 
 <?php
 //check if the form is submitted
