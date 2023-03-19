@@ -12,15 +12,16 @@ function handle_logout($jwt){
         ':token' => $jwt
         ]);
         return [
+            'type' => 'logout',
             'code' => 200,
             'status' => 'success',
             'message' => 'Deleted user session.',
                 ];
     }
-    catch(Exception $e){
+    catch(PDOException $e){
         $error_message = var_export($e, true);
-        logIT('db', $error_message, __LINE__, __FILE__);
                 return [
+                    'type' => 'logout',
                     'code' => 500,
                     'status' => 'error',
                     'message' => $error_message,

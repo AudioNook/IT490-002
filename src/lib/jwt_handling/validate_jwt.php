@@ -23,6 +23,7 @@ function validate_jwt($jwt) {
             if (time() < $expiry) {
 
                 return [
+                    'type' => 'validate_jwt',
                     'code' => 200,
                     'status' => 'success',
                     'message' => 'Valid token.',
@@ -30,6 +31,7 @@ function validate_jwt($jwt) {
             }
         }
         return [
+            'type' => 'validate_jwt',
             'code' => 401,
             'status' => 'error',
             'message' => 'invalid token.',
@@ -37,6 +39,7 @@ function validate_jwt($jwt) {
     } catch (Exception $e) {
         $error_message = var_export($e, true);
         return [
+            'type' => 'validate_jwt',
             'code' => 500,
             'status' => 'error',
             'message' => $error_message,
