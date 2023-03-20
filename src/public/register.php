@@ -3,26 +3,26 @@ require(__DIR__ . "/../partials/nav.php");
 ?>
 <div id="alert_msg"></div>
 <div class="container-fluid">
-    <h1>Register wtih AudioNook!</h1>
+    <h1>Register</h1>
     <!-- <form method="POST"> -->
     <!-- validation script to be added for onsubmitt-->
         <form onsubmit="return validate_register(this)" method="POST">
         <div class="mb-3">
             <label class="form-label" for="username">Username</label>
-            <input class="form-control" type="text" id="username" name="username"/>
+            <input class="form-control" type="text" placeholder= "JohnDoe" id="username" name="username"/>
         </div>
         <div class="mb-3">
             <label class="form-label" for="email">Email</label>
-            <input class="form-control" type="text" id="email" name="email"/>
+            <input class="form-control" type="text" placeholder="user@domain.com" id="email" name="email"/>
         </div>
         <div class="mb-3">
             <label class="form-label" for="password">Password</label>
-            <input class="form-control" type="password" id="password" name="password"/>
+            <input class="form-control" type="password" placeholder="P@ssword1" id="password" name="password"/>
             <label class="form-label" for="confirm">Confirm Password</label>
-            <input class="form-control" type="password" id="confirm" name="confirm"/>
+            <input class="form-control" type="password" placeholder="P@ssword1" id="confirm" name="confirm"/>
 
         </div>
-        <input type="submit" name="submit" class="mt-3 btn btn-primary" value="Register" />
+        <input type="submit" name="submit" class="mt-3 btn btn-primary" value="register" />
     </form>
 </div>
 
@@ -37,6 +37,8 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm = $_POST['confirm'];
+    $patternName = '/^[a-z0-9_-]{3,30}$/';
+    $patternPassword = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/';
 
     // sanitize email here
     
@@ -62,7 +64,18 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
             $hasError = true;
             $errorMsg = "Passwords do not match.";
             break;
+         //case for checking username against regEx   
+         case((preg_match($patternName, $username) == 0)):
+            $hasError = true;
+            $errorMsg = "Invalid Username Format.";
+            break;
+        //case for checking username against regEx   
+        case((preg_match($patternPassword, $password) == 0)):
+            $hasError = true;
+            $errorMsg = "Invalid Password Format.";
+            break;
     }
+    
 
     //If there are no validation errors
     if(!$hasError){
@@ -82,10 +95,10 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         //sending received form responses to rabbitMQ
         $response = json_decode($rbMQc->send_request($register_req), true);
 
-        //checking whether or not resgister was processed successfully/unsuccessfully
+        //checking whether or not register was processed successfully/unsuccessfully
         switch($response['code']){
             case 200:
-                redirect(get_url("login.php"));
+                redirect(get_url("home.php"));
                 break;
             case 409:
                 echo '<script language="javascript">';
@@ -103,8 +116,4 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         }
 
 }
-?>
-
-<?php
-include('footer.php');
 ?>
