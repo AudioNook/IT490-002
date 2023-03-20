@@ -24,7 +24,7 @@ function validate_jwt() {
 }
 
 function isValidUsername(username){
-  const reUser = new RegExp('^[a-z0-9_-]{3,16}$');
+  const reUser = new RegExp('^[a-z0-9_-]{3,30}$');
   return reUser.test(username);
 }
 

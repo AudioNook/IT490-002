@@ -37,7 +37,7 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
     $email = $_POST['email'];
     $password = $_POST['password'];
     $confirm = $_POST['confirm'];
-    $patternName = '/^[a-z0-9_-]{3,16}$/';
+    $patternName = '/^[a-z0-9_-]{3,30}$/';
     $patternPassword = '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/';
 
     // sanitize email here
