@@ -1,7 +1,9 @@
 <?php
    /* This page will host the search if a user is signed in. */
    require(__DIR__ . "/../partials/nav.php");
+   logged_in(true);
    ?>
+   
 <!DOCTYPE html>
 <html lang="en">
    <head>
@@ -17,16 +19,13 @@
       <link href="css/styles.css" rel="stylesheet" />
    </head>
    <body>
-      <!-- Navigation-->
-      <!-- Header-->
-      <header class="bg-dark py-5">
-         <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-               <h1 class="display-4 fw-bolder">AudioNook Product Page</h1>
-               <p class="lead fw-normal text-white-50 mb-0">Discover music.</p>
-            </div>
-         </div>
-      </header>
+   <div class="card bg-light">
+   <div class="card-body text-center">
+      <img src="https://cdn.discordapp.com/attachments/1065331325546020967/1086880328053948527/AUDIONOOK_blk.png" alt="AN logo" class="img-fluid mx-auto d-block" style="max-width: 20%; height: auto;">
+   </div>
+</div>
+
+</header>
       <!-- Header-->
       <!-- Search-->
       <div class="container">
@@ -60,7 +59,8 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
                      </div>
                   </div>
                </div>
@@ -79,7 +79,8 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
                      </div>
                   </div>
                </div>
@@ -98,7 +99,8 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
                      </div>
                   </div>
                </div>
@@ -117,19 +119,22 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
                      </div>
                   </div>
                </div>
             </div>
          </div>
          <style>
-            .btn-outline-dark {
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-            }
-         </style>
+   .btn-cart {
+      background-color: green;
+   }
+   
+   .btn-productDetails{
+      background-color: orange;
+   }
+</style>
       </section>
       <!-- Bootstrap core JS-->
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

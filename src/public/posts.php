@@ -6,7 +6,7 @@ $topic_id= $_GET["id"];
 
 if (!isset($_GET["id"])|| is_null($topic_id) > 0 || $topic_id < 0) {
     error_log("no posts!");
-    redirect(get_url("forum.php"));
+    redirect(get_url("forums.php"));
 }
 
 

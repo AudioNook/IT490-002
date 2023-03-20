@@ -1,12 +1,11 @@
 <?php
    require(__DIR__ . "/../partials/nav.php");
-   
    // Check if user is logged in
-   
    logged_in(true);
-   
-   // User is logged in, show the forum page
+   // If user is logged in, show the forum page
    ?>
+
+
 <html>
    <head>
       <script>
@@ -77,7 +76,8 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Remove from collection</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark btn-rate mt-auto" href="#">Rate</a></div>
                      </div>
                   </div>
                </div>
@@ -94,7 +94,8 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-rate mt-auto" href="#">Rate</a></div>
                      </div>
                   </div>
                </div>
@@ -111,7 +112,8 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-rate mt-auto" href="#">Rate</a></div>
                      </div>
                   </div>
                </div>
@@ -128,17 +130,20 @@
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-rate mt-auto" href="#">Rate</a></div>
                      </div>
                   </div>
                </div>
 
 <style>
-    .btn-outline-dark {
-        color: #fff;
-        background-color: #dc3545;
-        border-color: #dc3545;
-    }
+   .btn-remove {
+      background-color: red;
+   }
+   
+   .btn-rate {
+      background-color: yellow;
+   }
 </style>
                
       </section>
@@ -147,7 +152,6 @@
       <!-- Core theme JS-->
       <script src="js/scripts.js"></script>
    </body>
-
 
 <?php
 include('footer.php');

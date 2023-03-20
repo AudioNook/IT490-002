@@ -36,3 +36,25 @@ function get_user_id(){
     }
     return $user_id;
 }
+
+function get_credentials($user_id,$rbMQc){
+    $user_cred = array();
+    $user_cred['type'] = 'user_cred';
+    $user_cred['user_id'] = (int)$user_id;
+
+    $response = json_decode($rbMQc->send_request('user_cred'), true);
+
+    switch ($response['code']) {
+        case 200:
+            return $response;
+        case 401:
+            $error_msg = 'Unauthorized: ' . $response['message'];
+            error_log($error_msg);
+            throw new Exception($error_msg);
+        default:
+            $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+            error_log($error_msg);
+            throw new Exception($error_msg);
+    }
+
+}

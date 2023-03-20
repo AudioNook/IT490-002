@@ -1,5 +1,5 @@
 /*
-CREATE TABLE IF NOT EXISTS `Ratings`(
+CREATE TABLE IF NOT EXISTS `Reviews`(
     `id` int AUTO_INCREMENT PRIMARY KEY,
     `product_id` int,
     `user_id` int,

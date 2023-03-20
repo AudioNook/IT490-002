@@ -5,7 +5,7 @@ $post_id = $_GET["id"];
 
 if (!isset($_GET["id"]) || is_null($post_id) > 0 || $post_id < 0) {
     error_log("Empty discussion!");
-    redirect(get_url("forum.php"));
+    redirect(get_url("forums.php"));
 }
 // Fetch and display discussion
 $msg = "Sending discussion topic request";

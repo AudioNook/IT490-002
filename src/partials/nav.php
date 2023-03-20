@@ -1,6 +1,6 @@
 <?php
    require_once(__DIR__ . "/../lib/functions.php");
-   check_jwt($rbMQc);
+   //check_jwt($rbMQc);
    $is_logged_in = false;
    if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current page is not login.php
      $is_logged_in = logged_in();
@@ -33,13 +33,17 @@
          <?php if ($is_logged_in) : ?>
          <a class="navbar-brand" href="#">AudioNook</a>
          <li class="nav-item">
-            <a class="nav-link" href="<?php echo get_url('home.php'); ?>">Home</a>
+            <a class="nav-link" href="<?php echo get_url('marketplace.php'); ?>">Marketplace</a>
          </li>
          <li class="nav-item">
             <a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a>
          </li>
          <li class="nav-item">
-            <a class="nav-link" href="<?php echo get_url('forum.php'); ?>">Forum
+            <a class="nav-link" href="<?php echo get_url('forums.php'); ?>">Forum
+            <a>
+            </li>
+         <li class="nav-item">
+            <a class="nav-link" href="<?php echo get_url('review.php'); ?>">Review
             <a>
          </li>
          <li class="nav-item">

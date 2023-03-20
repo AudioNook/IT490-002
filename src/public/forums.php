@@ -1,6 +1,7 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
 
+logged_in(true);
 
 $topics_req = array();
 $topics_req['type'] = 'topics';
@@ -22,6 +23,8 @@ if ($response['type'] == 'topics') {
       echo ($response['message']);
   }
 }
+//check_jwt($rbMQc);
+
 ?>
 <html>
 
@@ -29,7 +32,7 @@ if ($response['type'] == 'topics') {
   <script>
     //validateJWT();
   </script>
-  <title>AudioNook Forums</title>
+  <title>Forums</title>
 </head>
 <div class="container-fluid">
 
@@ -58,7 +61,7 @@ if ($response['type'] == 'topics') {
       <div class="card m-3">
         <h5 class="card-header">Unable to Load Topics!</h5>
         <div class="card-body">
-          <p class="card-text">Try again next semester</p>
+          <p class="card-text">Try again next semester.</p>
         </div>
       </div>
     </div>
