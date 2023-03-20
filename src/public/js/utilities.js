@@ -24,12 +24,12 @@ function validate_jwt() {
 }
 
 function isValidUsername(username){
-  const reUser = new RegExp("^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$");
+  const reUser = new RegExp('^[a-z0-9_-]{3,16}$');
   return reUser.test(username);
 }
 
 function isValidPassword(password){
-  const rePass = new RegExp("^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$");
+  const rePass = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$');
   return rePass.test(password);
 }
 
@@ -51,16 +51,20 @@ function validate_register(form){
     return false;
   }
 
+
   if(!isValidUsername(username)){
       isValid = false;
-      display_msg("Invalid Username: \n Minimum five characters, at least one letter and one number.", "warning");
+      display_msg("Invalid Username: \n Minimum four characters, at least one letter and one number.", "warning");
       
-  }
+   }
   
-  if (confirm == password){
-    if(!isValidPassword(password)){
+   if (confirm == password){
+     if(!isValidPassword(password)){
       isValid = false;
       display_msg("Invalid Password: \n Minimum eight characters, at least one letter, one number and one special character", "warning");
+      }
+      else{
+        display_msg("Passwords do not match");
       }
     }
 
@@ -71,9 +75,6 @@ function validate_register(form){
 return isValid;
 
 }
-
-
-
 function validate_login(form){
   let isValid = true;
   let username = form.username.value;
