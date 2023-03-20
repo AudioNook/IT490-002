@@ -114,5 +114,28 @@ function db_register($email, $username, $password)
             ];
         }
     }
+    function db_credentials($user_id){
+        $table_name = 'Users';
+        $query = "SELECT username, email FROM $table_name WHERE id = :uid";
+        $params = [':uid' => $user_id];
+        $user = executeQuery($query, $params);
+        if ($user !== false) {
+            return [
+                'type' => 'user_cred',
+                'code' => 200,
+                'status' => 'success',
+                'username' => $user['username'],
+                'email' => $user['email'],
+                'message' => 'Sucessfully returning usernam and email',
+            ];
+        } else {
+            return [
+                'type' => 'user_cred',
+                'code' => 500,
+                'status' => 'error',
+                'message' => 'Unable to return username and email',
+            ];
+        }
+    }
 }
 
