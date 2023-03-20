@@ -41,6 +41,10 @@
          <li class="nav-item">
             <a class="nav-link" href="<?php echo get_url('forum.php'); ?>">Forum
             <a>
+            </li>
+         <li class="nav-item">
+            <a class="nav-link" href="<?php echo get_url('review.php'); ?>">Review
+            <a>
          </li>
          <li class="nav-item">
          <a class="nav-link" href="<?php echo get_url('logout.php'); ?>">Logout</a>
