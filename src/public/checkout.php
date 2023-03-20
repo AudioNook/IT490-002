@@ -291,6 +291,7 @@ require(__DIR__ . "/../partials/nav.php");
           });
         }, false);
       })();
+      
     </script>
   </body>
 </html>

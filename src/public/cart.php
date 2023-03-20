@@ -1,9 +1,19 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
-?>
 
+
+$action = $_POST("action");
+$cart =array(
+  'product_id' == 1,
+  'product_name'=='vinyl',
+  'price' == 100,
+  'quantity' == 1,
+  'subtotal' == 200
+)
+
+?>
 <section class="h-100" style="background-color: #eee;">
-  <div class="container h-100 py-5">
+<div class="container h-100 py-5">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-10">
 
@@ -18,6 +28,7 @@ require(__DIR__ . "/../partials/nav.php");
               
         
         <div class="card rounded-3 mb-4">
+          <?php foreach $cart as $item:?>
           <div class="card-body p-4">
             <div class="row d-flex justify-content-between align-items-center">
               <div class="col-md-2 col-lg-2 col-xl-2">
@@ -51,6 +62,7 @@ require(__DIR__ . "/../partials/nav.php");
               </div>
             </div>
           </div>
+          <?php endforeach;?>
         </div>
 
         <div class="card mb-4">
@@ -67,6 +79,7 @@ require(__DIR__ . "/../partials/nav.php");
           <div class="card-body">
           <button type="button" class="btn btn-dark" onclick="window.location.href='checkout.php'">Continue to Check Out</button>
           </div>
+          xx
         </div>
 
       </div>
