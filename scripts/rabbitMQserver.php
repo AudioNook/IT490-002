@@ -15,22 +15,26 @@ function requestProcessor($request)
         return "ERROR: unsupported message type";
     }
 
-        switch ($request['type']) {
-            // Handling User Sessions
+    switch ($request['type']) {
+        // Handling User Sessions
         case "login":
-            $response = handle_login($request["username"], $request["password"]);
+            $response = db_login($request["username"], $request["password"]);
             break;
         case "register":
-            $response = handle_register($request["email"], $request["username"], $request["password"]);
+            $response = db_register($request["email"], $request["username"], $request["password"]);
             break;
         case "validate_jwt":
             $response = validate_jWT($request['token']);
             break;
         case "logout":
-            $response = handle_logout($request['token']);
+            $response = db_logout($request['token']);
             break;
-            // Handling forums
-        case "topics" || "posts" || "create_post" || "discussion" || "reply":
+        // Handling forums
+        case "topics":
+        case "posts":
+        case "create_post":
+        case "discussion":
+        case "reply":
             $response = handle_forum($request);
             break;
         default:
