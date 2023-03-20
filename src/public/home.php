@@ -1,24 +1,141 @@
 <?php
-require(__DIR__ . "/../partials/nav.php");
-?>
+   /* This page will host the search if a user is signed in. */
+   require(__DIR__ . "/../partials/nav.php");
+   ?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Home</title>
-</head>
-<body>
-  
-<div class="container-fluid justify-center text-center">    
-  <div class="row content">
-    <div class="col-sm-8 text-left"> 
-      <h1>Welcome</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-      <hr>
-      <h3>Test</h3>
-      <p>Lorem ipsum...</p>
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
+   <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+      <!-- Favicon-->
+      <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+      <!-- Bootstrap icons-->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+      <!-- Core theme CSS (includes Bootstrap)-->
+      <link href="css/styles.css" rel="stylesheet" />
+   </head>
+   <body>
+      <!-- Navigation-->
+      <!-- Header-->
+      <header class="bg-dark py-5">
+         <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+               <h1 class="display-4 fw-bolder">AudioNook Product Page</h1>
+               <p class="lead fw-normal text-white-50 mb-0">Discover music.</p>
+            </div>
+         </div>
+      </header>
+      <!-- Header-->
+      <!-- Search-->
+      <div class="container">
+         <div class="row height d-flex justify-content-center align-items-center justify-content-md-center">
+            <div class="col-md-4">
+               <div class="search">
+                  <i class="fa fa-search"></i>
+                  <input type="text" class="form-control" placeholder="Search...">
+                  <button class="btn btn-primary ml-auto" style="background-color: #28a745; border-color: #28a745;">Search</button>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- Search-->
+      <!-- Section-->
+      <section class="py-5">
+         <div class="container px-4 px-lg-5 mt-5">
+            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+               <div class="col mb-5">
+                  <div class="card h-100">
+                     <!-- Product image-->
+                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                     <!-- Product details-->
+                     <div class="card-body p-4">
+                        <div class="text-center">
+                           <!-- Product name-->
+                           <h5 class="fw-bolder">Product</h5>
+                           <!-- Product price-->
+                           $$$
+                        </div>
+                     </div>
+                     <!-- Product actions-->
+                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col mb-5">
+                  <div class="card h-100">
+                     <!-- Product image-->
+                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                     <!-- Product details-->
+                     <div class="card-body p-4">
+                        <div class="text-center">
+                           <!-- Product name-->
+                           <h5 class="fw-bolder">Product</h5>
+                           <!-- Product price-->
+                           $$$
+                        </div>
+                     </div>
+                     <!-- Product actions-->
+                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col mb-5">
+                  <div class="card h-100">
+                     <!-- Product image-->
+                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                     <!-- Product details-->
+                     <div class="card-body p-4">
+                        <div class="text-center">
+                           <!-- Product name-->
+                           <h5 class="fw-bolder">Product</h5>
+                           <!-- Product price-->
+                           $$$
+                        </div>
+                     </div>
+                     <!-- Product actions-->
+                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                     </div>
+                  </div>
+               </div>
+               <div class="col mb-5">
+                  <div class="card h-100">
+                     <!-- Product image-->
+                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                     <!-- Product details-->
+                     <div class="card-body p-4">
+                        <div class="text-center">
+                           <!-- Product name-->
+                           <h5 class="fw-bolder">Product</h5>
+                           <!-- Product price-->
+                           $$$
+                        </div>
+                     </div>
+                     <!-- Product actions-->
+                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <style>
+            .btn-outline-dark {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+            }
+         </style>
+      </section>
+      <!-- Bootstrap core JS-->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      <!-- Core theme JS-->
+      <script src="js/scripts.js"></script>
+   </body>
+   <?php
+      include('footer.php');
+      ?>

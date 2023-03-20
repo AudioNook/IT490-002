@@ -4,7 +4,7 @@ require(__DIR__ . "/../partials/nav.php");
 ?>
 <div id="alert_msg"></div>
 <div class="container-fluid">
-    <h1>Login</h1>
+    <h1>Log in to your AudioNook account!</h1>
     <!-- <form method="POST"> -->
     <form onsubmit="return validate_login(this)" method="POST">
         <div class="mb-3">
@@ -15,7 +15,7 @@ require(__DIR__ . "/../partials/nav.php");
             <label class="form-label" for="pw">Password</label>
             <input class="form-control" type="password" id="password" name="password"/>
         </div>
-        <input type="submit" name="submit" class="mt-3 btn btn-primary" value="Login" />
+        <input type="submit" name="submit" class="mt-3 btn btn-primary" value="Log in" />
     </form>
 </div>
 
@@ -71,7 +71,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])){
             $token = $response['token'];
             $expiry = $response['expiry'];
             setcookie("jwt", $token, $expiry, "/");
-            redirect(get_url("profile.php"));
+            redirect(get_url("home.php"));
             break;
         case 401:
             echo '<script language="javascript">';
@@ -91,4 +91,8 @@ if (isset($_POST["username"]) && isset($_POST["password"])){
 
     }
 
+?>
+
+<?php
+include('footer.php');
 ?>

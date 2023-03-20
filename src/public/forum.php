@@ -65,3 +65,7 @@ if ($response['type'] == 'topics') {
   <?php endif; ?>
 </div> 
 </html>
+
+<?php
+include('footer.php');
+?>
