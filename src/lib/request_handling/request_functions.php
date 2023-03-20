@@ -16,16 +16,24 @@ function db_login($username, $password)
         unset($user["password"]);
 
         if (password_verify($password, $hash)) {
-            $db = getDB();
-            $jwt = generate_jwt($db, $user);
-            return [
-                'type' => 'login',
-                'code' => 200,
-                'status' => 'success',
-                'message' => 'Valid login credentials.',
-                'token' => $jwt['token'],
-                'expiry' => $jwt['expiry']
-            ];
+            $jwt = generate_jwt($user);
+            if ($jwt['status'] !=='error') {
+                return [
+                    'type' => 'login',
+                    'code' => 200,
+                    'status' => 'success',
+                    'message' => 'Valid login credentials.',
+                    'token' => $jwt['token'],
+                    'expiry' => $jwt['expiry']
+                ];
+            } else {
+                return [
+                    'type' => 'login',
+                    'code' => 401,
+                    'status' => 'error',
+                    'message' => 'Unable to generate User Session'
+                ];
+            }
         } else {
             return [
                 'type' => 'login',
@@ -66,29 +74,28 @@ function db_logout($jwt)
         ];
     }
 }
-function db_register($email,$username,$password){
+function db_register($email, $username, $password)
+{
     $db = getDB();
-    $table_name= 'Users';
-    $query= "INSERT INTO $table_name (email, username, password) VALUES(:email, :username, :password)";
+    $table_name = 'Users';
+    $query = "INSERT INTO $table_name (email, username, password) VALUES(:email, :username, :password)";
     $stmt = $db->prepare($query);
 
-        try{ // maps username to username and password to password
-            $stmt->execute([":email" => $email, ":username" => $username, ":password" => $password]);
-            //echo "User registered: $username";
-            return [
-                'type' => 'register',
-                'code' => 200,
-                'status' => 'success',
-                'message' => 'Registered user: ' .  $username
-            ];        
-            
-        }
-        catch (PDOException $e){
-            //$e = json_decode($e,true);
-            // checks for error num for duplicate
-            if ($e->getCode() === "23000"){ 
-                preg_match("/Users.(\w+)/", $e->getMessage(), $matches);
-                if (isset($matches[1])) { // if duplicate error look for username
+    try { // maps username to username and password to password
+        $stmt->execute([":email" => $email, ":username" => $username, ":password" => $password]);
+        //echo "User registered: $username";
+        return [
+            'type' => 'register',
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Registered user: ' .  $username
+        ];
+    } catch (PDOException $e) {
+        //$e = json_decode($e,true);
+        // checks for error num for duplicate
+        if ($e->getCode() === "23000") {
+            preg_match("/Users.(\w+)/", $e->getMessage(), $matches);
+            if (isset($matches[1])) { // if duplicate error look for username
                 echo $matches[1]  . " is already in use!";
                 return [
                     'type' => 'register',
@@ -96,16 +103,16 @@ function db_register($email,$username,$password){
                     'status' => 'error',
                     'message' => $matches[1]  . " is already in use!"
                 ];
-                }
-            } else { 
-                $error_message = var_export($e, true);
-                return [
-                    'type' => 'register',
-                    'code' => 500,
-                    'status' => 'error',
-                    'message' => $error_message,
-                ];
             }
-            
+        } else {
+            $error_message = var_export($e, true);
+            return [
+                'type' => 'register',
+                'code' => 500,
+                'status' => 'error',
+                'message' => $error_message,
+            ];
         }
+    }
 }
+
