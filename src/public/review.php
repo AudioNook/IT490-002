@@ -40,35 +40,23 @@ if ($response['type'] == 'reviews') {
   <?php if (!empty($reviews)) : ?>
     <?php foreach ($reviews as $review) : ?>
       <div class="container-fluid">
-        <div>
-          <div class="card m-3">
-            <h5 class="card-header"> Product ID: <?php echo $review['product_id']; ?></h5>
-            <div class="card-body">
-               <p class="card-text">Comment: <?php echo $review['comment']; ?></p>
-            </div>
-            <div class="card-body">
-              <p class="card-text">Created: <?php echo $review['created']; ?></p>
-              </div>
-              </div>
-              
-      <!--
-               </div>
-            <p class="card-text">Product Name: 
-               <?//php echo $review['product_name']; ?></p>
-          </div>
-    -->
-        </div>
+  <div>
+    <div class="card m-3">
+      <div class="card-header d-flex justify-content-between">
+        <div>Product ID: <?php echo $review['product_id']; ?></div>
+        <div>Product Name: <?php echo $review['product_name']; ?></div>
       </div>
-    <?php endforeach; ?>
-  <?php else : ?>
-    <div>
-      <div class="card m-3">
-        <h5 class="card-header">Unable to Load Reviews!</h5>
-        <div class="card-body">
-          <p class="card-text">Try again next semester.</p>
-        </div>
+      <div class="card-body">
+        <p class="card-text">Comment: <?php echo $review['comment']; ?></p>
+      </div>
+      <div class="card-body">
+        <p class="card-text">Created: <?php echo $review['created']; ?></p>
       </div>
     </div>
+  </div>
+</div>
+    <?php endforeach; ?>
+  <?php else : ?>
   <?php endif; ?>
 </div> 
 </html>
