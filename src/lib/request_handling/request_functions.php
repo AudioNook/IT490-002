@@ -126,7 +126,7 @@ function db_register($email, $username, $password)
                 'status' => 'success',
                 'username' => $user['username'],
                 'email' => $user['email'],
-                'message' => 'Sucessfully returning usernam and email',
+                'message' => 'Sucessfully returning username and email',
             ];
         } else {
             return [

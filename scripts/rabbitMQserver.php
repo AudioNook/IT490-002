@@ -29,6 +29,10 @@ function requestProcessor($request)
         case "logout":
             $response = db_logout($request['token']);
             break;
+        // Handling reviews
+        case "reviews":
+            $response = handle_review($request);
+            break;
         // Handling forums
         case "topics":
         case "posts":
