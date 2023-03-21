@@ -3,6 +3,7 @@
 // my functions
 require(__DIR__ . "/../src/lib/functions.php");
 
+
 function logError($e, $fname){
     $file = fopen( $fname . '.txt', "a" );
     foreach ($e as $errors)
@@ -10,6 +11,7 @@ function logError($e, $fname){
       fwrite($file, $errors);
     }
 }
+
 
 
 function requestProcessor($error)
@@ -27,7 +29,7 @@ function requestProcessor($error)
              logError($error, __DIR__ . "/../data/logs/frontendErrors");
              break;
                        
-        case "db":
+        case "database":
             //uses logError function to write the errors to the file dbErrors
              logError($error, __DIR__ . "/../data/logs/dbErrors");
              break;
@@ -35,6 +37,15 @@ function requestProcessor($error)
             //uses logError function to write the errors to the file apiErrors    
              logError($error, __DIR__ . "/../data/logs/apiErrors");
              break;
+        case 'rbmq':
+            //uses logError function to write the errors to the file apiErrors    
+            logError($error, __DIR__ . "/../data/logs/rbmqErrors");
+            break;
+        case 'login':
+            //uses logError function to write the errors to the file apiErrors    
+            logError($error, __DIR__ . "/../data/logs/loginErrors");
+            break;
+
         default:
             //uses logError function to write any errors that do not fall under the above types to a 
             // miscErrors file.    
@@ -43,10 +54,11 @@ function requestProcessor($error)
     }
     return array("returnCode" => '0', 'response'=>"Server received request and processed");
 }
-$rbMQLS = get_logServer("luandaLogServer");
+$rbMQLS = get_logServer("RBMQLogServer");
 
 echo "Log Server Starting...".PHP_EOL;
 $rbMQLs->process_requests('requestProcessor');
 echo "testRabbitMQServer END".PHP_EOL;
 exit();
 ?>
+

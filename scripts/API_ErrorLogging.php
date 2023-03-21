@@ -12,6 +12,7 @@ function logError($e, $fname){
 }
 
 
+
 function requestProcessor($error)
 {
     echo "received request".PHP_EOL;
@@ -27,7 +28,7 @@ function requestProcessor($error)
              logError($error, __DIR__ . "/../data/logs/frontendErrors");
              break;
                        
-        case "db":
+        case "database":
             //uses logError function to write the errors to the file dbErrors
              logError($error, __DIR__ . "/../data/logs/dbErrors");
              break;
@@ -35,6 +36,15 @@ function requestProcessor($error)
             //uses logError function to write the errors to the file apiErrors    
              logError($error, __DIR__ . "/../data/logs/apiErrors");
              break;
+        case 'rbmq':
+            //uses logError function to write the errors to the file apiErrors    
+            logError($error, __DIR__ . "/../data/logs/rbmqErrors");
+            break;
+        case 'login':
+            //uses logError function to write the errors to the file apiErrors    
+            logError($error, __DIR__ . "/../data/logs/loginErrors");
+            break;
+
         default:
             //uses logError function to write any errors that do not fall under the above types to a 
             // miscErrors file.    
@@ -43,10 +53,10 @@ function requestProcessor($error)
     }
     return array("returnCode" => '0', 'response'=>"Server received request and processed");
 }
-$rbMQLS = get_logServer("jaylinLogServer");
+$rbMQLS = get_logServer("APILogServer");
 
 echo "Log Server Starting...".PHP_EOL;
-$rbMQLs->process_requests('requestProcessor');
+$rbMQLS->process_requests('requestProcessor');
 echo "testRabbitMQServer END".PHP_EOL;
 exit();
 ?>
