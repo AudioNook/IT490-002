@@ -2,7 +2,7 @@
 require(__DIR__ . "/../partials/nav.php");
 
 
-$action = $_POST["action"];
+
 $cart = array(
     array(
         'product_id' => 1,
@@ -25,8 +25,10 @@ $cart = array(
         'quantity' => 1,
         'subtotal' => 15.99
     )
+    
 );
-
+$total = 0;
+$subtotal = 0;
 
 
 ?>
@@ -50,9 +52,6 @@ $cart = array(
                         <div class="card-body p-4">
                         <?php foreach ($cart as $item): ?>
                           <div class="card">
-
-
-
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="col-md-2 col-lg-2 col-xl-2">
                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
@@ -61,11 +60,11 @@ $cart = array(
                                 <div class="col-md-3 col-lg-3 col-xl-3">
                                     <!-- Replace Pname with actual product name-->
                                     <p class="lead fw-normal mb-2">PName:
-                                        <?php htmlspecialchars($item["name"]); ?>
+                                        <?php echo htmlspecialchars($item["name"]); ?>
                                     </p>
                                     <!-- end product name -->
                                     <span class="text-muted">Product ID:</span>
-                                    <?php htmlspecialchars($item["product_id"]); ?>
+                                    <?php echo htmlspecialchars($item["product_id"]); ?>
                                     </p>
                                 </div>
                                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -84,7 +83,7 @@ $cart = array(
                                 </div>
                                 <!-- display price -->
                                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                <p><span class="text-muted">Price: </span><?php htmlspecialchars($item["price"]); ?> 
+                                <p><span class="text-muted">Price: </span><?php echo htmlspecialchars($item["price"]); ?> 
                                 </div>
                                 <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                     <a href="#!" class="btn btn-danger"></i></a>
@@ -123,7 +122,7 @@ $cart = array(
                             <?php $subtotal += (int) htmlspecialchars($item["price"], 0, false); ?>
                           <!-- display subtotal amount -->
                             <h5 class="mb-0" type='text' value='subtotal' id='subtotal'>
-                                <?php htmlspecialchars($item["subtotal"]); ?>
+                                <?php echo htmlspecialchars($item["subtotal"]); ?>
                             </h5>
 
                         </div>
