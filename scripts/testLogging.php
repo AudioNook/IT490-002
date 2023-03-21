@@ -4,15 +4,15 @@
 require(__DIR__ . "/../src/lib/functions.php");
     $rbMQLc = get_rbMQLc();
 
-    $msg = "Sending Error Logs";
-    
+    $msg = "ERROR MIDTERM LATE";
+    $type = 'database';
     $errorFileName =" ERROR IN FILE ". __FILE__. " :\n";
     $line = "ERROR ON LINE: ".__LINE__." \n";
     $error = array();
-    $error['type'] = 'db';
+    $error['type'] = $type;
+    $error['message'] = $msg;
     $error['file'] = $errorFileName;
     $error['line'] = $line;
-    $error['error'] = "ERROR ERROR ERROR\n" ;//PLACEHOLDER FOR ERROR
     $rbMQLc->publish($error);
 
 ?>

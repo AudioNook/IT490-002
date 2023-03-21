@@ -22,9 +22,9 @@ function get_logServer($logServer){
 
     if(!isset($rbMQLs)){
         try{
-            global $rabbit_ini2;
+            global $rabbit_ini;
             require_once(__DIR__ . "/../config.php");
-            $rbMQLs = new rabbitMQServer($rabbit_ini2,$logServer);
+            $rbMQLs = new rabbitMQServer($rabbit_ini,$logServer);
         }
         catch(Exception $e){
             error_log("get_rbMQC() error: " . var_export($e,true));
