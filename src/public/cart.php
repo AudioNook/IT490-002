@@ -46,9 +46,12 @@ $cart = array(
 
                     <!-- start for each -->
                     <?php $total = 0; ?>
-                    <?php foreach ($cart as $item): ?>
 
                         <div class="card-body p-4">
+                        <?php foreach ($cart as $item): ?>
+                          <div class="card">
+
+
 
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="col-md-2 col-lg-2 col-xl-2">
@@ -56,7 +59,7 @@ $cart = array(
                                         class="img-fluid rounded-3" alt="Cotton T-shirt">
                                 </div>
                                 <div class="col-md-3 col-lg-3 col-xl-3">
-                                    <!-- display product name -->
+                                    <!-- Replace Pname with actual product name-->
                                     <p class="lead fw-normal mb-2">PName:
                                         <?php htmlspecialchars($item["name"]); ?>
                                     </p>
@@ -87,6 +90,7 @@ $cart = array(
                                     <a href="#!" class="btn btn-danger"></i></a>
                                 </div>
                             </div>
+                        </div>
                         <?php endforeach; ?>
 
                     </div>
