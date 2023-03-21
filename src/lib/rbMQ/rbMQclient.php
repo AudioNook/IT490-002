@@ -11,9 +11,9 @@ function get_rbMQLc(){
     if(!isset($rbMQLc)){
         try{
             require_once(__DIR__ . "/../config.php");
-            global $rabbit_ini2;
-            global $rabbit_johnLogServer;
-            $rbMQLc = new rabbitMQClient($rabbit_ini2,$rabbit_johnLogServer);
+            global $rabbit_ini;
+            global $rabbit_FELS;
+            $rbMQLc = new rabbitMQClient($rabbit_ini,$rabbit_FELS);
         }
         catch(Exception $e){
             error_log("get_rbMQC() error: " . var_export($e,true));
