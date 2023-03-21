@@ -23,6 +23,27 @@ function get_rbMQLc(){
 
     return $rbMQLc;
 }
+global $rbMQCJWT;
+
+
+
+    if(!isset($rbMQCJWT)){
+
+        try{
+
+            $rbMQCJWT = new rabbitMQClient($rabbit_ini,$jwtServer);
+
+        }
+
+        catch(Exception $e){
+
+            error_log("get_rbMQC() error: " . var_export($e,true));
+
+			$rbMQCJWT = null;
+
+        }
+
+    }
 if (!isset($rbMQc) || $rbMQc === null) {
     $rbMQc = new rabbitMQClient($rabbit_ini,$rabbit_server);
 }

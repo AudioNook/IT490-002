@@ -6,6 +6,7 @@ $rabbit_FELS = 'FELogServer';
 $rabbit_APILS = 'APILogServer';
 $rabbit_DBLS = 'DBLogServer';
 $rabbit_RBMQLS = 'RBMQLogServer';
+$jwtServer = 'jwtServer';
 
 
 require(__DIR__ . "/path.inc");
