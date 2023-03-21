@@ -37,7 +37,11 @@ function requestProcessor($error)
              break;
         case 'rbmq':
             //uses logError function to write the errors to the file apiErrors    
-            logError($error, __DIR__ . "/../data/logs/apiErrors");
+            logError($error, __DIR__ . "/../data/logs/rbmqErrors");
+            break;
+        case 'login':
+            //uses logError function to write the errors to the file apiErrors    
+            logError($error, __DIR__ . "/../data/logs/loginErrors");
             break;
 
         default:
