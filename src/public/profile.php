@@ -1,10 +1,27 @@
-<?php
-   require(__DIR__ . "/../partials/nav.php");
-   // Check if user is logged in
-   logged_in(true);
-   // If user is logged in, show the forum page
-   ?>
+<?php require(__DIR__ . "/../partials/nav.php"); 
+logged_in(true);
 
+$email = 'email not found';
+$username = 'username not found';
+
+
+$user_id = get_user_id();
+if(!empty($user_id) && !is_null($user_id)){
+   $creds = get_credentials($user_id,$rbMQc);
+   $email = $creds['email'];
+   $username = $creds['username'];
+   
+}
+
+
+?>
+
+<html>
+<head>
+  <script>
+    //validateJWT();
+  </script>
+  <title>UserCreds</title>
 
 <html>
    <head>
@@ -31,7 +48,7 @@
                            <p class="mb-0">Username</p>
                         </div>
                         <div class="col-sm-9">
-                           <p class="text-muted mb-0">$username</p>
+                           <p class="text-muted mb-0"><?php echo htmlspecialchars($username); ?></p>
                         </div>
                      </div>
                      <hr>
@@ -40,7 +57,7 @@
                            <p class="mb-0">Email</p>
                         </div>
                         <div class="col-sm-9">
-                           <p class="text-muted mb-0">$email</p>
+                           <p class="text-muted mb-0"><?php echo htmlspecialchars($email); ?></p>
                         </div>
                      </div>
                   </div>

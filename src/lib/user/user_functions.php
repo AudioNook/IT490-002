@@ -40,9 +40,10 @@ function get_user_id(){
 function get_credentials($user_id,$rbMQc){
     $user_cred = array();
     $user_cred['type'] = 'user_cred';
+    $user_cred['message'] = "Sending user_creds request";
     $user_cred['user_id'] = (int)$user_id;
 
-    $response = json_decode($rbMQc->send_request('user_cred'), true);
+    $response = json_decode($rbMQc->send_request($user_cred), true);
 
     switch ($response['code']) {
         case 200:
