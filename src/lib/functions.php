@@ -21,3 +21,6 @@ require(__DIR__ . "/jwt_handling/jwt_functions.php");
 
 // Forum Handling functions
 require(__DIR__ . "/forum_handling/forum_functions.php");
+
+// Forum Handling functions
+require(__DIR__ . "/review_handling/review_functions.php");
