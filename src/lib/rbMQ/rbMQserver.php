@@ -34,5 +34,39 @@ function get_logServer($logServer){
 
     return $rbMQLs;
 }
+function get_jwtServer(){
 
+    global $rbMQJWTS;
+
+
+
+    if(!isset($rbMQJWTS)){
+
+        try{
+
+            global $rabbit_ini;
+
+            global $jwtServer;
+
+            require_once(__DIR__ . "/../config.php");
+
+            $rbMQJWTS= new rabbitMQServer($rabbit_ini,$jwtServer);
+
+        }
+
+        catch(Exception $e){
+
+            error_log("get_rbMQC() error: " . var_export($e,true));
+
+			$rbMQJWTS = null;
+
+        }
+
+    }
+
+
+
+    return $rbMQJWTS;
+
+}
 ?>
