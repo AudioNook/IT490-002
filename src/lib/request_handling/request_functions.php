@@ -140,4 +140,42 @@ function db_credentials($user_id){
         ];
     }
 }
-
+function db_add_collect($user_id,$items){
+    $user_id = (int)htmlspecialchars($user_id);
+    $collection = 'Collection_Items';
+    $usr_collect = 'User_Collect_Items';
+    $collect_query = "INSERT INTO $collection (release_id, title, cover_image, format)VALUES(:rid, :title, :img, :format)";
+    $user_query = "INSERT INTO $usr_collect (user_id, collection_item_id)
+    VALUES (:uid, :cid)";
+    $r = false;
+    foreach($items as $item){
+        $params1 = [
+            ':rid'=> $item["release_id"],
+            ':title'=> $item["title"],
+            ':img'=>$item["cover_image"],
+            ':format'=>$item["format"]
+        ];
+        $lastInsertId = executeQuery($collect_query,$params1, true);
+        $collected_item_id = $lastInsertId;
+        $params2 = [
+            ":uid"=>"$user_id",
+            ":cid"=>"$collected_item_id",
+        ];
+        $r = executeQuery($user_query,$params2);
+    }
+    if($r != false){
+        return [
+        'type' => 'add_collect',
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Sucessfully added to collection',
+        ];
+    }else{
+        return [
+            'type' => 'add_collect',
+                'code' => 401,
+                'status' => 'error',
+                'message' => 'Error adding to collection',
+            ];
+    }
+}

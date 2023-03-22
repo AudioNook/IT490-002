@@ -7,7 +7,18 @@ if (!isset($page)) {
     error_log("Note to Dev: The page variable is undefined: danger");
     $page = 1;
 }
-//$total_pages = ceil($total / $per_page);
+$total_pages = ceil($total_items / $per_page);
+$visible_pages = 3; // Number of visible pages before and after the current page
+$start_page = $page - $visible_pages;
+$end_page = $page + $visible_pages;
+
+if ($start_page < 1) {
+    $start_page = 1;
+}
+
+if ($end_page > $total_pages) {
+    $end_page = $total_pages;
+}
 //updates or inserts page into query string while persisting anything already present
 function persistQueryString($page)
 {
@@ -21,7 +32,7 @@ function check_apply_disabled_prev($page)
 }
 function check_apply_active($page, $i)
 {
-    echo ($page - 1) == $i ? "active" : "";
+    echo ($page) == $i ? "active" : "";
 }
 function check_apply_disabled_next($page)
 {
@@ -32,16 +43,34 @@ function check_apply_disabled_next($page)
 
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
-        <li class="page-item <?php echo $page <= 1 ? 'disabled' : ''; ?>">
-            <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>" tabindex="-1">Previous</a>
+        <li class="page-item <?php echo check_apply_disabled_prev($page); ?>">
+            <a class="page-link" href="?<?php echo persistQueryString($page - 1); ?>" tabindex="-1">Previous</a>
         </li>
-        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-            <li class="page-item <?php echo $i == $page ? 'active' : ''; ?>">
-                <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"><?php echo $i; ?></a>
+        <?php if ($start_page > 1) : ?>
+            <li class="page-item">
+                <a class="page-link" href="?<?php echo persistQueryString(1); ?>">1</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+        <?php endif; ?>
+
+        <?php for ($i = $start_page; $i <= $end_page; $i++) : ?>
+            <li class="page-item <?php echo check_apply_active($page, $i); ?>">
+                <a class="page-link" href="?<?php echo persistQueryString($i); ?>"><?php echo $i; ?></a>
             </li>
         <?php endfor; ?>
-        <li class="page-item <?php echo $page >= $total_pages ? 'disabled' : ''; ?>">
-            <a class="page-link" href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>">Next</a>
+
+        <?php if ($end_page < $total_pages) : ?>
+            <li class="page-item disabled">
+                <span class="page-link">...</span>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?<?php echo persistQueryString($total_pages); ?>"><?php echo $total_pages; ?></a>
+            </li>
+        <?php endif; ?>
+        <li class="page-item <?php echo check_apply_disabled_next($page); ?>">
+            <a class="page-link" href="?<?php echo persistQueryString($page + 1); ?>">Next</a>
         </li>
     </ul>
 </nav>
