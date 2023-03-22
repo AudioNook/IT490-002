@@ -30,10 +30,28 @@
       }
     }
     var form = document.getElementById("confirm-collection-form");
+
+    // Remove any previous added items inputs
+    $(".added-items-input").remove();
+
+    // Add an input element for each item
+    $(".added-items .item").each(function() {
+      var itemId = $(this).data("item-id");
+      $("<input>").attr({
+        type: "hidden",
+        name: "items[]",
+        value: itemId,
+        class: "added-items-input"
+      }).appendTo(form);
+    });
+
     var data = new FormData(form);
-    var encoded = new FormData(form);
-    request.send(encoded);
+
+    // Encode the FormData to x-www-form-urlencoded format
+    var encodedData = new URLSearchParams(data).toString();
+    request.send(encodedData);
   }
+
 
   $(document).ready(function() {
     $('#confirm-collection-form').submit(function(e) {
@@ -42,28 +60,3 @@
     });
   });
 </script>
-<!--
-/*$(document).ready(function() {
-    $('#confirm-collection-form').submit(function(e) {
-      e.preventDefault();
-      $.ajax({
-        url: '',
-        method: 'POST',
-        data: $(this).serialize(),
-        success: function(response) {
-          // Check if the response indicates success
-          if (response.success) {
-            // Redirect user to confirmation page
-            window.location.href = 'confirmation.php';
-          } else {
-            // Display an error message
-            alert('Error processing collection: ' + response.error);
-          }
-        },
-        error: function(xhr, status, error) {
-          console.error(error);
-          alert('Error processing collection. Please try again later.');
-        }
-      });
-    });
-  });*/ -->

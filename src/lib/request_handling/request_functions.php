@@ -17,7 +17,7 @@ function db_login($username, $password)
 
         if (password_verify($password, $hash)) {
             $jwt = generate_jwt($user);
-            if ($jwt['status'] !=='error') {
+            if ($jwt['status'] !== 'error') {
                 return [
                     'type' => 'login',
                     'code' => 200,
@@ -114,9 +114,9 @@ function db_register($email, $username, $password)
             ];
         }
     }
-    
 }
-function db_credentials($user_id){
+function db_credentials($user_id)
+{
     $table_name = 'Users';
     $query = "SELECT username, email FROM $table_name WHERE id = :uid";
     $params = [':uid' => (int) $user_id];
@@ -140,42 +140,42 @@ function db_credentials($user_id){
         ];
     }
 }
-function db_add_collect($user_id,$items){
+function db_add_collect($user_id, $items)
+{
     $user_id = (int)htmlspecialchars($user_id);
     $collection = 'Collection_Items';
-    $usr_collect = 'User_Collect_Items';
+    $usr_collect = 'User_Collected_Items';
     $collect_query = "INSERT INTO $collection (release_id, title, cover_image, format)VALUES(:rid, :title, :img, :format)";
     $user_query = "INSERT INTO $usr_collect (user_id, collection_item_id)
     VALUES (:uid, :cid)";
-    $r = false;
-    foreach($items as $item){
+    foreach ($items as $item) {
         $params1 = [
-            ':rid'=> $item["release_id"],
-            ':title'=> $item["title"],
-            ':img'=>$item["cover_image"],
-            ':format'=>$item["format"]
+            ':rid' => (int) htmlspecialchars($item['release_id']),
+            ':title' => $item['title'],
+            ':img' => $item['cover_image'],
+            ':format' => $item['format']
         ];
-        $lastInsertId = executeQuery($collect_query,$params1, true);
+        $lastInsertId = executeQuery($collect_query, $params1, true);
         $collected_item_id = $lastInsertId;
         $params2 = [
-            ":uid"=>"$user_id",
-            ":cid"=>"$collected_item_id",
+            ':uid' => "$user_id",
+            ':cid' => "$collected_item_id",
         ];
-        $r = executeQuery($user_query,$params2);
+        $r = executeQuery($user_query, $params2);
     }
-    if($r != false){
+    if ($r !== false) {
         return [
-        'type' => 'add_collect',
+            'type' => 'add_collect',
             'code' => 200,
             'status' => 'success',
             'message' => 'Sucessfully added to collection',
         ];
-    }else{
+    } else {
         return [
             'type' => 'add_collect',
-                'code' => 401,
-                'status' => 'error',
-                'message' => 'Error adding to collection',
-            ];
+            'code' => 401,
+            'status' => 'error',
+            'message' => 'Error adding to collection',
+        ];
     }
 }
