@@ -4,7 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user_id = $_POST["user_id"] ?? null;
     $items = $_POST["items"] ?? [];
 
-    if ($user_id && count($items) > 0) {
+    if ($user_id && count($items) > 0){
         $add_collect = array();
         $add_collect['type'] = "add_collect";
         $add_collect['user_id'] = $user_id;
@@ -12,10 +12,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         global $rbMQc;
 
         $response = json_decode($rbMQc->send_request($add_collect), true);
-        switch ($response['code']) {
+        switch($response['code']) {
             case 200:
                 $response['success'] = true;
-                echo json_encode($response['message']);
                 break;
             case 401:
                 $response['success'] = false;
@@ -23,22 +22,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 error_log($response['message']);
                 break;
             default:
-                $response['success'] = false;
-                $response['message'] = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
-                error_log($response['message']);
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                $response['message'] = $error_msg;
                 break;
         }
-    } else {
-        $response['success'] = false;
-        $response['message'] = 'Invalid request';
     }
-} else {
-    $response['success'] = false;
-    $response['message'] = 'Invalid request method';
 }
-
-echo json_encode($response);
-exit(0);
+    echo json_encode($response);
+    exit(0);
     /*
     $items = array();
     $release_ids = $_POST['release_id'];
