@@ -9,9 +9,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $add_collect['type'] = "add_collect";
         $add_collect['user_id'] = $user_id;
         $add_collect['items'] = $items;
-        global $rbMQc;
+        global $rbMQCOL;
 
-        $response = json_decode($rbMQc->send_request($add_collect), true);
+        $response = json_decode($rbMQCOL->send_request($add_collect), true);
         switch($response['code']) {
             case 200:
                 $response['success'] = true;

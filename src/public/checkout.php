@@ -1,31 +1,5 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
-// maybe include checkoutFunction.php in partials
-
-
-$cart = array(
-    array(
-        'product_id' => 1,
-        'name' => 'Cassette',
-        'price' => 0,
-        'quantity' => 1,
-    ),
-    array(
-        'product_id' => 2,
-        'name' => 'CD',
-        'price' => 10.99,
-        'quantity' => 2,
-    ),
-    array(
-        'product_id' => 3,
-        'name' => 'Vinyl',
-        'price' => 15.99,
-        'quantity' => 1,
-    )
-    
-);
-// $total = 0;
-$subtotal = 0;
 ?>
 
 <!doctype html>
@@ -52,7 +26,7 @@ $subtotal = 0;
 
     <div class="container">
       <div class="py-5 text-center">
-        <h2>Checkout </h2>
+        <h2>Checkout form</h2>
       </div>
 
       <div class="row">
@@ -62,24 +36,30 @@ $subtotal = 0;
             <span class="badge badge-secondary badge-pill">3</span>
           </h4>
           <ul class="list-group mb-3">
-            <!-- maybe here -->
-            <?php foreach ($cart as $item): ?>
-
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
-                <h6 class="my-0">Product name:<span class="text-muted"> <?php echo htmlspecialchars($item["name"]); ?></span></h6>
-                <small class="text-muted">Product ID:<span class="text-muted"> <?php echo htmlspecialchars($item["product_id"]); ?></span></small>
+                <h6 class="my-0">Product name</h6>
+                <small class="text-muted">Brief description</small>
               </div>
-              <span class="text-muted"> $<?php echo htmlspecialchars($item["price"]); ?></span>
+              <span class="text-muted"> $0.00</span>
             </li>
-           <?php $subtotal += (double) htmlspecialchars($item["price"], 0, false); ?>
-
-            <?php endforeach; ?>
-
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Second product</h6>
+                <small class="text-muted">Brief description</small>
+              </div>
+              <span class="text-muted">$0.00</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">Third item</h6>
+                <small class="text-muted">Brief description</small>
+              </div>
+              <span class="text-muted">$0.00</span>
+            </li>
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-
-              <strong>$<?php echo htmlspecialchars($subtotal); ?></strong>
+              <strong>$0.00</strong>
             </li>
           </ul>
 
@@ -121,8 +101,6 @@ $subtotal = 0;
               <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
-                user_creds= 
-                userid= get_user_id
               </div>
             </div>
 
@@ -274,7 +252,7 @@ $subtotal = 0;
             </div>
             <hr class="mb-4">
             <!-- make it so that if the fields are empty, they cant submit -->
-            <button type="submit" value="checkOut" class="btn btn-dark btn-lg btn-block" onclick="window.location.href='orderSummary.php'" >Place Order</button>
+            <button type="submit" value="checkOut" class="btn btn-dark btn-lg btn-block" onclick="window.location.href='orderSummary.php'" >Continue to checkout</button>
           </form>
         </div>
       </div>
