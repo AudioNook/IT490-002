@@ -40,11 +40,11 @@
             <a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a>
          </li>
          <li class="nav-item">
-            <a class="nav-link" href="<?php echo get_url('forums.php'); ?>">Forum
+            <a class="nav-link" href="<?php echo get_url('forums.php'); ?>">Forums
             <a>
             </li>
          <li class="nav-item">
-            <a class="nav-link" href="<?php echo get_url('review.php'); ?>">Review
+            <a class="nav-link" href="<?php echo get_url('review.php'); ?>">Reviews
             <a>
          </li>
          <li class="nav-item">
