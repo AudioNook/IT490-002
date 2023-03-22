@@ -35,12 +35,14 @@ function generate_jwt($user){
             ':issued_at' => $issuedAt->format('Y-m-d H:i:s'),
         ]);
         return array(
+            'status'=>'success',
             'token' => $token,
             'expiry' => $expiry->getTimestamp()
         );
     }
     catch (Exception $e){
-        throw new Exception('Error saving JWT session: ' . $e->getMessage());
+        return[ 'status'=> 'Error',
+         'message'=>'saving JWT session: ' . $e->getMessage()];
     }
 }
 function validate_jwt($jwt) {
