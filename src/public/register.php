@@ -98,7 +98,7 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         //checking whether or not register was processed successfully/unsuccessfully
         switch($response['code']){
             case 200:
-                redirect(get_url("home.php"));
+                redirect(get_url("login.php"));
                 break;
             case 409:
                 echo '<script language="javascript">';

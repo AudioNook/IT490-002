@@ -8,7 +8,7 @@ require(__DIR__ . "/../src/lib/functions.php");
 function requestProcessor($request)
 {
     echo "========================".PHP_EOL;
-    echo "RECEIVED REQUEST". PHP_EOL;
+    // echo "RECEIVED ".$request['type'] . " REQUEST". PHP_EOL;
     echo json_encode($request, JSON_PRETTY_PRINT) . PHP_EOL;
     if(!isset($request['type']))
     {
@@ -47,9 +47,6 @@ function requestProcessor($request)
         case "reply":
             $response = handle_forum($request);
             break;
-        case "add_collect":
-            $response = db_add_collect($request['user_id'],$request['items']);
-            break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;
@@ -61,10 +58,10 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQS = get_rbMQs();
+$rbMQSOL = get_olServer();
 
 echo "RabbitMQServer BEGIN".PHP_EOL;
-$rbMQs->process_requests('requestProcessor');
+$rbMQSOL->process_requests('requestProcessor');
 echo "RabbitMQServer END".PHP_EOL;
 exit();
 ?>

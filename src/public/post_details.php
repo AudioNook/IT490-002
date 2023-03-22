@@ -10,12 +10,12 @@ if (!isset($_GET["id"]) || is_null($post_id) > 0 || $post_id < 0) {
 // Fetch and display discussion
 $msg = "Sending discussion topic request";
 
-$disucison_req = array();
-$disucison_req['type'] = 'discussion';
-$disucison_req['post_id'] = $post_id;
+$discussionreq = array();
+$discussion_req['type'] = 'discussion';
+$discussion_req['post_id'] = $post_id;
 $initial_post;
 // $replies to said post
-$response = json_decode($rbMQc->send_request($disucison_req), true);
+$response = json_decode($rbMQCOL->send_request($discussion_req), true);
 if ($response['type'] == 'discussion') {
     switch ($response['code']) {
         case 200:
@@ -45,7 +45,7 @@ if (isset($_POST['reply_msg']) && isset($_GET["id"])) {
     switch (true) {
         case empty($reply_msg):
             $hasError = true;
-            $errorMsg = "Password cannot be empty.";
+            $errorMsg = "Reply message cannot be empty.";
             break;
     }
     if (!$hasError) {
@@ -66,7 +66,7 @@ if (isset($_POST['reply_msg']) && isset($_GET["id"])) {
                     echo '<script language="javascript">';
                     echo 'alert("' . $response['message'] . '")';
                     echo '</script>';
-                    //redirect(get_url("discussion.php?=".$created_post['id']));
+                    redirect(get_url("post_details.php?id=".$post_id));
                     break;
                 case 401:
                     echo '<script language="javascript">';
@@ -105,8 +105,13 @@ if (isset($_POST['reply_msg']) && isset($_GET["id"])) {
         <h3 class="mt-5">Replies</h3>
 
         <?php if (!empty($response['replies'])): ?>
-            <?php foreach ($response['replies'] as $reply): ?>
+            <?php foreach ($response['replies'] as $reply):?>
+            
                 <div class="card mt-3">
+                    <div class="card-body">
+                        <h5 class="card-text"><?php echo $reply['username'];?>:</h5>
+                        <p class="card-text"><?php echo $reply['created'];?>:</p>
+                    </div>
                     <div class="card-body">
                         <p class="card-text"><?php echo $reply['content']; ?></p>
                     </div>
@@ -117,7 +122,7 @@ if (isset($_POST['reply_msg']) && isset($_GET["id"])) {
         <?php endif; ?>
 
         <?php if (logged_in()): ?>
-            <form action="" method="POST" class="mt-5">
+            <form action = "" method="POST" class="mt-5"  >
                 <div class="form-group">
                     <label for="reply_msg">Post a Reply:</label>
                     <textarea class="form-control" id="reply_msg" name="reply_msg" rows="3"></textarea>

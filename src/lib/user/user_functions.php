@@ -56,6 +56,8 @@ function get_credentials($user_id,$rbMQc){
             $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
             error_log($error_msg);
             throw new Exception($error_msg);
+
     }
+    return $response;
 
 }
