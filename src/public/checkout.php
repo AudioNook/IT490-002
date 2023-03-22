@@ -1,5 +1,6 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
+// maybe include checkoutFunction.php in partials
 
 
 $cart = array(
@@ -51,7 +52,7 @@ $subtotal = 0;
 
     <div class="container">
       <div class="py-5 text-center">
-        <h2>Checkout form</h2>
+        <h2>Checkout </h2>
       </div>
 
       <div class="row">
@@ -120,6 +121,8 @@ $subtotal = 0;
               <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
+                user_creds= 
+                userid= get_user_id
               </div>
             </div>
 
@@ -271,7 +274,7 @@ $subtotal = 0;
             </div>
             <hr class="mb-4">
             <!-- make it so that if the fields are empty, they cant submit -->
-            <button type="submit" value="checkOut" class="btn btn-dark btn-lg btn-block" onclick="window.location.href='orderSummary.php'" >Continue to checkout</button>
+            <button type="submit" value="checkOut" class="btn btn-dark btn-lg btn-block" onclick="window.location.href='orderSummary.php'" >Place Order</button>
           </form>
         </div>
       </div>
