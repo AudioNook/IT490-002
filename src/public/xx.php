@@ -1,30 +1,5 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
-
-
-$cart = array(
-    array(
-        'product_id' => 1,
-        'name' => 'Cassette',
-        'price' => 0,
-        'quantity' => 1,
-    ),
-    array(
-        'product_id' => 2,
-        'name' => 'CD',
-        'price' => 10.99,
-        'quantity' => 2,
-    ),
-    array(
-        'product_id' => 3,
-        'name' => 'Vinyl',
-        'price' => 15.99,
-        'quantity' => 1,
-    )
-    
-);
-// $total = 0;
-$subtotal = 0;
 ?>
 
 <!doctype html>
@@ -61,24 +36,24 @@ $subtotal = 0;
             <span class="badge badge-secondary badge-pill">3</span>
           </h4>
           <ul class="list-group mb-3">
-            <!-- maybe here -->
-            <?php foreach ($cart as $item): ?>
+          <?php foreach ($cart as $item): ?>
 
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
-                <h6 class="my-0">Product name:<span class="text-muted"> <?php echo htmlspecialchars($item["name"]); ?></span></h6>
-                <small class="text-muted">Product ID:<span class="text-muted"> <?php echo htmlspecialchars($item["product_id"]); ?></span></small>
+                <h6 class="my-0">Product Name</h6>
+                <small class="text-muted"><?php echo htmlspecialchars($item["name"]); ?></small>
               </div>
+              <!-- show price -->
               <span class="text-muted"> $<?php echo htmlspecialchars($item["price"]); ?></span>
             </li>
-           <?php $subtotal += (double) htmlspecialchars($item["price"], 0, false); ?>
-
             <?php endforeach; ?>
 
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
+              <!-- show total -->
+              <?php $subtotal += (int) htmlspecialchars($item["price"], 0, false); ?>
 
-              <strong>$<?php echo htmlspecialchars($subtotal); ?></strong>
+              <strong>$ <span class="text-muted"> $<?php echo htmlspecialchars($subtotal); ?></span></strong>
             </li>
           </ul>
 

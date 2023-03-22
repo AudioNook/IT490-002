@@ -90,6 +90,8 @@ $subtotal = 0;
                                 </div>
                             </div>
                         </div>
+<!-- adding all the items in the cart to get subtotal before chekout page -->
+<?php $subtotal += (double) htmlspecialchars($item["price"], 0, false); ?>
                         <?php endforeach; ?>
 
                     </div>
@@ -118,8 +120,7 @@ $subtotal = 0;
                           <!-- display word subtotal -->
                             <h4 class="mb-0" type='text' value='sub' id='sub'> Subtotal:</h4>
 
-                            <!-- adding all the items in the cart to get subtotal before chekout page -->
-                            <?php $subtotal += (int) htmlspecialchars($item["price"], 0, false); ?>
+                            
                           <!-- display subtotal amount -->
                             <h5 class="mb-0" type='text' value='subtotal' id='subtotal'>
                                 <?php echo htmlspecialchars($item["subtotal"]); ?>
@@ -138,3 +139,6 @@ $subtotal = 0;
         </div>
     </div>
 </section>
+<?php
+include('footer.php');
+?>
