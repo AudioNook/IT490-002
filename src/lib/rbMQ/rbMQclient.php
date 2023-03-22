@@ -44,6 +44,23 @@ global $rbMQCJWT;
         }
 
     }
+    if(!isset($rbMQCOL)){
+
+        try{
+
+            $rbMQCOL = new rabbitMQClient($rabbit_ini,$OLServer);
+
+        }
+
+        catch(Exception $e){
+
+            error_log("get_rbMQC() error: " . var_export($e,true));
+
+			$rbMQCOL = null;
+
+        }
+
+    }
 if (!isset($rbMQc) || $rbMQc === null) {
     $rbMQc = new rabbitMQClient($rabbit_ini,$rabbit_server);
 }

@@ -24,7 +24,60 @@
       <img src="https://cdn.discordapp.com/attachments/1065331325546020967/1086880328053948527/AUDIONOOK_blk.png" alt="AN logo" class="img-fluid mx-auto d-block" style="max-width: 20%; height: auto;">
    </div>
 </div>
-
+<?php
+   $users_arr = array(
+      array(
+          'id' => 3,
+          'username' => 'user1',
+          'avg_rating' => 4.5
+      ),
+      array(
+          'id' => 4,
+          'username' => 'user2',
+          'avg_rating' => 3.2
+      ),
+      array(
+          'id' => 5,
+          'username' => 'user3',
+          'avg_rating' => 4.8
+      )
+  );
+  $products_arr=array(
+    array(
+    'id' => 1,
+    'Seller_id'=> 3,
+    'title' => 'InnerSpeaker',
+    'Artist' => 'Tame Impala',
+    'Description' => 'Loved this album hate to see it go',
+    'Genre' =>array('Electronic, Rock'),
+    'cost' => 120, 
+    'image' => "https://i.discogs.com/i3rsD0HQ6wa4CPQGRcSa5Zc_K-jRogPC3wp4jCd-OU8/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0MDI3/MjAtMTU0NzQ0ODA5/Mi0yMTMyLmpwZWc.jpeg",
+  'created' => '2022-03-20 10:00:00',
+  ),
+    array(
+      'id' => 2,
+      'Seller_id' => 4,
+      'title' => 'Random Access Memories',
+      'Artist' => 'Daft Punk',
+      'Description' => 'One of the best albums of all time, in perfect condition.',
+      'Genre' =>array('Electronic, Rock'),
+      'cost' => 150, 
+      'image' => 'N/A',
+      'created' => '2022-03-22 09:15:00',
+    ),
+    array(
+      'id' => 2,
+      'Seller_id' => 5,
+      'title' => 'Random Access Memories',
+      'Artist' => 'Daft Punk',
+      'Description' => 'One of the best albums of all time, in perfect condition.',
+      'Genre' =>array('Electronic, Rock'),
+      'cost' => 150, 
+      'image' => 'N/A',
+      'created' => '2022-03-21 14:30:00',
+    )
+  )
+?>
 </header>
       <!-- Header-->
       <!-- Search-->
@@ -41,99 +94,88 @@
       </div>
       <!-- Search-->
       <!-- Section-->
-      <section class="py-5">
-         <div class="container px-4 px-lg-5 mt-5">
-            <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-               <div class="col mb-5">
-                  <div class="card h-100">
-                     <!-- Product image-->
-                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                     <!-- Product details-->
-                     <div class="card-body p-4">
-                        <div class="text-center">
-                           <!-- Product name-->
-                           <h5 class="fw-bolder">Product</h5>
-                           <!-- Product price-->
-                           $$$
-                        </div>
-                     </div>
-                     <!-- Product actions-->
-                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
-                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col mb-5">
-                  <div class="card h-100">
-                     <!-- Product image-->
-                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                     <!-- Product details-->
-                     <div class="card-body p-4">
-                        <div class="text-center">
-                           <!-- Product name-->
-                           <h5 class="fw-bolder">Product</h5>
-                           <!-- Product price-->
-                           $$$
-                        </div>
-                     </div>
-                     <!-- Product actions-->
-                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
-                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col mb-5">
-                  <div class="card h-100">
-                     <!-- Product image-->
-                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                     <!-- Product details-->
-                     <div class="card-body p-4">
-                        <div class="text-center">
-                           <!-- Product name-->
-                           <h5 class="fw-bolder">Product</h5>
-                           <!-- Product price-->
-                           $$$
-                        </div>
-                     </div>
-                     <!-- Product actions-->
-                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
-                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
-                     </div>
-                  </div>
-               </div>
-               <div class="col mb-5">
-                  <div class="card h-100">
-                     <!-- Product image-->
-                     <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                     <!-- Product details-->
-                     <div class="card-body p-4">
-                        <div class="text-center">
-                           <!-- Product name-->
-                           <h5 class="fw-bolder">Product</h5>
-                           <!-- Product price-->
-                           $$$
-                        </div>
-                     </div>
-                     <!-- Product actions-->
-                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark btn-cart mt-auto" href="#">Add to cart</a></div>
-                        <div class="text-center"><a class="btn btn-outline-dark btn-productDetails mt-auto" href="<?php echo get_url('review.php'); ?>">Rate</a></div>
-                     </div>
-                  </div>
-               </div>
+      <?php foreach($products_arr as $products): ?>
+      <?php foreach($users_arr as $seller){} ?>
+      <section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row justify-content-center mb-3">
+      <div class="col-md-12 col-xl-10">
+        <div class="card shadow-0 border rounded-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                 <!-- Product image-->
+                  <img  src= "<?php echo ($products['image']);?>" onerror="this.src='https://tinyurl.com/5n7fs4w8';"
+                  
+                    class="w-100" />
+                  <a href="#!">
+                    <div class="hover-overlay">
+                      <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-6 col-xl-6">
+               <!-- Product Title-->
+                <h5><?php echo ($products['title']);?></h5>
+                <div class="d-flex flex-row">
+                  <!-- Potential Ratings
+                <div>
+                  <b-form-rating v-model="value"></b-form-rating>
+                  <p class="mt-2">Value: <?php ?></p>
+               </div> -->
+                  <!-- Product condition-->
+                  <span>Artist: <?php echo $products['Artist'];?></span>
+                </div>
+                <!-- Product genre loop and create more-->
+                <?php foreach($products['Genre'] as $genres): ?>
+                <div class="mt-1 mb-0 text-muted small">
+                  <span><?php echo $genres; ?></span>
+                  <span class="text-primary">  </span>
+                </div>
+                <?php endforeach ?>
+                <!-- Product country-->
+                <div class="mb-2 text-muted small">
+                Condition: NEW
+                </div>
+                <!-- Product seller comments-->
+                <p class="mb-4 mb-md-0">
+                  <?php echo $products['Description'];?>
+                </p>
+              </div>
+              <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                <div class="d-flex flex-row align-items-center mb-1">
+                  <!-- Product price-->
+                  <h4 class="mb-1 me-1">$<?php echo $products['cost'];?></h4>
+                </div>
+                <!-- Product shipping-->
+                <h6 class="text-success">Shipping: $6.99</h6>
+                <div class="d-flex flex-column mt-4">
+                <div class="d-flex flex-row align-items-center mb-1">
+                  <!-- Seller ID-->
+                  <h4 class="mt-1 mb-0 text-muted small">Seller ID: <?php echo $seller['id'];?></h4>
+                </div>
+                <div class="d-flex flex-row align-items-center mb-1">
+                <h4 class="mt-1 mb-0 text-muted small">Seller: <?php echo $seller['username'];?></h4>
+                </div>
+                <div class="d-flex flex-row align-items-center mb-1">
+                <h4 class="mt-1 mb-0 text-muted small">Seller Rating: <?php echo $seller['avg_rating'];?>/5</h4>
+                </div>
+                  <!-- Add to cart button-->
+                  <button class="btn btn-success btn-sm" type="button">Add to Cart</button>
+                  
+                </div>
+              </div>
             </div>
-         </div>
-         <style>
-   .btn-cart {
-      background-color: green;
-   }
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endforeach;?>
+    
+
    
-   .btn-productDetails{
-      background-color: orange;
-   }
 </style>
       </section>
       <!-- Bootstrap core JS-->

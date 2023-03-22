@@ -1,6 +1,6 @@
 <?php
    require_once(__DIR__ . "/../lib/functions.php");
-   //check_jwt();
+   check_jwt();
    $is_logged_in = false;
    if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current page is not login.php
      $is_logged_in = logged_in();
