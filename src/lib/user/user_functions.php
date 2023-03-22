@@ -51,13 +51,36 @@ function get_credentials($user_id,$rbMQc){
         case 401:
             $error_msg = 'Unauthorized: ' . $response['message'];
             error_log($error_msg);
-            throw new Exception($error_msg);
+            break;
         default:
             $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
             error_log($error_msg);
-            throw new Exception($error_msg);
+            break;
 
     }
     return $response;
 
+}
+function get_collection($user_id,$rbMQc){
+    $collect_req = array();
+    $collect_req['type'] = 'user_collect';
+    $collect_req['message'] = "Sending collection request";
+    $collect_req['user_id'] = (int)htmlspecialchars($user_id);
+
+    $response = json_decode($rbMQc->send_request($collect_req), true);
+
+    switch ($response['code']) {
+        case 200:
+            return $response;
+        case 401:
+            $error_msg = 'Unauthorized: ' . $response['message'];
+            error_log($error_msg);
+            break;
+        default:
+            $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+            error_log($error_msg);
+            break;
+
+    }
+    return $response;
 }

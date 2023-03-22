@@ -151,9 +151,9 @@ function db_add_collect($user_id, $items)
     foreach ($items as $item) {
         $params1 = [
             ':rid' => (int) htmlspecialchars($item['release_id']),
-            ':title' => $item['title'],
-            ':img' => $item['cover_image'],
-            ':format' => $item['format']
+            ':title' => htmlspecialchars($item['title']),
+            ':img' => htmlspecialchars($item['cover_image'],ENT_QUOTES, 'UTF-8'),
+            ':format' => htmlspecialchars($item['format'])
         ];
         $lastInsertId = executeQuery($collect_query, $params1, true);
         $collected_item_id = $lastInsertId;
@@ -176,6 +176,33 @@ function db_add_collect($user_id, $items)
             'code' => 401,
             'status' => 'error',
             'message' => 'Error adding to collection',
+        ];
+    }
+}
+function db_user_collect($user_id){
+    $user_id = (int)htmlspecialchars($user_id);
+    $collection = 'Collection_Items';
+    $usr_collect = 'User_Collected_Items';
+    $query = "SELECT Collection_Items.release_id, Collection_Items.title, Collection_Items.cover_image, Collection_Items.format
+    FROM User_Collected_Items
+    INNER JOIN Collection_Items ON User_Collected_Items.collection_item_id = Collection_Items.id
+    WHERE User_Collected_Items.user_id = :uid;";
+    $params = [':uid' => "$user_id"];
+    $collected = executeQuery($query, $params);
+    if ($collected !== false) {
+        return [
+            'type' => 'user_collect',
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Sucessfully pulled collection',
+            'collection' => $collected,
+        ];
+    } else {
+        return [
+            'type' => 'user_collect',
+            'code' => 401,
+            'status' => 'error',
+            'message' => 'Error pulling collection',
         ];
     }
 }
