@@ -126,12 +126,13 @@ $subtotal = 0;
                                 <?php echo htmlspecialchars($item["subtotal"]); ?>
                             </h5>
 
-                        </div>
+                        
                         <div style="position:relative; left:100px; top:2px;">
 
                             <button type="button" class="btn btn-dark"
                                 onclick="window.location.href='checkout.php'">Continue to Check Out</button>
-                        </div>
+                                </div>
+                            </div>
                     </div>
                 </div>
 
