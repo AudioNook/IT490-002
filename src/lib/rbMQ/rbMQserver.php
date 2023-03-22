@@ -69,4 +69,39 @@ function get_jwtServer(){
     return $rbMQJWTS;
 
 }
+function get_olServer(){
+
+    global $rbMQOLS;
+
+
+
+    if(!isset($rbMQOLS)){
+
+        try{
+
+            global $rabbit_ini;
+
+            global $OLServer;
+
+            require_once(__DIR__ . "/../config.php");
+
+            $rbMQOLS= new rabbitMQServer($rabbit_ini,$OLServer);
+
+        }
+
+        catch(Exception $e){
+
+            error_log("get_rbMQC() error: " . var_export($e,true));
+
+			$rbMQOLS = null;
+
+        }
+
+    }
+
+
+
+    return $rbMQOLS;
+
+}
 ?>

@@ -16,7 +16,7 @@ $posts_req = array();
 $posts_req['type'] = 'posts';
 $posts_req['topic_id'] = $topic_id;
 $posts;
-$response = json_decode($rbMQc->send_request($posts_req), true);
+$response = json_decode($rbMQCOL->send_request($posts_req), true);
 if ($response['type'] == 'posts') {
     switch ($response['code']) {
         case 200:
@@ -63,27 +63,28 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
         $create_post_req = array();
         $create_post_req['type'] = 'create_post';
         $create_post_req['title'] = $title;
-        $create_post_req['content'] = $content;
+        $create_post_req['reply_msg'] = $content;
         $create_post_req['user_id'] = $user_id;
         $create_post_req['topic_id'] = $topic_id;
 
         $created_post = json_decode($rbMQc->send_request($create_post_req), true);
-        if ($create_post_req['type'] == 'create_post') {
+        error_log("REEEEEEEE");
+        if ($created_post['type'] == 'create_post') {
             switch ($created_post['code']) {
                 case 200:
                     error_log("Sucessfully uploaded post");
                     echo '<script language="javascript">';
-                    echo 'alert("' . $response['message'] . '")';
+                    echo 'alert("' . $created_post['message'] . '")';
                     echo '</script>';
-                    //redirect(get_url("discussion.php?=".$created_post['id']));
+                    redirect(get_url("posts.php?id=".$topic_id));
                     break;
                 case 401:
                     echo '<script language="javascript">';
-                    echo 'alert("' . $response['message'] . '")';
+                    echo 'alert("' . $created_post['message'] . '")';
                     echo '</script>';
                     break;
                 default:
-                    error_log($response['message']);
+                    error_log($created_post['message']);
             }
         }
     }
@@ -107,8 +108,8 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
                 <div class="col-md-12">
                     <div class="card mb-3">
                         <div class="card-header">
-                            <a href="user_profile">USERNAME</a>
-                            <div class="text-muted small"><?php echo $post['created'] ?>;</div>
+                            <h5> <?php echo $post['username']; ?></h5>
+                            <div class="text-muted small"><?php echo $post['created']; ?></div>
                         </div>
                         <div class="card-body">
                             <h5 class="card-title"><?php echo htmlspecialchars_decode($post['post_title']); ?></h5>

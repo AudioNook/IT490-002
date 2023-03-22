@@ -58,10 +58,10 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQS = get_rbMQs();
+$rbMQSOL = get_olServer();
 
 echo "RabbitMQServer BEGIN".PHP_EOL;
-$rbMQs->process_requests('requestProcessor');
+$rbMQSOL->process_requests('requestProcessor');
 echo "RabbitMQServer END".PHP_EOL;
 exit();
 ?>
