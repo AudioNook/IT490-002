@@ -50,6 +50,9 @@ function requestProcessor($request)
         case "add_collect":
             $response = db_add_collect($request['user_id'],$request['items']);
             break;
+        case "user_collect":
+            $response = db_user_collect($request['user_id']);
+            break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;
