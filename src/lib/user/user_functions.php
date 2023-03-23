@@ -86,11 +86,11 @@ function get_collection($user_id,$rbMQc){
 }
 function get_item($user_id, $collect_id,$rbMQCOL){
     $get_item = array();
-    $get_item['type'] = 'get_item';
-    $get_item['message'] = 'Requesting item form Colection';
-    $get_itm['user_id']= (int) $user_id;
+    $get_item['type'] = 'req_item';
+    $get_item['message'] = 'Requesting item from Collection';
+    $get_item['user_id']= (int) $user_id;
     $get_item['collect_id'] = (int) $collect_id;
-
+    error_log("HELLO");
     $response = json_decode($rbMQCOL->send_request($get_item), true);
 
     switch ($response['code']) {

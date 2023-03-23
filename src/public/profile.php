@@ -93,12 +93,17 @@ if(!empty($user_id) && !is_null($user_id)){
                      <div class="card-body p-4">
                         <div class="text-center">
                            <!-- Product name-->
-                           <h5 class="fw-bolder"><?php echo htmlspecialchars($c['title'])?></h5>
+                           <h5 class="fw-bolder"><?php echo htmlspecialchars($c['title']);?></h5>
                         </div>
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                     <div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="list_item.php?id=<?php echo $c['id']?>">Remove from collection</a></div>
+                     <div class="text-center"><a class="btn btn-outline-dark btn-success mt-auto" href="list_item.php?id=">List</a></div>
+                     <form method="POST" action="list_item.php?id=<?php echo (int)htmlspecialchars($c['id'])?>">
+                           <input type="hidden" name="cid" value="<?php echo (int)htmlspecialchars($c['id'])?>">
+                           <input type="hidden" name="uid" value="<?php echo (int) htmlspecialchars(get_user_id()) ?>" />
+                           <input type="submit" value="List" class="btn btn-outline-dark btn-success mt-auto" />
+                     </form>
                      <!--<div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>-->
                      <!--<div class="text-center"><a class="btn btn-outline-dark btn-rate mt-auto" href="#">Rate</a></div>-->
                      </div>

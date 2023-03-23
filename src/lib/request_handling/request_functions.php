@@ -189,7 +189,7 @@ function db_user_collect($user_id){
     WHERE User_Collected_Items.user_id = :uid;";
     $params = [':uid' => "$user_id"];
     $collected = executeQuery($query, $params);
-    if ($collected !== false) {
+    if (count($collected) >0) {
         return [
             'type' => 'user_collect',
             'code' => 200,
@@ -207,8 +207,9 @@ function db_user_collect($user_id){
     }
 }
 function db_item($uid, $cid){
-    $uid = (int)htmlspecialchars($uid);
-    $cid = (int)htmlspecialchars($cid);
+    $uid = (int) $uid;
+    $cid = (int) $cid;
+    error_log($uid . " " . $cid);
     $query = "SELECT
     Collection_Items.id AS collection_item_id,
     Collection_Items.title,
@@ -216,9 +217,9 @@ function db_item($uid, $cid){
     Collection_Items.format
   FROM User_Collected_Items
   JOIN Collection_Items ON User_Collected_Items.collection_item_id = Collection_Items.id
-  WHERE User_Collected_Items.collection_item_id = :cid AND User_Collected_Items.user_id = :uid
-  LIMIT 1;
-  ";
+  WHERE User_Collected_Items.user_id = :uid
+    AND Collection_Items.id = :cid
+  LIMIT 1;";
   $params = [
     ':uid' => "$uid",
     ':cid' => "$cid",
@@ -226,17 +227,18 @@ function db_item($uid, $cid){
   $item = executeQuery($query, $params);
   if ($item !== false) {
     return [
-        'type' => 'get_item',
+        'type' => 'req_item',
         'code' => 200,
         'status' => 'success',
         'message' => 'Sucessfully grabbed item from collection',
+        'item' => $item,
     ];
 } else {
     return [
         'type' => 'get_item',
         'code' => 401,
         'status' => 'error',
-        'message' => 'Error grabbing item fro collection',
+        'message' => 'Error grabbing item from collection',
     ];
 }
 }
