@@ -179,3 +179,37 @@ function db_add_collect($user_id, $items)
         ];
     }
 }
+function db_item($uid, $cid){
+    $uid = (int)htmlspecialchars($uid);
+    $cid = (int)htmlspecialchars($cid);
+    $query = "SELECT
+    Collection_Items.id AS collection_item_id,
+    Collection_Items.title,
+    Collection_Items.cover_image,
+    Collection_Items.format
+  FROM User_Collected_Items
+  JOIN Collection_Items ON User_Collected_Items.collection_item_id = Collection_Items.id
+  WHERE User_Collected_Items.collection_item_id = :cid AND User_Collected_Items.user_id = :uid
+  LIMIT 1;
+  ";
+  $params = [
+    ':uid' => "$uid",
+    ':cid' => "$cid",
+  ];
+  $item = executeQuery($query, $params);
+  if ($item !== false) {
+    return [
+        'type' => 'get_item',
+        'code' => 200,
+        'status' => 'success',
+        'message' => 'Sucessfully grabbed item from collection',
+    ];
+} else {
+    return [
+        'type' => 'get_item',
+        'code' => 401,
+        'status' => 'error',
+        'message' => 'Error grabbing item fro collection',
+    ];
+}
+}

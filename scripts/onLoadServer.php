@@ -47,6 +47,9 @@ function requestProcessor($request)
         case "reply":
             $response = handle_forum($request);
             break;
+        case "get_item":
+            $response = db_item($request['user_id'],$request=['collect_id']);
+            break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;

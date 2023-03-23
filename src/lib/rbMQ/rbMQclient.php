@@ -44,6 +44,7 @@ global $rbMQCJWT;
         }
 
     }
+global $rbMQCOL;
     if(!isset($rbMQCOL)){
 
         try{
