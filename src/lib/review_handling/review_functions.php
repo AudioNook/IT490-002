@@ -6,7 +6,7 @@ function handle_review($request)
     switch ($request['type']) {
         case "reviews":
             $table = 'Reviews';
-            $reviews = executeQuery("SELECT product_id, comment, product_name, rating, created FROM $table");
+            $reviews = executeQuery("SELECT user_id, user_name, product_id, comment, productname, rating, created FROM $table");
             if ($reviews !== false) {
                 return [
                     'type' => 'reviews',
