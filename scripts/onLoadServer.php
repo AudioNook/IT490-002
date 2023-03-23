@@ -66,7 +66,7 @@ function requestProcessor($request)
 }
 $rbMQSOL = get_olServer();
 
-echo "RabbitMQServer BEGIN".PHP_EOL;
+echo "On Load Server Start".PHP_EOL;
 $rbMQSOL->process_requests('requestProcessor');
 echo "RabbitMQServer END".PHP_EOL;
 exit();

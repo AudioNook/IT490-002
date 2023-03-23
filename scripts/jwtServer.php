@@ -57,7 +57,7 @@ function requestProcessor($request)
 }
 $rbMQS = get_jwtServer();
 
-echo "RabbitMQServer BEGIN".PHP_EOL;
+echo "JWT SERVER START".PHP_EOL;
 $rbMQS->process_requests('requestProcessor');
 echo "RabbitMQServer END".PHP_EOL;
 exit();
