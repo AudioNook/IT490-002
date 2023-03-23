@@ -183,7 +183,7 @@ function db_user_collect($user_id){
     $user_id = (int)htmlspecialchars($user_id);
     $collection = 'Collection_Items';
     $usr_collect = 'User_Collected_Items';
-    $query = "SELECT Collection_Items.release_id, Collection_Items.title, Collection_Items.cover_image, Collection_Items.format
+    $query = "SELECT Collection_Items.id, Collection_Items.title, Collection_Items.cover_image, Collection_Items.format
     FROM User_Collected_Items
     INNER JOIN Collection_Items ON User_Collected_Items.collection_item_id = Collection_Items.id
     WHERE User_Collected_Items.user_id = :uid;";

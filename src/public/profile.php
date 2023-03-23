@@ -98,6 +98,7 @@ if(!empty($user_id) && !is_null($user_id)){
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                     <div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="list_item.php?id=<?php echo $c['id']?>">Remove from collection</a></div>
                      <!--<div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>-->
                      <!--<div class="text-center"><a class="btn btn-outline-dark btn-rate mt-auto" href="#">Rate</a></div>-->
                      </div>
