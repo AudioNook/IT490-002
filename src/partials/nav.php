@@ -48,7 +48,7 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current pa
                   <a>
             </li>
             <li class="nav-item">
-               <a class="nav-link" href="<?php echo get_url('review.php'); ?>">Review
+               <a class="nav-link" href="<?php echo get_url('review.php'); ?>">Reviews
                   <a>
             </li>
             <li class="nav-item">
