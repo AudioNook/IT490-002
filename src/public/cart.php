@@ -22,13 +22,13 @@ $cart = array(
         'price' => 15.99,
         'quantity' => 1,
     )
-
+    
 );
-// $total = 0;
+$total = 0;
 $subtotal = 0;
+
+
 ?>
-
-
 <section class="h-100" style="background-color: #eee;">
     <div class="container h-100 py-5">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -46,50 +46,50 @@ $subtotal = 0;
                     <!-- start for each -->
                     <?php $total = 0; ?>
 
-                    <div class="card-body p-4">
+                        <div class="card-body p-4">
                         <?php foreach ($cart as $item): ?>
-                            <div class="card">
-                                <div class="row d-flex justify-content-between align-items-center">
-                                    <div class="col-md-2 col-lg-2 col-xl-2">
-                                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
-                                            class="img-fluid rounded-3" alt="Cotton T-shirt">
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-xl-3">
-                                        <!-- Replace Pname with actual product name-->
-                                        <p class="lead fw-normal mb-2">Product:
-                                            <?php echo htmlspecialchars($item["name"]); ?>
-                                        </p>
-                                        <!-- end product name -->
-                                        <span class="text-muted">Product ID:</span>
-                                        <?php echo htmlspecialchars($item["product_id"]); ?>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                        <button class="btn btn-link px-2"
-                                            onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                            <i class="fas fa-minus"></i>
-                                        </button>
-                                        <!-- if number is less than 1, it is deleted from the cart -->
-                                        <input id="form1" min="0" max="1" name="quantity" value="1" type="number"
-                                            class="form-control form-control-sm" />
 
-                                        <button class="btn btn-link px-2"
-                                            onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                            <i class="fas fa-plus"></i>
-                                        </button>
-                                    </div>
-                                    <!-- display price -->
-                                    <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                        <p><span class="text-muted">Price: </span>
-                                            $<?php echo htmlspecialchars($item["price"]); ?>
-                                    </div>
-                                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                        <a href="#!" class="btn btn-danger"></i></a>
-                                    </div>
+                          <div class="card">
+                            <div class="row d-flex justify-content-between align-items-center">
+                                <div class="col-md-2 col-lg-2 col-xl-2">
+                                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                        class="img-fluid rounded-3" alt="Cotton T-shirt">
                                 </div>
-                            </div>
+                                <div class="col-md-3 col-lg-3 col-xl-3">
+                                    <!-- Replace Pname with actual product name-->
+                                    <p class="lead fw-normal mb-2">PName:
+                                        <?php echo htmlspecialchars($item["name"]); ?>
+                                    </p>
+                                    <!-- end product name -->
+                                    <span class="text-muted">Product ID:</span>
+                                    <?php echo htmlspecialchars($item["product_id"]); ?>
+                                    </p>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                    <button class="btn btn-link px-2"
+                                        onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                <!-- if number is less than 1, it is deleted from the cart -->
+                                    <input id="form1" min="0" max="1" name="quantity" value="1" type="number"
+                                        class="form-control form-control-sm" />
+
+                                    <button class="btn btn-link px-2"
+                                        onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <!-- display price -->
+                                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                                <p><span class="text-muted">Price: </span><?php echo htmlspecialchars($item["price"]); ?> 
+                                </div>
+                                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                                    <a href="#!" class="btn btn-danger"></i></a>
+                                </div>
                             <!-- adding all the items in the cart to get subtotal before chekout page -->
                             <?php $subtotal += (double) htmlspecialchars($item["price"], 0, false); ?>
+                            </div>
+                        </div>
                         <?php endforeach; ?>
 
                     </div>
@@ -115,26 +115,22 @@ $subtotal = 0;
                 <div class="card">
                     <div class="card-body p-4 d-flex flex-row">
                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                            <!-- display word subtotal -->
+                          <!-- display word subtotal -->
                             <h4 class="mb-0" type='text' value='sub' id='sub'> Subtotal:</h4>
-
-
-                            <!-- display subtotal amount -->
                             <h5 class="mb-0" type='text' value='subtotal' id='subtotal'>
-                                $
                                 <?php echo htmlspecialchars($subtotal); ?>
                             </h5>
 
+                        </div>
+                        <div style="position:relative; left:100px; top:2px;">
 
-                            <div style="position:relative; left:100px; top:2px;">
-
-                                <button type="button" class="btn btn-dark"
-                                    onclick="window.location.href='checkout.php'">Continue to Check Out</button>
-                            </div>
+                            <button type="button" class="btn btn-dark"
+                                onclick="window.location.href='checkout.php'">Continue to Check Out</button>
                         </div>
                     </div>
-
                 </div>
+
             </div>
         </div>
+    </div>
 </section>
