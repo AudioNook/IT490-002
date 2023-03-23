@@ -61,6 +61,24 @@ global $rbMQCJWT;
         }
 
     }
+    global $rbMQapiC;
+    if(!isset($rbMQapiC)){
+
+        try{
+
+            $rbMQapiC = new rabbitMQClient($rabbit_ini,$apiServer);
+
+        }
+
+        catch(Exception $e){
+
+            error_log("get_rbMQC() error: " . var_export($e,true));
+
+			$rbMQapiC = null;
+
+        }
+
+    }
 if (!isset($rbMQc) || $rbMQc === null) {
     $rbMQc = new rabbitMQClient($rabbit_ini,$rabbit_server);
 }

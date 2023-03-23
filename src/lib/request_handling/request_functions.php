@@ -206,3 +206,52 @@ function db_user_collect($user_id){
         ];
     }
 }
+
+function searchApi($request)
+{
+    $url = $request['url'];
+            
+            // User agent and access token
+            $user_agent = 'AudioNook/0.1 +https://github.com/AudioNook/IT490-002';
+            $key = 'ZJheumfPznGeBujBlIso';
+            $secret = 'uCPtHkhTHyVIRtKOaPthnhoPKkzxoAQs';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "User-Agent: $user_agent",
+                "Authorization: Discogs key=$key, secret=$secret",
+            ]);
+
+            // Add the CA certificate bundle for SSL verification
+            curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . '/certs/cacert.pem');
+            $response = curl_exec($ch);
+            if (curl_errno($ch)) {
+                echo 'Error: ' . curl_error($ch);
+                return [
+                    'type' => 'search',
+                    'code' => 401,
+                    'status' => 'error',
+                    'message' => 'Error in apiServer',
+                ];
+              } 
+              else 
+              {
+                curl_close($ch);
+                return [
+                    'type' => 'search',
+                    'code' => 200,
+                    'status' => 'success',
+                    'message' => 'Returning Search',
+                    'response' => $response
+                ];
+                
+                }
+                 // Close the cURL session
+                curl_close($ch);
+                
+              
+             // Close the cURL session
+             curl_close($ch);
+             
+}

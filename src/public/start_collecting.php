@@ -7,10 +7,7 @@ $genres = [];
 $search = "";
 if (isset($_GET['searching'])) {
   $search = htmlspecialchars($_GET['searching']);
-  // User agent and access token
-  $user_agent = 'AudioNook/0.1 +https://github.com/AudioNook/IT490-002';
-  $key = 'ZJheumfPznGeBujBlIso';
-  $secret = 'uCPtHkhTHyVIRtKOaPthnhoPKkzxoAQs';
+  
 
   $results = [[]];
 
@@ -51,26 +48,29 @@ if (isset($_GET['searching'])) {
 
   // Combine base URL and query parameters using http_build_query()
   $url = $base_url . '?' . http_build_query($query_params);
-
-  $ch = curl_init();
-
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    "User-Agent: $user_agent",
-    "Authorization: Discogs key=$key, secret=$secret",
-  ]);
-
-  // Add the CA certificate bundle for SSL verification
-  curl_setopt($ch, CURLOPT_CAINFO, __DIR__ . '/certs/cacert.pem');
-  $response = curl_exec($ch);
-  $response_data = json_decode($response, true);
-
+  $apiReq = array();
+$apiReq['type'] = 'search';
+$apiReq['url'] = $url;
+// sends information to query api
+$response = json_decode($rbMQapiC->send_request($apiReq), true);
+if ($response['type'] == 'search') {
+    switch ($response['code']) {
+        case 200:
+            error_log("succesfully searched api");
+            $response_data = json_decode($response['response'], true);
+            $results = $response_data['results'];
+            break;
+        case 401:
+            echo '<script language="javascript">';
+            echo 'alert("' . $response['message'] . '")';
+            echo '</script>';
+            break;
+        default:
+            echo ($response['message']);
+    }
+  }
   // Check for errors
-  if (curl_errno($ch)) {
-    echo 'Error: ' . curl_error($ch);
-  } else {
-    $results = $response_data['results'];
+    
     $total_items = 0;
     $per_page = 18;
     if (isset($response_data['pagination']['items'])) {
@@ -86,9 +86,8 @@ if (isset($_GET['searching'])) {
         sort($genres);
       }
     }
-  }
-  // Close the cURL session
-  curl_close($ch);
+  
+ 
 }
 
 ?>

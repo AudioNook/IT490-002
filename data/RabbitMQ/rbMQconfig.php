@@ -8,6 +8,7 @@ $rabbit_DBLS = 'DBLogServer';
 $rabbit_RBMQLS = 'RBMQLogServer';
 $jwtServer = 'jwtServer';
 $OLServer = 'onLoadServer';
+$apiServer = 'apiServer';
 
 
 require(__DIR__ . "/path.inc");

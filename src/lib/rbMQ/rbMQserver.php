@@ -104,4 +104,39 @@ function get_olServer(){
     return $rbMQOLS;
 
 }
+function get_apiServer(){
+
+    global $rbMQapiS;
+
+
+
+    if(!isset($rbMQapiS)){
+
+        try{
+
+            global $rabbit_ini;
+
+            global $apiServer;
+
+            require_once(__DIR__ . "/../config.php");
+
+            $rbMQapiS= new rabbitMQServer($rabbit_ini,$apiServer);
+
+        }
+
+        catch(Exception $e){
+
+            error_log("get_rbMQC() error: " . var_export($e,true));
+
+			$rbMQapiS = null;
+
+        }
+
+    }
+
+
+
+    return $rbMQapiS;
+
+}
 ?>
