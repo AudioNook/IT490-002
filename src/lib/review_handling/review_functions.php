@@ -6,7 +6,7 @@ function handle_review($request)
     switch ($request['type']) {
         case "reviews":
             $table = 'Reviews';
-            $reviews = executeQuery("SELECT product_id, comment, product_name, rating, created FROM $table");
+            $reviews = executeQuery("SELECT product_id, comment, created FROM $table");
             if ($reviews !== false) {
                 return [
                     'type' => 'reviews',
@@ -17,7 +17,27 @@ function handle_review($request)
                 ];
             }
             break;
+            /////////////////////////////////////////////////
+            case 'new_review':
+                $product_id = $request['product_id'];
+                $comment = htmlspecialchars($request['comment']);
 
+                $query = "INSERT INTO Reviews(product_id, comment) 
+                VALUES(:product_id,:comment)";
+                $params = [
+                    ':product_id' => $product_id,
+                    ':comment' => $comment
+                ];
+                if (executeQuery($query, $params) !== false) {
+                    return [
+                        'type' => 'new_review',
+                        'code' => 200,
+                        'status' => 'success',
+                        'message' => 'Created a new review'
+                    ];
+                }
+                break;
+            ////////////////////////////////////////////////
         default:
             return [
                 'type' => 'review',
