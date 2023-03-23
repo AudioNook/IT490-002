@@ -9,21 +9,18 @@ $cart = array(
         'name' => 'Cassette',
         'price' => 0,
         'quantity' => 1,
-        'subtotal' => 0
     ),
     array(
         'product_id' => 2,
         'name' => 'CD',
         'price' => 10.99,
         'quantity' => 2,
-        'subtotal' => 21.98
     ),
     array(
         'product_id' => 3,
         'name' => 'Vinyl',
         'price' => 15.99,
         'quantity' => 1,
-        'subtotal' => 15.99
     )
     
 );
@@ -51,6 +48,7 @@ $subtotal = 0;
 
                         <div class="card-body p-4">
                         <?php foreach ($cart as $item): ?>
+
                           <div class="card">
                             <div class="row d-flex justify-content-between align-items-center">
                                 <div class="col-md-2 col-lg-2 col-xl-2">
@@ -88,6 +86,8 @@ $subtotal = 0;
                                 <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                     <a href="#!" class="btn btn-danger"></i></a>
                                 </div>
+                            <!-- adding all the items in the cart to get subtotal before chekout page -->
+                            <?php $subtotal += (double) htmlspecialchars($item["price"], 0, false); ?>
                             </div>
                         </div>
                         <?php endforeach; ?>
@@ -117,12 +117,8 @@ $subtotal = 0;
                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                           <!-- display word subtotal -->
                             <h4 class="mb-0" type='text' value='sub' id='sub'> Subtotal:</h4>
-
-                            <!-- adding all the items in the cart to get subtotal before chekout page -->
-                            <?php $subtotal += (int) htmlspecialchars($item["price"], 0, false); ?>
-                          <!-- display subtotal amount -->
                             <h5 class="mb-0" type='text' value='subtotal' id='subtotal'>
-                                <?php echo htmlspecialchars($item["subtotal"]); ?>
+                                <?php echo htmlspecialchars($subtotal); ?>
                             </h5>
 
                         </div>
