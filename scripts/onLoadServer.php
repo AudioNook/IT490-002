@@ -8,7 +8,7 @@ require(__DIR__ . "/../src/lib/functions.php");
 function requestProcessor($request)
 {
     echo "========================".PHP_EOL;
-    echo "RECEIVED ".$request['type'] . " REQUEST". PHP_EOL;
+    // echo "RECEIVED ".$request['type'] . " REQUEST". PHP_EOL;
     echo json_encode($request, JSON_PRETTY_PRINT) . PHP_EOL;
     if(!isset($request['type']))
     {
@@ -29,23 +29,33 @@ function requestProcessor($request)
         case "logout":
             $response = db_logout($request['token']);
             break;
+        // Handling user_creds
+        case "user_cred":
+            $response = db_credentials($request['user_id']);
+            break;
+        // Handling reviews
+        case "reviews":
+            $response = handle_review($request);
+            break;
         // Handling forums
         case "topics":
-            echo "I MADE IT HERE";
+        case "posts":
+        case "create_post":
             $response = handle_forum($request);
-            
             break;
-        //case "posts":
-        //case "create_post":
-        //case "discussion":
-        //case "reply":
-            //$response = "TESTING"/*handle_forum($request)*/;
-            //echo $response;
-            //break;
-        //default:
-            //$response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
-            //echo $response;
-            //break;
+        case "discussion":
+        case "reply":
+            $response = handle_forum($request);
+            break;
+        case "add_collect":
+            $response = db_add_collect($request['user_id'],$request['items']);
+            break;
+        case "user_collect":
+            $response = db_user_collect($request['user_id']);
+            break;
+        default:
+            $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
+            break;
     }
 
     echo "\n";
@@ -53,12 +63,11 @@ function requestProcessor($request)
     echo json_encode($response, JSON_PRETTY_PRINT) . PHP_EOL;
 
     return json_encode($response);
-    echo "RESPONSE WAS SENT";
 }
-$rbMQS = get_jwtServer();
+$rbMQSOL = get_olServer();
 
-echo "JWT SERVER START".PHP_EOL;
-$rbMQS->process_requests('requestProcessor');
+echo "On Load Server Start".PHP_EOL;
+$rbMQSOL->process_requests('requestProcessor');
 echo "RabbitMQServer END".PHP_EOL;
 exit();
 ?>

@@ -35,14 +35,18 @@ function getDB()
     return $db;
 }
 
-function executeQuery($query, $params = [])
+function executeQuery($query, $params = [],$returnLastInsertId = false)
 {
     $db = getDB();
     $stmt = $db->prepare($query);
     try {
         $r = $stmt->execute($params);
         if ($r) {
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($returnLastInsertId) {
+                return $db->lastInsertId();
+            } else {
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
         }
     } catch (PDOException $e) {
         error_log("Error executing query: " . $query);
