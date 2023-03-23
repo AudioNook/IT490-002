@@ -33,8 +33,11 @@ function requestProcessor($request)
         case "user_cred":
             $response = db_credentials($request['user_id']);
             break;
-        // Handling reviews
+        // Handling reviews + new reviews
         case "reviews":
+            $response = handle_review($request);
+            break;
+        case "new_review":
             $response = handle_review($request);
             break;
         // Handling forums

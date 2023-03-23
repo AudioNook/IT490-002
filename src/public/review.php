@@ -5,9 +5,9 @@
    $reviews_req['type'] = 'reviews';
    $reviews_req['message'] = "Sending reviews request";
    $reviews;
-   $response = json_decode($rbMQc->send_request($reviews_req), true);
 
-
+   $response = json_decode($rbMQCOL->send_request($reviews_req), true);
+   
    if ($response['type'] == 'reviews') {
      switch ($response['code']) {
        case 200:
@@ -30,41 +30,41 @@
           echo '</script>';
           redirect(get_url("login.php"));
       }
-   }
+}
+   
    $hasError = false;
    if (!$hasError && isset($_GET['product_id'])) {
 
       $user_id = get_user_id();
+      $product_id = $_GET['product_id'];
+      $comment = $_GET['comment'];
+      $new_reviews_req = array();
+      $new_reviews_req['type'] = 'new_review';
+      $new_reviews_req['message'] = "Sending new reviews request";
+      $new_reviews_req['product_id'] = $product_id;
+      $new_reviews_req['comment'] = $comment;
 
-      $reviews_req = array();
-      $reviews_req['type'] = 'review';
-      $reviews_req['product_id'] = $product_id;
-      $reviews_req['comment'] = $comment;
-      $reviews_req['user_name'] = $user_name;
-      $reviews_req['created'] = $created;
-      $reviews_req['user_id'] = $user_id;
-
-      $created_review = json_decode($rbMQc->send_request($reviews_req), true);
-      error_log("REEEEEEEE");
-      if ($created_review['type'] == 'reviews') {
-          switch ($created_review['code']) {
-              case 200:
-                  error_log("Sucessfully uploaded review");
-                  echo '<script language="javascript">';
-                  echo 'alert("' . $created_review['message'] . '")';
-                  echo '</script>';
-                  //redirect(get_url("posts.php?id=".$topic_id));
-                  break;
-              case 401:
-                  echo '<script language="javascript">';
-                  echo 'alert("' . $created_review['message'] . '")';
-                  echo '</script>';
-                  break;
-              default:
-                  error_log($created_review['message']);
-          }
-      }
-  }
+      $created_new_reviews = json_decode($rbMQc->send_request($new_reviews_req), true);
+      error_log("hello?");
+        if ($created_new_reviews['type'] == 'new_review') {
+            switch ($created_new_reviews['code']) {
+                case 200:
+                    error_log("Sucessfully uploaded new review");
+                    echo '<script language="javascript">';
+                    echo 'alert("' . $response['message'] . '")';
+                    echo '</script>';
+                    redirect(get_url("review.php?id=".$product_id));
+                    break;
+                case 401:
+                    echo '<script language="javascript">';
+                    echo 'alert("' . $response['message'] . '")';
+                    echo '</script>';
+                    break;
+                default:
+                    error_log($response['message']);
+            }
+        }
+   }
 
    ?>
 <html>
@@ -84,13 +84,6 @@
             <div class="card m-3">
                <div class="card-header d-flex justify-content-between">
                   <div>Product ID: <?php echo $review['product_id']; ?></div>
-                  <div>Product Name: <?php echo $review['productname']; ?></div>
-               </div>
-               <div class="card-body">
-                  <p class="card-text">Username: <?php echo $review['user_name']; ?></p>
-               </div>
-               <div class="card-body">
-                  <p class="card-text">User ID: <?php echo $review['user_id']; ?></p>
                </div>
                <div class="card-body">
                   <p class="card-text">Comment: <?php echo $review['comment']; ?></p>
@@ -116,14 +109,17 @@
       <div class="container">
          <h1>Review a Product!</h1>
          <form>
-         <form action="/action_page.php">
-            <label for="fname">Product ID:</label><br>
-            <input type="text" id="fname" name="fname" value=""><br>
-            <label for="review">Write a review:</label>
-            <input type="text" id="review" name="review" style="height: 150px;">
-            <input type="submit" value="Review">
-         </form>
-      </div>
+         <form class="form" method="POST">
+            <label for="product_id">Product ID:</label><br>
+            <input type="text" id="product_id" name="product_id" value=""><br>
+            <label for="comment">Write a review:</label>
+            <input type="comment" id="comment" name="comment" value=""><br>
+            <textarea class="form-control" placeholder="Enter content" name="content" rows="4"></textarea>
+            <button type="submit" class="btn btn-primary btn-block mb-4">
+                Post Review
+            </button>
+        </form>
+    </div>
    </body>
 </html>
 <style>
