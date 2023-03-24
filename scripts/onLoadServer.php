@@ -56,6 +56,9 @@ function requestProcessor($request)
         case "user_collect":
             $response = db_user_collect($request['user_id']);
             break;
+        case "req_market":
+            $response = db_market();
+            break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;
