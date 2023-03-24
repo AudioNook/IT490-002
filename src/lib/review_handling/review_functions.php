@@ -50,6 +50,6 @@ function handle_review($request)
         'type' => $request['type'],
         'code' => 500,
         'status' => 'error',
-        'message' => 'An error occurred while processing the request',
+        'message' => 'No reviews! Make one.',
     ];
 }
