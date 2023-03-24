@@ -2,6 +2,9 @@
    /* This page will host the search if a user is signed in. */
    require(__DIR__ . "/../partials/nav.php");
    logged_in(true);
+
+   $response = get_market($rbMQCOL);
+   $market_arr = $response['market_place_items'];
    ?>
    
 <!DOCTYPE html>
@@ -24,60 +27,6 @@
       <img src="https://cdn.discordapp.com/attachments/1065331325546020967/1086880328053948527/AUDIONOOK_blk.png" alt="AN logo" class="img-fluid mx-auto d-block" style="max-width: 20%; height: auto;">
    </div>
 </div>
-<?php
-   $users_arr = array(
-      array(
-          'id' => 3,
-          'username' => 'user1',
-          'avg_rating' => 4.5
-      ),
-      array(
-          'id' => 4,
-          'username' => 'user2',
-          'avg_rating' => 3.2
-      ),
-      array(
-          'id' => 5,
-          'username' => 'user3',
-          'avg_rating' => 4.8
-      )
-  );
-  $products_arr=array(
-    array(
-    'id' => 1,
-    'Seller_id'=> 3,
-    'title' => 'InnerSpeaker',
-    'Artist' => 'Tame Impala',
-    'Description' => 'Loved this album hate to see it go',
-    'Genre' =>array('Electronic, Rock'),
-    'cost' => 120, 
-    'image' => "https://i.discogs.com/i3rsD0HQ6wa4CPQGRcSa5Zc_K-jRogPC3wp4jCd-OU8/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTI0MDI3/MjAtMTU0NzQ0ODA5/Mi0yMTMyLmpwZWc.jpeg",
-  'created' => '2022-03-20 10:00:00',
-  ),
-    array(
-      'id' => 2,
-      'Seller_id' => 4,
-      'title' => 'Random Access Memories',
-      'Artist' => 'Daft Punk',
-      'Description' => 'One of the best albums of all time, in perfect condition.',
-      'Genre' =>array('Electronic, Rock'),
-      'cost' => 150, 
-      'image' => 'N/A',
-      'created' => '2022-03-22 09:15:00',
-    ),
-    array(
-      'id' => 2,
-      'Seller_id' => 5,
-      'title' => 'Random Access Memories',
-      'Artist' => 'Daft Punk',
-      'Description' => 'One of the best albums of all time, in perfect condition.',
-      'Genre' =>array('Electronic, Rock'),
-      'cost' => 150, 
-      'image' => 'N/A',
-      'created' => '2022-03-21 14:30:00',
-    )
-  )
-?>
 </header>
       <!-- Header-->
       <!-- Search-->
@@ -94,8 +43,8 @@
       </div>
       <!-- Search-->
       <!-- Section-->
-      <?php foreach($products_arr as $products): ?>
-      <?php foreach($users_arr as $seller){} ?>
+      <?php foreach($market_arr as $products): ?>
+     
       <section style="background-color: #eee;">
   <div class="container py-5">
     <div class="row justify-content-center mb-3">
@@ -106,7 +55,7 @@
               <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                 <div class="bg-image hover-zoom ripple rounded ripple-surface">
                  <!-- Product image-->
-                  <img  src= "<?php echo ($products['image']);?>" onerror="this.src='https://tinyurl.com/5n7fs4w8';"
+                  <img  src= "<?php echo stripslashes(htmlspecialchars($products['cover_image']))?>" onerror="this.src='https://tinyurl.com/5n7fs4w8';"
                   
                     class="w-100" />
                   <a href="#!">
@@ -126,41 +75,41 @@
                   <p class="mt-2">Value: <?php ?></p>
                </div> -->
                   <!-- Product condition-->
-                  <span>Artist: <?php echo $products['Artist'];?></span>
+                  <span>Format: <?php echo $products['format'];?></span>
                 </div>
                 <!-- Product genre loop and create more-->
-                <?php foreach($products['Genre'] as $genres): ?>
+               
                 <div class="mt-1 mb-0 text-muted small">
-                  <span><?php echo $genres; ?></span>
+                  <span><?php echo $products['genres']; ?></span>
                   <span class="text-primary">  </span>
                 </div>
-                <?php endforeach ?>
+                
                 <!-- Product country-->
                 <div class="mb-2 text-muted small">
-                Condition: NEW
+                <?php echo $products['item_condition'] ?>
                 </div>
                 <!-- Product seller comments-->
                 <p class="mb-4 mb-md-0">
-                  <?php echo $products['Description'];?>
+                  <?php echo $products['item_description'];?>
                 </p>
               </div>
               <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
                 <div class="d-flex flex-row align-items-center mb-1">
                   <!-- Product price-->
-                  <h4 class="mb-1 me-1">$<?php echo $products['cost'];?></h4>
+                  <h4 class="mb-1 me-1">$<?php echo $products['price'];?></h4>
                 </div>
                 <!-- Product shipping-->
                 <h6 class="text-success">Shipping: $6.99</h6>
                 <div class="d-flex flex-column mt-4">
                 <div class="d-flex flex-row align-items-center mb-1">
                   <!-- Seller ID-->
-                  <h4 class="mt-1 mb-0 text-muted small">Seller ID: <?php echo $seller['id'];?></h4>
+                  <h4 class="mt-1 mb-0 text-muted small">Seller username: <?php echo $products['username'];?></h4>
                 </div>
                 <div class="d-flex flex-row align-items-center mb-1">
-                <h4 class="mt-1 mb-0 text-muted small">Seller: <?php echo $seller['username'];?></h4>
+                <h4 class="mt-1 mb-0 text-muted small">Item Id: <?php echo $products['id'];?></h4>
                 </div>
                 <div class="d-flex flex-row align-items-center mb-1">
-                <h4 class="mt-1 mb-0 text-muted small">Seller Rating: <?php echo $seller['avg_rating'];?>/5</h4>
+                <h4 class="mt-1 mb-0 text-muted small">Date Listed: <?php echo $products['created'];?>/5</h4>
                 </div>
                   <!-- Add to cart button-->
                   <button class="btn btn-success btn-sm" type="button">Add to Cart</button>

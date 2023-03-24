@@ -24,3 +24,6 @@ require(__DIR__ . "/forum_handling/forum_functions.php");
 
 // Forum Handling functions
 require(__DIR__ . "/review_handling/review_functions.php");
+
+// Marketplace Functions
+require(__DIR__ . "/market_functions.php");

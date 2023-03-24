@@ -320,3 +320,36 @@ function db_list_item($uid,$cid,$condition,$description,$price){
         ];
     }
 }
+function db_market(){
+    $db = getDB();
+    $query="SELECT mi.id, mi.item_condition, mi.item_description, mi.price, mi.created, mi.modified,
+    ci.title, ci.cover_image, ci.format,
+    u.email, u.username,
+    GROUP_CONCAT(g.name SEPARATOR ', ') AS genres
+    FROM Marketplace_Items AS mi
+    INNER JOIN User_Collected_Items AS uci ON mi.user_collected_item_id = uci.id
+    INNER JOIN Users AS u ON uci.user_id = u.id
+    INNER JOIN Collection_Items AS ci ON uci.collection_item_id = ci.id
+    INNER JOIN Genres_Collection AS gc ON ci.id = gc.collection_item_id
+    INNER JOIN Genres AS g ON gc.genre_id = g.id
+    GROUP BY mi.id";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if($result){
+        return [
+            'type' => 'req_marketplace',
+            'code' => 200,
+            'status' => 'success',
+            'message' => 'Sucessfully pulled ENTIRE fucking MARKETPALCE',
+            'market_place_items' => $result,
+        ];
+    }else{
+        return [
+            'type' => 'req_marketplace',
+            'code' => 401,
+            'status' => 'error',
+            'message' => 'Error pulling entire fucking marketplace',
+        ];
+    }
+}
