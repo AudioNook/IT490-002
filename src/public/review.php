@@ -112,9 +112,8 @@
          <form class="form" method="POST">
             <label for="product_id">Product ID:</label><br>
             <input type="text" id="product_id" name="product_id" value=""><br>
-            <label for="comment">Write a review:</label>
+            <label for="comment">Write a review:</label><br>
             <input type="comment" id="comment" name="comment" value=""><br>
-            <textarea class="form-control" placeholder="Enter content" name="content" rows="4"></textarea>
             <button type="submit" class="btn btn-primary btn-block mb-4">
                 Post Review
             </button>
@@ -149,6 +148,13 @@
    border-radius: 5px;
    cursor: pointer;
    }
+   #product_id {
+    width: 200px; /* adjust the value to your desired width */
+}
+
+#comment {
+    height: 150px; /* adjust the value to your desired height */
+}
 </style>
 <?php
    include('footer.php');
