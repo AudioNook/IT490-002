@@ -133,12 +133,14 @@ function add_items(form, event) {
   const title = form.title.value;
   const cover_image = form.cover_image.value;
   const format = form.format.value;
+  const genres = form.genres.value;
 
   const item = {
     release_id: release_id,
     title: title,
     cover_image: cover_image,
-    format: format
+    format: format,
+    genre: genres,
   };
   collected_items.push(item);
 

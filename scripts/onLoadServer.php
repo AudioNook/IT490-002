@@ -50,6 +50,9 @@ function requestProcessor($request)
         case "add_collect":
             $response = db_add_collect($request['user_id'],$request['items']);
             break;
+        case "req_item":
+            $response = db_item($request['user_id'],$request['collect_id']);
+            break;
         case "user_collect":
             $response = db_user_collect($request['user_id']);
             break;

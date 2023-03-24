@@ -56,6 +56,9 @@ function requestProcessor($request)
         case "user_collect":
             $response = db_user_collect($request['user_id']);
             break;
+        case "list_item":
+            $response = db_list_item($request['uid'],$request['cid'],$request['condition'],$request['description'],$request['price']);
+            break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;

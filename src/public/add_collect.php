@@ -7,7 +7,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($user_id && count($items) > 0){
         $add_collect = array();
         $add_collect['type'] = "add_collect";
-        $add_collect['user_id'] = $user_id;
+        $add_collect['user_id'] = (int) $user_id;
         $add_collect['items'] = $items;
         global $rbMQCOL;
 
