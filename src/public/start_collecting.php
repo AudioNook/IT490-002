@@ -147,15 +147,23 @@ if (isset($_GET['searching'])) {
               <img class="card-img-top" src="<?php echo !empty($result['cover_image']) ? $result['cover_image'] : 'https://tinyurl.com/5n7fs4w8'; ?>" alt="Album Covers" onerror="this.onerror=null;this.src='https://tinyurl.com/5n7fs4w8';" width="300" height="300">
               <div class="card-body" style="max-height: 350px ">
                 <h5 class="card-title"><?php echo htmlspecialchars($result['title'] ?? "N/A"); ?></h5>
-                <p class="details1 card-text">><?php echo htmlspecialchars(($result['year'] ?? "N/A") . " " . ($result['country'] ?? "N/A")) . '<br><br>' . "Genre: <br>" . (isset($result['genre']) ? implode(", ", $result['genre']) : "N/A"); ?></p>
+                <p class="details1 card-text"><?php echo htmlspecialchars(($result['year'] ?? "N/A") . " " . ($result['country'] ?? "N/A")) . '<br><br>' . "Genre: <br>" . (isset($result['genre']) ? implode(", ", $result['genre']) : "N/A"); ?></p>
                 <p class="details2 card-text"><?php echo "Formats: <br>" . (isset($result['format']) ? implode(", ", $result['format']) : "N/A") . '<br><br>'; ?></p>
                 <form onsubmit="add_items(this, event)">
-                  <input type="hidden" name="release_id" value="<?php echo htmlspecialchars($result['release_id'] ?? 0) ?>" />
+                  <input type="hidden" name="release_id" value="<?php echo intval($result['id'] ?? 0) ?>" />
                   <input type="hidden" name="title" value="<?php echo is_string($result['title']) ? htmlspecialchars($result['title']) : "N/A"; ?>" />
-                  <input type="hidden" name="cover_image" value="<?php echo !empty($result['cover_image']) ? $result['cover_image'] : "N/A"
-                                                                  ?>" />
-                  <input type="hidden" name="format" value="<?php echo is_string($result['format']) ? htmlspecialchars($result['format']) : "N/A";
-                                                                ?>" />
+                  <input type="hidden" name="cover_image" value="<?php echo !empty($result['cover_image']) ? $result['cover_image'] : "N/A"?>" />
+                  <?php $genre_strings;
+                  if (isset($result['genre']) && is_array($result['genre'])) {
+                      $genre_arr = array_map(function ($arr) {
+                          return htmlspecialchars($arr);
+                      }, $result['genre']);
+                      $genre_strings = implode(", ", $genre_arr);
+                  } else {
+                      $genre_strings = "N/A";
+                  } ?>
+                  <input type="hidden" name="genres" value="<?php echo $genre_strings?>" />
+                  <input type="hidden" name="format" value="<?php echo isset($result['format']) ? htmlspecialchars(implode(", ", $result['format'])) : "N/A";?>" />
                   <input type="hidden" name="action" value="add" />
                   <input type="submit" class="btn btn-success" value="Add to Collection" />
                 </form>

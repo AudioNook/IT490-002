@@ -98,10 +98,8 @@ if(!empty($user_id) && !is_null($user_id)){
                      </div>
                      <!-- Product actions-->
                      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                     <div class="text-center"><a class="btn btn-outline-dark btn-success mt-auto" href="list_item.php?id=">List</a></div>
-                     <form method="POST" action="list_item.php?id=<?php echo (int)htmlspecialchars($c['id'])?>">
-                           <input type="hidden" name="cid" value="<?php echo (int)htmlspecialchars($c['id'])?>">
-                           <input type="hidden" name="uid" value="<?php echo (int) htmlspecialchars(get_user_id()) ?>" />
+                     <!--<div class="text-center"><a class="btn btn-outline-dark btn-success mt-auto" href="list_item.php?id=">List</a></div>-->
+                     <form method="POST" action="list_item.php?id=<?php echo (int)htmlspecialchars($c['id']) . "&uid=" . (int) htmlspecialchars(get_user_id())?>">
                            <input type="submit" value="List" class="btn btn-outline-dark btn-success mt-auto" />
                      </form>
                      <!--<div class="text-center"><a class="btn btn-outline-dark btn-remove mt-auto" href="#">Remove from collection</a></div>-->
@@ -110,21 +108,8 @@ if(!empty($user_id) && !is_null($user_id)){
                   </div>
                </div>
                <?php endforeach; ?>
-<style>
-   .btn-remove {
-      background-color: red;
-   }
-   
-   .btn-rate {
-      background-color: yellow;
-   }
-</style>
                
       </section>
-      <!-- Bootstrap core JS-->
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-      <!-- Core theme JS-->
-      <script src="js/scripts.js"></script>
    </body>
 
 <?php
