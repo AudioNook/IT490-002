@@ -109,6 +109,61 @@ function get_item($user_id, $collect_id,$rbMQCOL){
     return $response;
 }
 
+function get_cart($user_id, $rbMQCOL){
+    $get_cart = array();
+    $get_cart['type'] = 'req_cart';
+    $get_cart['message'] = 'Requesting item from Collection';
+    $get_cart['user_id']= (int) $user_id;
+    //error_log("HELLO");
+    $response = json_decode($rbMQCOL->send_request($get_cart), true);
+
+    switch ($response['code']) {
+        case 200:
+            return $response;
+        case 401:
+            $error_msg = 'Unauthorized: ' . $response['message'];
+            error_log($error_msg);
+            break;
+        default:
+            $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+            error_log($error_msg);
+            break;
+
+    }
+    return $response;
+}
+function update_cart($action, $user_id, $cart_id = null, $product_id = null, $rbMQc){
+    $get_cart = array();
+    $get_cart['type'] = 'req_cart';
+    $get_cart['message'] = 'Requesting item from Collection';
+    $get_cart['user_id']= (int) $user_id;
+    if(!is_null($cart_id)){
+        $get_cart['cart_id'] = (int) $cart_id;
+        
+    }
+    if(!is_null($product_id)){
+        $get_cart['product_id']= (int) $product_id;
+    }
+    $get_cart['action'] = $action;
+    //error_log("HELLO");
+    $response = json_decode($rbMQc->send_request($get_cart), true);
+
+    switch ($response['code']) {
+        case 200:
+            error_log($response['message']);
+        case 401:
+            $error_msg = 'Unauthorized: ' . $response['message'];
+            error_log($error_msg);
+            break;
+        default:
+            $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+            error_log($error_msg);
+            break;
+
+    }
+    return $response;
+}
+
 /*function list_item($uid, $cid, $conditon, $description, $price, $rbMQc){
     $list_item= array();
     $list_item['type'] = 'list_item';

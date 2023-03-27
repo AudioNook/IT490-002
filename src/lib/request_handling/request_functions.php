@@ -153,15 +153,15 @@ function db_add_collect($user_id, $items)
     foreach ($items as $item) {
         // Check if the release id for the collection item already exists
         $stmt = $db->prepare("Select id FROM $collection WHERE release_id = :release_id");
-        $stmt->execute([':release_id'=>(int)$item['release_id']]);
+        $stmt->execute([':release_id' => (int)$item['release_id']]);
         $collected_item_id = $stmt->fetchColumn();
-        
+
         // if the release id does not already exist insert it
-        if(!$collected_item_id){ 
+        if (!$collected_item_id) {
             $params1 = [
                 ':rid' => (int) $item['release_id'],
                 ':title' => htmlspecialchars($item['title']),
-                ':img' => htmlspecialchars($item['cover_image'],ENT_QUOTES, 'UTF-8'),
+                ':img' => htmlspecialchars($item['cover_image'], ENT_QUOTES, 'UTF-8'),
                 ':format' => htmlspecialchars($item['format'])
             ];
             $lastInsertId = executeQuery($collect_query, $params1, true);
@@ -177,28 +177,28 @@ function db_add_collect($user_id, $items)
 
         // Insert genres and the relationship between the collected item and the genre
         $genre_arr = []; // For reach will always go through an array
-        if(strpos($item['genre'],', ') !== false){
-            $genre_arr = explode(",",$item['genre']);
-        }else{
+        if (strpos($item['genre'], ', ') !== false) {
+            $genre_arr = explode(",", $item['genre']);
+        } else {
             $genre_arr[] = $item['genre'];
         }
-        foreach($genre_arr as $genreName){
+        foreach ($genre_arr as $genreName) {
             // Check if the genre already exists
             $stmt = $db->prepare("SELECT id FROM Genres WHERE name = :genre_name");
-            $stmt->execute([':genre_name' =>$genreName]);
+            $stmt->execute([':genre_name' => $genreName]);
             $genreId = $stmt->fetchColumn();
 
             // if the genre does not exist insert it
-            if(!$genreId){
+            if (!$genreId) {
                 $genre_query = "INSERT INTO Genres (name) VALUES(:genre_name)";
-                $genre_param = [':genre_name'=>$genreName];
-                $genreId = executeQuery($genre_query,$genre_param,true);
+                $genre_param = [':genre_name' => $genreName];
+                $genreId = executeQuery($genre_query, $genre_param, true);
             }
 
             // Insert the relationship into the Genre_Collecitons Table
             $genRel_query = "INSERT INTO Genres_Collection (collection_item_id, genre_id) VALUES (:cid, :gid)";
-            $params3 = [':cid'=>$collected_item_id, ':gid' => $genreId];
-            $r = executeQuery($genRel_query,$params3);
+            $params3 = [':cid' => $collected_item_id, ':gid' => $genreId];
+            $r = executeQuery($genRel_query, $params3);
         }
     }
 
@@ -219,7 +219,8 @@ function db_add_collect($user_id, $items)
     }
 }
 
-function db_user_collect($user_id){
+function db_user_collect($user_id)
+{
     $user_id = (int)htmlspecialchars($user_id);
     //$collection = 'Collection_Items';
     //$usr_collect = 'User_Collected_Items';
@@ -229,7 +230,7 @@ function db_user_collect($user_id){
     WHERE User_Collected_Items.user_id = :uid;";
     $params = [':uid' => "$user_id"];
     $collected = executeQuery($query, $params);
-    if (count($collected) >0) {
+    if (count($collected) > 0) {
         return [
             'type' => 'user_collect',
             'code' => 200,
@@ -246,11 +247,12 @@ function db_user_collect($user_id){
         ];
     }
 }
-function db_item($uid, $cid){
-        $uid = (int) $uid;
-        $cid = (int) $cid;
-        error_log("user_id => ". $uid . "collect_id => " . $cid);
-        $query = "SELECT
+function db_item($uid, $cid)
+{
+    $uid = (int) $uid;
+    $cid = (int) $cid;
+    error_log("user_id => " . $uid . "collect_id => " . $cid);
+    $query = "SELECT
         Collection_Items.id AS collection_item_id,
         Collection_Items.title,
         Collection_Items.cover_image,
@@ -286,7 +288,8 @@ function db_item($uid, $cid){
         ];
     }
 }
-function db_list_item($uid,$cid,$condition,$description,$price){
+function db_list_item($uid, $cid, $condition, $description, $price)
+{
     $db = getDB();
     $uid = (int) $uid;
     $cid = (int) $cid;
@@ -294,9 +297,9 @@ function db_list_item($uid,$cid,$condition,$description,$price){
     $stmt = $db->prepare("SELECT id FROM User_Collected_Items WHERE user_id = :user_id AND collection_item_id = :collection_item_id");
     $stmt->execute([':user_id' => (int) $uid, ':collection_item_id' => (int) $cid]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    if($result){
+    if ($result) {
         $userCollectedItemId = $result['id'];
-    } else{
+    } else {
         return [
             'type' => 'list_item',
             'code' => 401,
@@ -306,12 +309,12 @@ function db_list_item($uid,$cid,$condition,$description,$price){
     }
     $stmt = $db->prepare("INSERT INTO Marketplace_Items (user_collected_item_id, item_condition, item_description, price) VALUES (:user_collected_item_id, :condition, :description, :price)");
     $r = $stmt->execute([
-      ':user_collected_item_id' => $userCollectedItemId,
-      ':condition' => $condition,
-      ':description' => $description,
-      ':price' => $price
+        ':user_collected_item_id' => $userCollectedItemId,
+        ':condition' => $condition,
+        ':description' => $description,
+        ':price' => $price
     ]);
-    if($r){
+    if ($r) {
         return [
             'type' => 'req_item',
             'code' => 200,
@@ -320,9 +323,10 @@ function db_list_item($uid,$cid,$condition,$description,$price){
         ];
     }
 }
-function db_market(){
+function db_market()
+{
     $db = getDB();
-    $query="SELECT mi.id, mi.item_condition, mi.item_description, mi.price, mi.created, mi.modified,
+    $query = "SELECT mi.id, mi.item_condition, mi.item_description, mi.price, mi.created, mi.modified,
     ci.title, ci.cover_image, ci.format,
     u.email, u.username,
     GROUP_CONCAT(g.name SEPARATOR ', ') AS genres
@@ -336,7 +340,7 @@ function db_market(){
     $stmt = $db->prepare($query);
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if($result){
+    if ($result) {
         return [
             'type' => 'req_marketplace',
             'code' => 200,
@@ -344,12 +348,143 @@ function db_market(){
             'message' => 'Sucessfully pulled ENTIRE fucking MARKETPALCE',
             'market_place_items' => $result,
         ];
-    }else{
+    } else {
         return [
             'type' => 'req_marketplace',
             'code' => 401,
             'status' => 'error',
             'message' => 'Error pulling entire fucking marketplace',
+        ];
+    }
+}
+
+function db_cart($request)
+{
+    $action = strtolower(trim($request['action']));
+    if (!empty($action)) {
+        $db = getDB();
+        switch ($action) {
+            case "add":
+                $query = "INSERT INTO Cart (product_id, unit_price, user_id)
+            VALUES (:iid, (SELECT cost FROM Products where id = :iid), :uid)";
+                $stmt = $db->prepare($query);
+                $stmt->bindValue(":iid", $request['product_id'], PDO::PARAM_INT);
+                $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+                try {
+                    $stmt->execute();
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 200,
+                        'status' => 'success',
+                        'message' => 'Sucessfully added item to cart',
+                    ];
+                } catch (PDOException $e) {
+                    error_log(var_export($e, true));
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 401,
+                        'status' => 'error',
+                        'message' => 'Error adding item to cart',
+                    ];
+                }
+                break;
+            case "update":
+                $query = "UPDATE Cart WHERE id = :cid AND user_id = :uid";
+                $stmt = $db->prepare($query);
+                //cart id specifies a specific cart item
+                $stmt->bindValue(":cid", $request['cart_id'], PDO::PARAM_INT);
+                //user id ensures we can only edit our cart
+                $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+                try {
+                    $stmt->execute();
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 200,
+                        'status' => 'success',
+                        'message' => 'Sucessfully updated item in cart',
+                    ];
+                } catch (PDOException $e) {
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 401,
+                        'status' => 'Error',
+                        'message' => 'Error updating item in cart',
+                    ];
+                }
+                break;
+            case "delete":
+                $query = "DELETE FROM Cart WHERE id = :cid AND user_id = :uid";
+                $stmt = $db->prepare($query);
+                $stmt->bindValue(":cid", $request["cart_id"], PDO::PARAM_INT);
+                $stmt->bindValue(":uid", $request['user_id'], PDO::PARAM_INT);
+                try {
+                    $stmt->execute();
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 200,
+                        'status' => 'success',
+                        'message' => 'Sucessfully deleted item from cart',
+                    ];
+                } catch (PDOException $e) {
+                    error_log(var_export($e, true));
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 401,
+                        'status' => 'Error',
+                        'message' => 'Error deleting item in cart',
+                    ];
+                }
+                break;
+            case "clear":
+                //clear cart contents
+                $query = "DELETE FROM Cart";
+                $stmt = $db->prepare($query);
+                try {
+                    $stmt->execute();
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 200,
+                        'status' => 'Sucess',
+                        'message' => 'Sucessfully cleared items in cart',
+                    ];
+                } catch (PDOException $e) {
+                    error_log(var_export($e, true));
+                    return [
+                        'type' => 'req_cart',
+                        'code' => 401,
+                        'status' => 'Error',
+                        'message' => 'Error clearing items in cart',
+                    ];
+                }
+                break;
+        }
+    }
+    $query = "SELECT cart.id, cart.product_id, product.stock, product.name, cart.unit_price, (cart.unit_price) as subtotal,
+FROM Marketplace_Items as product JOIN Cart as cart on product.id = cart.product_id
+ WHERE cart.user_id = :uid";
+    $db = getDB();
+    $stmt = $db->prepare($query);
+    $cart = [];
+    try {
+        $stmt->execute([":uid" => get_user_id()]);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if ($results) {
+            $cart = $results;
+            return [
+                'type' => 'req_cart',
+                'code' => 200,
+                'status' => 'Success',
+                'message' => 'Retrieved cart',
+                'cart' => $cart,
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log(var_export($e, true));
+        return [
+            'type' => 'req_cart',
+            'code' => 401,
+            'status' => 'Error',
+            'message' => 'Error fetching items in cart',
         ];
     }
 }
