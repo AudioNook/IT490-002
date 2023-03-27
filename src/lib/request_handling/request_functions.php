@@ -466,7 +466,7 @@ FROM Marketplace_Items as product JOIN Cart as cart on product.id = cart.product
     $stmt = $db->prepare($query);
     $cart = [];
     try {
-        $stmt->execute([":uid" => get_user_id()]);
+        $stmt->execute([":uid" => (int)$request['user_id']]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if ($results) {
             $cart = $results;
@@ -474,8 +474,7 @@ FROM Marketplace_Items as product JOIN Cart as cart on product.id = cart.product
                 'type' => 'req_cart',
                 'code' => 200,
                 'status' => 'Success',
-                'message' => 'Retrieved cart',
-                'cart' => $cart,
+                'message' => 'Created cart',
             ];
         }
     } catch (PDOException $e) {
@@ -484,7 +483,7 @@ FROM Marketplace_Items as product JOIN Cart as cart on product.id = cart.product
             'type' => 'req_cart',
             'code' => 401,
             'status' => 'Error',
-            'message' => 'Error fetching items in cart',
+            'message' => 'Error Creating in cart',
         ];
     }
 }

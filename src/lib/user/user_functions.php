@@ -133,20 +133,20 @@ function get_cart($user_id, $rbMQCOL){
     return $response;
 }
 function update_cart($action, $user_id, $cart_id = null, $product_id = null, $rbMQc){
-    $get_cart = array();
-    $get_cart['type'] = 'req_cart';
-    $get_cart['message'] = 'Requesting item from Collection';
-    $get_cart['user_id']= (int) $user_id;
+    $update_cart = array();
+    $update_cart['type'] = 'req_cart';
+    $update_cart['message'] = 'Requesting to update cart';
+    $update_cart['user_id']= (int) $user_id;
     if(!is_null($cart_id)){
-        $get_cart['cart_id'] = (int) $cart_id;
+        $update_cart['cart_id'] = (int) $cart_id;
         
     }
     if(!is_null($product_id)){
-        $get_cart['product_id']= (int) $product_id;
+        $update_cart['product_id']= (int) $product_id;
     }
-    $get_cart['action'] = $action;
+    $update_cart['action'] = $action;
     //error_log("HELLO");
-    $response = json_decode($rbMQc->send_request($get_cart), true);
+    $response = json_decode($rbMQc->send_request($update_cart), true);
 
     switch ($response['code']) {
         case 200:

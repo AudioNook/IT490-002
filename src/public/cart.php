@@ -1,14 +1,18 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
+
+
 $user_id = get_user_id();
 $cart = get_cart($user_id,$rbMQCOL);
-
+var_dump($cart);
 if(isset($_POST['action'])){
     $action = $_POST['action'];
-    $cart_id = $_POST['cart_id'];
-    update_cart($action,$user_id,null,null,$rbMQC);
+    $product_id = $_POST['product_id'];
+    $uid = $_POST['user_id'];
+    require_once(__DIR__ . "/../lib/rbMQ/rbMQclient.php");
+    $rbMQc = new rabbitMQClient($rabbit_ini,$rabbit_server);
+    update_cart($action,$user_id,$product_id,null,$rbMQC);
 }
-
 ?>
 <div class="container-fluid">
     <h1>Cart</h1>
@@ -41,7 +45,7 @@ if(isset($_POST['action'])){
                     <form method="POST">
                         <input type="hidden" name="cart_id" value="<?php (int)$c["id"]; ?>" />
                         <input type="hidden" name="action" value="delete" />
-                        <input type="submit" class="btn btn-danger" value="X" />
+                        <input type="submit" name="submit"class="btn btn-danger" value="X" />
                     </form>
                 </td>
             </tr>
