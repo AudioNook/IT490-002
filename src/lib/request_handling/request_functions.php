@@ -360,7 +360,7 @@ function db_market()
 
 function db_cart($request)
 {
-    $action = strtolower(trim($request['action']));
+    $action = strtolower($request['action']);
     if (!empty($action)) {
         $db = getDB();
         switch ($action) {
@@ -369,7 +369,7 @@ function db_cart($request)
             VALUES (:iid, (SELECT cost FROM Products where id = :iid), :uid)";
                 $stmt = $db->prepare($query);
                 $stmt->bindValue(":iid", $request['product_id'], PDO::PARAM_INT);
-                $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+                $stmt->bindValue(":uid", $request['user_id'], PDO::PARAM_INT);
                 try {
                     $stmt->execute();
                     return [
@@ -394,7 +394,7 @@ function db_cart($request)
                 //cart id specifies a specific cart item
                 $stmt->bindValue(":cid", $request['cart_id'], PDO::PARAM_INT);
                 //user id ensures we can only edit our cart
-                $stmt->bindValue(":uid", get_user_id(), PDO::PARAM_INT);
+                $stmt->bindValue(":uid", $request['user_id'], PDO::PARAM_INT);
                 try {
                     $stmt->execute();
                     return [
@@ -422,7 +422,7 @@ function db_cart($request)
                     return [
                         'type' => 'req_cart',
                         'code' => 200,
-                        'status' => 'success',
+                        'status' => 'Success',
                         'message' => 'Sucessfully deleted item from cart',
                     ];
                 } catch (PDOException $e) {
@@ -444,7 +444,7 @@ function db_cart($request)
                     return [
                         'type' => 'req_cart',
                         'code' => 200,
-                        'status' => 'Sucess',
+                        'status' => 'Success',
                         'message' => 'Sucessfully cleared items in cart',
                     ];
                 } catch (PDOException $e) {
@@ -459,7 +459,7 @@ function db_cart($request)
                 break;
         }
     }
-    $query = "SELECT cart.id, cart.product_id, product.stock, product.name, cart.unit_price, (cart.unit_price) as subtotal,
+    $query = "SELECT cart.id, cart.product_id, product.stock, product.name, cart.unit_price, (cart.unit_price) as subtotal
 FROM Marketplace_Items as product JOIN Cart as cart on product.id = cart.product_id
  WHERE cart.user_id = :uid";
     $db = getDB();
