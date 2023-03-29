@@ -60,7 +60,7 @@ function requestProcessor($request)
             $response = db_market();
             break;
         case "req_cart":
-            $response = db_cart($request['action']);
+            $response = db_cart($request);
             break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");

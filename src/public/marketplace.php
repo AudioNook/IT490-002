@@ -7,7 +7,6 @@ $response = get_market($rbMQCOL);
 $market_arr = $response['market_place_items'];
 
 /*if(isset($_POST['action'])){
-  global $rbMQc;
   $user_id = get_user_id();
   $action = $_POST['action'];
   $cart_id = $_POST['cart_id'];
