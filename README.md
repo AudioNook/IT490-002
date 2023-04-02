@@ -1,4 +1,25 @@
-# **AudioNook**: An Online Digital Collection and Trading Platform
+<h1 align="center">
+  <a href='#'><img src="https://cdn.discordapp.com/attachments/279412433120919562/1092154277302124635/image.png" alt="AudioNook" width="90%"></a>
+  <br>
+  <div>
+    <a href="https://github.com/AudioNook/IT490-002/issues">
+        <img src="https://img.shields.io/github/issues-raw/AudioNook/IT490-002?labelColor=303446&style=for-the-badge">
+    </a>
+    <a href="https://github.com/AudioNook/IT490-002/issues?q=is%3Aissue+is%3Aclosed">
+        <img src="https://img.shields.io/github/issues-closed-raw/AudioNook/IT490-002?labelColor=303446&style=for-the-badge">
+    </a>
+    <a href="https://github.com/PROxZIMA/.dotfiles/">
+        <img src="https://img.shields.io/github/repo-size/AudioNook/IT490-002?labelColor=303446&style=for-the-badge">
+    </a>
+    <a href="https://github.com/PROxZIMA/.dotfiles/blob/master/LICENSE">
+        <img src="https://img.shields.io/github/milestones/all/AudioNook/IT490-002?labelColor=303446&style=for-the-badge"/>
+    </a>
+    <br>
+  </div>
+</h1>
+<br>
+
+**AudioNook**: An Online Digital Collection and Trading Platform
 **AudioNook** is an online platform for digital collection keeping and trading physical formats of Music. It is is built on [Discog's API](https://www.discogs.com/developers). This project is an a *PHP* implementation of *RabbitMQ* and *PHP's AMQP protocol*.
 ## Getting Started
 - 
@@ -59,10 +80,25 @@
 </details>
 
 ## Contributors
-[Carlos Segarra](https://github.com/Carlomos7)
+## Contributors
 
-[Jaylin Cabrera](https://github.com/jaylincabrera10)
+<div style="display: flex; align-items: center; font-size: 1.2em;">
+  <img src="https://avatars.githubusercontent.com/u/106279547?v=4" alt="Carlos Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
+  <a href="https://github.com/Carlomos7">Carlos Segarra</a>
+</div>
 
-[Luanda Silva](https://github.com/LuandaS)
+<div style="display: flex; align-items: center; font-size: 1.2em;">
+  <img src="https://avatars.githubusercontent.com/u/98345193?v=4" alt="Jaylin Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
+  <a href="https://github.com/jaylincabrera10">Jaylin Cabrera</a>
+</div>
 
-[John Pearson](https://github.com/jmpearson135)
+<div style="display: flex; align-items: center; font-size: 1.2em;">
+  <img src="https://avatars.githubusercontent.com/u/113204714?v=4" alt="Luanda Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
+  <a href="https://github.com/LuandaS">Luanda Silva</a>
+</div>
+
+<div style="display: flex; align-items: center; font-size: 1.2em;">
+  <img src="https://avatars.githubusercontent.com/u/123332874?v=4" alt="John Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
+  <a href="https://github.com/jmpearson135">John Pearson</a>
+</div>
+
