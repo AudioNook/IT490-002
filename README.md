@@ -45,38 +45,37 @@
 ## Hierarchy
 <details>
     <summary>File Structure</summary>
-    <p>
-    <pre>
-    AudioNook/IT-490/
-    ├── Frontend/  -- Frontend Instance
-    │   ├── lib/
-    │   │   └── frontend relavant functions and classess
-    │   ├── partials/
-    │   ├── public/
-    │   │   ├── publicly accesible pages
-    │   │   ├── css/ 
-    │   │   └── js/
-    │   ├── RabbitMQ/
-    │   └── logs/
-    ├── Database/  -- Database Instance
-    │   ├── lib/
-    │   │   ├── config.php
-    │   │   └── db.php, .env, etc.
-    │   ├── sql/ -- .sql files and init_db.php script
-    │   ├── logs/
-    │   └── db_listner.php  -- listens for DB Requests (e.g., 'login')
-    ├── Rabbitmq/
-    │   ├── lib/
-    │   │   ├── rabbitMQLib.php
-    │   │   └── rabbitmq_config.php
-    │   └── logs/
-    └── DMZ/  -- DMZ Instance
-        ├── lib/ -- API class and functions utilizing custom Curl class
-        │   └── certs/ -- for curl
-        ├── logs/
-        └── dmz_listner.php -- listens for DMZ Requests (e.g., 'search')
-    </pre>
-    </p>
+    
+  ```mint
+  AudioNook/IT-490/
+  ├── Frontend/  -- Frontend Instance
+  │   ├── lib/
+  │   │   └── frontend relavant functions and classess
+  │   ├── partials/
+  │   ├── public/
+  │   │   ├── publicly accesible pages
+  │   │   ├── css/ 
+  │   │   └── js/
+  │   ├── RabbitMQ/
+  │   └── logs/
+  ├── Database/  -- Database Instance
+  │   ├── lib/
+  │   │   ├── config.php
+  │   │   └── db.php, .env, etc.
+  │   ├── sql/ -- .sql files and init_db.php script
+  │   ├── logs/
+  │   └── db_listner.php  -- listens for DB Requests (e.g., 'login')
+  ├── Rabbitmq/
+  │   ├── lib/
+  │   │   ├── rabbitMQLib.php
+  │   │   └── rabbitmq_config.php
+  │   └── logs/
+  └── DMZ/  -- DMZ Instance
+      ├── lib/ -- API class and functions utilizing custom Curl class
+      │   └── certs/ -- for curl
+      ├── logs/
+      └── dmz_listner.php -- listens for DMZ Requests (e.g., 'search')
+```
 </details>
 
 ## Contributors
