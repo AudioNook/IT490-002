@@ -8,7 +8,7 @@
     <a href="https://github.com/AudioNook/IT490-002/issues?q=is%3Aissue+is%3Aclosed">
         <img src="https://img.shields.io/github/issues-closed-raw/AudioNook/IT490-002?labelColor=303446&style=for-the-badge">
     </a>
-    <a href="https://github.com/PROxZIMA/.dotfiles/">
+    <a href="https://github.com/AudiNook/IT490-002">
         <img src="https://img.shields.io/github/repo-size/AudioNook/IT490-002?labelColor=303446&style=for-the-badge">
     </a>
     <a href="https://github.com/PROxZIMA/.dotfiles/blob/master/LICENSE">
