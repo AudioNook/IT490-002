@@ -80,25 +80,13 @@
 </details>
 
 ## Contributors
+
 ## Contributors
 
-<div style="display: flex; align-items: center; font-size: 1.2em;">
-  <img src="https://avatars.githubusercontent.com/u/106279547?v=4" alt="Carlos Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
-  <a href="https://github.com/Carlomos7">Carlos Segarra</a>
-</div>
+| ![Carlos Profile Picture](https://avatars.githubusercontent.com/u/106279547?v=4&s=50) | [Carlos Segarra](https://github.com/Carlomos7) |
+|:-:|:-|
+| ![Jaylin Profile Picture](https://avatars.githubusercontent.com/u/98345193?v=4&s=50) | [Jaylin Cabrera](https://github.com/jaylincabrera10) |
+| ![Luanda Profile Picture](https://avatars.githubusercontent.com/u/113204714?v=4&s=50) | [Luanda Silva](https://github.com/LuandaS) |
+| ![John Profile Picture](https://avatars.githubusercontent.com/u/123332874?v=4&s=50) | [John Pearson](https://github.com/jmpearson135) |
 
-<div style="display: flex; align-items: center; font-size: 1.2em;">
-  <img src="https://avatars.githubusercontent.com/u/98345193?v=4" alt="Jaylin Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
-  <a href="https://github.com/jaylincabrera10">Jaylin Cabrera</a>
-</div>
-
-<div style="display: flex; align-items: center; font-size: 1.2em;">
-  <img src="https://avatars.githubusercontent.com/u/113204714?v=4" alt="Luanda Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
-  <a href="https://github.com/LuandaS">Luanda Silva</a>
-</div>
-
-<div style="display: flex; align-items: center; font-size: 1.2em;">
-  <img src="https://avatars.githubusercontent.com/u/123332874?v=4" alt="John Profile Picture" width="50" style="border-radius: 50%; margin-right: 10px;">
-  <a href="https://github.com/jmpearson135">John Pearson</a>
-</div>
 
