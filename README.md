@@ -81,8 +81,6 @@
 
 ## Contributors
 
-## Contributors
-
 | ![Carlos Profile Picture](https://avatars.githubusercontent.com/u/106279547?v=4&s=50) | [Carlos Segarra](https://github.com/Carlomos7) |
 |:-:|:-|
 | ![Jaylin Profile Picture](https://avatars.githubusercontent.com/u/98345193?v=4&s=50) | [Jaylin Cabrera](https://github.com/jaylincabrera10) |
