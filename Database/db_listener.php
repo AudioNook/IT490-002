@@ -3,11 +3,8 @@
 error_reporting(E_ALL ^ E_DEPRECATED);
 
 // DB functions
-require(__DIR__ . "/RabbitMQ/path.inc");
-require(__DIR__ . "/RabbitMQ/get_host_info.php");
-require_once(__DIR__ . "/RabbitMQ/rabbitMQLib.php");
-require_once(__DIR__ . "/lib/DB_utils.php");
-use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart, Reviews, Products};
+require_once(__DIR__ . "/../vendor/autoload.php");
+use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart};
 use RabbitMQ\rabbitMQServer;
 function requestProcessor($request)
 {
@@ -23,9 +20,8 @@ function requestProcessor($request)
     $db_forums = new Forums();
     $db_collection = new Collection();
     $db_market = new Marketplace();
-    $db_cart = new Cart();
-    $db_reviews = new Review();
-    $db_products = new Product();
+    //$db_reviews = new Review();
+    //$db_products = new Product();
     switch ($request['type']) {
         // Handling User Login and Sessions
         case "login": 
@@ -83,7 +79,7 @@ function requestProcessor($request)
         case "cart":
             $response = $db_cart->cart($request);
             break;
-        // TODO: Add more cases for Reviews, Products, Orders, and Payments
+        /* // TODO: Add more cases for Reviews, Products, Orders, and Payments
         // Handling Reviews
         case "get_reviews":
             $response = $db_reviews->get_reviews($request['id'], $request['product_id'],$request['comment'], $request['created']);
@@ -100,6 +96,7 @@ function requestProcessor($request)
             break;
         // Handling Orders
         // Handling Payments
+        */
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;
