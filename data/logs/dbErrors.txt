@@ -1,8 +1,0 @@
------------------------------------------------------------------------------------
-database
-03-20-2023  10:11:22
-ERROR IN FILE /home/jmp8/Desktop/Logging TEST/src/lib/rbMQ/test.php: 
-ON LINE: 4 
-ERROR: 
-LATE FOR MIDTERM SEND HELP
------------------------------------------------------------------------------------
