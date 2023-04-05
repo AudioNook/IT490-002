@@ -5,7 +5,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 // DB functions
 require_once(__DIR__ . "/../vendor/autoload.php");
 use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart};
-use RabbitMQ\rabbitMQServer;
+use RabbitMQ\RabbitMQServer;
 function requestProcessor($request)
 {
     echo "========================".PHP_EOL;
@@ -108,7 +108,7 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQs = new rabbitMQServer("rabbitMQ.ini","testServer");
+$rbMQs = new RabbitMQServer("rabbitMQ.ini","testServer");
 
 echo "RabbitMQServer BEGIN".PHP_EOL;
 $rbMQs->process_requests('requestProcessor');

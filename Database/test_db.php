@@ -11,7 +11,11 @@ echo "RabbitMQClient: Starting client..." . PHP_EOL;
 $client = new RabbitMQClient($rabbit_ini, $rabbit_server);
 
 // Call the send_request function with the message to be sent
-$request = array('type'=> 'login','username' => 'test_user', 'password' => 'test');
+$request = array(
+    'type'=> 'register',
+    'username' => 'new', 
+    'password' => '12345'
+);
 $response = $client->send_request($request);
 
 // Process the response received from the server
