@@ -1,4 +1,6 @@
 <?php
+//TODO Reirects to forums.php
+
 require(__DIR__ . "/../partials/nav.php");
 
 $topic_id= $_GET["id"];

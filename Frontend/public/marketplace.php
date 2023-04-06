@@ -1,9 +1,11 @@
 <?php
    /* This page will host the search if a user is signed in. */
    require(__DIR__ . "/../partials/nav.php");
-   logged_in(true);
+   //logged_in(true);
+   //TODO uncomment login 
 
    $response = get_market($rbMQCOL);
+   //TODO Fatal error: Uncaught Error: Call to undefined function get_market() in /Users/luanda/IT490-002/Frontend/public/marketplace.php:7 Stack trace: #0 {main} thrown in /Users/luanda/IT490-002/Frontend/public/marketplace.php on line 7
    $market_arr = $response['market_place_items'];
    ?>
    

@@ -93,6 +93,7 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
         $register_req['response'] = $msg;
     
         //sending received form responses to rabbitMQ
+        //TODO Fatal error: Uncaught Error: Call to a member function send_request() on null in /Users/luanda/IT490-002/Frontend/public/register.php:96 Stack trace: #0 {main} thrown in /Users/luanda/IT490-002/Frontend/public/register.php on line 96
         $response = json_decode($rbMQc->send_request($register_req), true);
 
         //checking whether or not register was processed successfully/unsuccessfully

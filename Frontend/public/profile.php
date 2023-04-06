@@ -1,5 +1,5 @@
 <?php require(__DIR__ . "/../partials/nav.php"); 
-logged_in(true);
+//logged_in(true); TODO uncomment
 
 $email = 'email not found';
 $username = 'username not found';
