@@ -1,4 +1,6 @@
 <?php
+//TODO Reirects to forums.php
+
 require(__DIR__ . "/../partials/nav.php");
 
 $post_id = $_GET["id"];

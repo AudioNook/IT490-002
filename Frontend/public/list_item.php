@@ -10,6 +10,7 @@ if(isset($_GET['id'])){
 if(isset($_GET['uid'])){
     $user_id = $_GET['uid'];
 }
+// TODO Warning: Undefined variable $rbMQCOL in /Users/luanda/IT490-002/Frontend/public/list_item.php on line 14
 $response = get_item($user_id,$collect_id,$rbMQCOL);
 if(count($response['item'][0])>0){
     $item = $response['item'][0];
@@ -90,7 +91,10 @@ if(isset($_POST['list'])){
                     <option class="dropdown-menu" aria-labelledby="Condition-select" disabled selected>Condition</option>
                     <?php foreach ($conditons as $c) : ?>
                         <option value="<?php echo $c ?>" class="dropdown-item"><?php echo $c ?></option>
-                    <?php endforeach; ?>
+                    <?php endforeach; 
+                    //TODO Fatal error: Uncaught Error: Call to a member function send_request() on null in /Users/luanda/IT490-002/Frontend/lib/user_functions.php:94 Stack trace: #0 /Users/luanda/IT490-002/Frontend/public/list_item.php(13): get_item(NULL, NULL, NULL) #1 {main} thrown in /Users/luanda/IT490-002/Frontend/lib/user_functions.php on line 94
+                    ?>
+                    
                 </select>
                 </ul>
             </div>

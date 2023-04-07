@@ -28,7 +28,9 @@
           echo '<script language="javascript">';
           echo 'alert("' . $bad_msg . '")';
           echo '</script>';
-          redirect(get_url("login.php"));
+         //  redirect(get_url("login.php"));
+         //TODO ADD LINE BACK IN 
+
       }
 }
    

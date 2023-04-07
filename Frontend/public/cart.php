@@ -206,7 +206,8 @@ if (isset($_GET['searching'])) {
                                                     <div class="col-md-3 col-lg-3 col-xl-3">
                                                         <!-- Replace Pname with actual product name-->
                                                         <p class="lead fw-normal mb-2">Product:
-                                                            <?php echo htmlspecialchars($item["name"]); ?>
+                                           
+                                                        <?php echo htmlspecialchars($item["name"]); ?>
                                                         </p>
                                                         <!-- end product name -->
                                                         <span class="text-muted">Product ID:</span>

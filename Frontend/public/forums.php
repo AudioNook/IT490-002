@@ -1,13 +1,16 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
 
-logged_in(true);
+//logged_in(true); TODO uncomment
 
 $topics_req = array();
 $topics_req['type'] = 'topics';
 $topics_req['message'] = "Sending discussion topic request";
 $topics;
 $response = json_decode($rbMQc->send_request($topics_req), true);
+//TODO Warning: Undefined variable $rbMQc in /Users/luanda/IT490-002/Frontend/public/forums.php on line 10
+//TODO Fatal error: Uncaught Error: Call to a member function send_request() on null in /Users/luanda/IT490-002/Frontend/public/forums.php:10 Stack trace: #0 {main} thrown in /Users/luanda/IT490-002/Frontend/public/forums.php on line 10
+
 
 if ($response['type'] == 'topics') {
   switch ($response['code']) {

@@ -30,4 +30,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
     echo json_encode($response);
+    //TODO Warning: Undefined variable $response in /Users/luanda/IT490-002/Frontend/public/add_collect.php on line 32 null
     exit(0);
