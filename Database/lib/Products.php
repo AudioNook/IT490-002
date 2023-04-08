@@ -6,9 +6,36 @@ require_once(__DIR__ . "/db.php");
 
 use Database\db;
 /**
- * Class Forums: Database class for forums
+ * Classwa Products and Reviews: Database class for Products and Reviews
  * @package Database
  */
+
+///////////////////////////////
+//Products Class
+///////////////////////////////
+
+class Products extends db
+{
+    /**
+     * Forums constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    /**
+     * Get all products in Products table
+     * @return array
+     */
+    public function get_products()
+    {
+        $table = 'Products';
+        $products = $this->exec_query("SELECT id, name, category, stock, cost, image FROM $table");
+        if ($products) {
+            return $products;
+        }
+    }
+}
 
 ///////////////////////////////
 //Reviews Class
@@ -24,7 +51,7 @@ class Reviews extends db
         parent::__construct();
     }
     /**
-     * Get all reviews
+     * Get all reviews in Review Table
      * @return array
      */
     public function get_reviews()
@@ -69,30 +96,5 @@ class Reviews extends db
         }
     }
 }
-///////////////////////////////
-//Products Class
-///////////////////////////////
 
-class Products extends db
-{
-    /**
-     * Forums constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-    /**
-     * Get all products
-     * @return array
-     */
-    public function get_products()
-    {
-        $table = 'Products';
-        $products = $this->exec_query("SELECT id, name, category, stock, cost, image FROM $table");
-        if ($products) {
-            return $products;
-        }
-    }
-}
 

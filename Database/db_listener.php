@@ -4,7 +4,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 
 // DB functions
 require_once(__DIR__ . "/../vendor/autoload.php");
-use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart};
+use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart, Products};
 use RabbitMQ\RabbitMQServer;
 function requestProcessor($request)
 {
@@ -20,8 +20,8 @@ function requestProcessor($request)
     $db_forums = new Forums();
     $db_collection = new Collection();
     $db_market = new Marketplace();
-    //$db_reviews = new Review();
-    //$db_products = new Product();
+   // $db_reviews = new Reviews();
+    $db_products = new Products();
     switch ($request['type']) {
         // Handling User Login and Sessions
         case "login": 
@@ -34,11 +34,12 @@ function requestProcessor($request)
             $response = $db_user->logout($request['token']);
             break;
         case "by_user_id":
-            $response = $db_user->get_user_by_id($request["username"]);
+            $response = $db_user->get_user_by_id($request["uid"]);
             break;
         case "by_username":
             $response = $db_user->get_user_by_username($request["username"]);
             break;
+        //Handling sessions
         case "validate_jwt":
             $response = $db_session->validate_session($request['token']);
             break;
@@ -66,7 +67,7 @@ function requestProcessor($request)
             $response = $db_collection->get_user_collection($request['user_id']);
             break;
         case "get_collection_item":
-            $response = $db_collection->get_collection_item($request['user_id'],$request['item_id']);
+            $response = $db_collection->get_collection_item($request['user_id'],$request['collection_item_id']);
             break;
         // Handling Marketplace
         case "get_marketplace":
@@ -76,9 +77,9 @@ function requestProcessor($request)
             $response = $db_market->list_item($request['uid'],$request['cid'],$request['condition'],$request['description'],$request['price']);
             break;
         // Handling Cart
-        case "cart":
-            $response = $db_cart->cart($request);
-            break;
+        // case "cart":
+            // $response = $db_cart->cart($request);
+           // break;
         /* // TODO: Add more cases for Reviews, Products, Orders, and Payments
         // Handling Reviews
         case "get_reviews":

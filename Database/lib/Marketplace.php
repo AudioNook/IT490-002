@@ -19,6 +19,7 @@ class Marketplace extends db
         $selectQuery = "SELECT id FROM User_Collected_Items WHERE user_id = :user_id AND collection_item_id = :collection_item_id";
         $selectParams = [':user_id' => (int) $uid, ':collection_item_id' => (int) $cid];
         $result = $this->exec_query($selectQuery, $selectParams);
+        var_dump($result);
         if ($result) {
             $userCollectedItemId = $result['id'];
         } else {
@@ -50,6 +51,19 @@ class Marketplace extends db
         INNER JOIN Genres_Collection AS gc ON ci.id = gc.collection_item_id
         INNER JOIN Genres AS g ON gc.genre_id = g.id
         GROUP BY mi.id";
-        return $this->exec_query($query);
+        $result = $this->exec_query($query);
+        if ($result !== false && !empty($result)){
+            return [
+                'code'=>200,
+                'message'=> 'Sending marketplace data',
+                'userid' => $result
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve marketplace data',
+            ];
+        }
     }
 }

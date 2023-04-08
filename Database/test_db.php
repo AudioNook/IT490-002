@@ -12,9 +12,15 @@ $client = new RabbitMQClient($rabbit_ini, $rabbit_server);
 
 // Call the send_request function with the message to be sent
 $request = array(
-    'type'=> 'register',
-    'username' => 'new', 
-    'password' => '12345'
+    'type'=> 'list_item',
+    'uid'=> '16',
+    'cid'=> '7',
+    'condition'=> 'mint',
+    'description'=> 'good',
+    'price'=> '100'
+
+
+
 );
 $response = $client->send_request($request);
 
