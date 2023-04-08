@@ -19,12 +19,16 @@ class Marketplace extends db
         $selectQuery = "SELECT id FROM User_Collected_Items WHERE user_id = :user_id AND collection_item_id = :collection_item_id";
         $selectParams = [':user_id' => (int) $uid, ':collection_item_id' => (int) $cid];
         $result = $this->exec_query($selectQuery, $selectParams);
-        var_dump($result);
         if ($result) {
-            $userCollectedItemId = $result['id'];
+            $userCollectedItemId = $result[0]['id'];
         } else {
-            return false;
+            return [
+                'code'=>400,
+                'message'=> 'Unable to find user collected item',
+                'success' => false
+            ];
         }
+
         $insertQuery = "INSERT INTO Marketplace_Items (user_collected_item_id, item_condition, item_description, price) VALUES (:user_collected_item_id, :condition, :description, :price)";
         $insertParams = [
             ':user_collected_item_id' => $userCollectedItemId,
@@ -34,8 +38,21 @@ class Marketplace extends db
         ];
         $r = $this->exec_query($insertQuery, $insertParams);
         if ($r) {
-            return true;
+            return [
+                'code'=>200,
+                'message'=> 'Successfully added item to marketplace',
+                'success' => true
+            ];
         }
+        else
+        {
+            return [
+                'code'=>400,
+                'message'=> 'Unable to list item in marketplace',
+                'success' => false
+            ];
+        }
+        
     }
 
     function get_marketplace()
