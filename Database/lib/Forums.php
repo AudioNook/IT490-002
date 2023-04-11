@@ -25,9 +25,19 @@ class Forums extends db
     public function get_topics()
     {
         $table = 'Discussion_Topics';
-        $topics = $this->exec_query("SELECT id, name. description FROM $table");
-        if ($topics) {
-            return $topics;
+        $topics = $this->exec_query("SELECT id, name, description FROM $table");
+        if ($topics !== false){
+            return [
+                'code'=>200,
+                'message'=> 'Successfully got topics user',
+                'topics' => $topics
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to get topics'
+            ];
         }
     }
 
@@ -39,8 +49,18 @@ class Forums extends db
     public function get_posts($topic_id)
     {
         $posts = $this->exec_query("SELECT Discussion_Posts.id, Discussion_Posts.user_id, Discussion_Posts.post_title, Discussion_Posts.content, Discussion_Posts.created, Users.username FROM Discussion_Posts INNER JOIN Users ON Discussion_Posts.user_id = Users.id WHERE Discussion_Posts.topic_id = :t_id", [":t_id" => $topic_id]);
-        if ($posts) {
-            return $posts;
+        if ($posts !== false && !empty($posts)){
+            return [
+                'code'=>200,
+                'message'=> 'Returning all posts',
+                'posts' => $posts
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve all posts'
+            ];
         }
     }
 
@@ -58,8 +78,20 @@ class Forums extends db
             ':reply_msg' => $reply_msg
         ];
         if ($this->exec_query($query, $params) !== false) {
-            return true;
+            return [
+                'code'=>200,
+                'message'=> 'Successfully created reply',
+                'success' => true
+            ];
         }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to reply to post',
+                'success' => false
+            ];
+        }
+    
     }
 
     /**
@@ -80,7 +112,18 @@ class Forums extends db
             ':reply_msg' => $reply_msg
         ];
         if ($this->exec_query($query, $params) !== false) {
-            return true;
+            return [
+                'code'=>200,
+                'message'=> 'Successfully created post',
+                'success' => true
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to create post',
+                'success' => false
+            ];
         }
     }
 
@@ -93,7 +136,21 @@ class Forums extends db
         $initial_post = $this->exec_query("SELECT id, user_id, post_title, content, created FROM Discussion_Posts WHERE id = :p_id", [":p_id" => $post_id]);
         $replies = $this->exec_query("SELECT Post_Replies.user_id, Post_Replies.content, Post_Replies.created, Users.username FROM Post_Replies INNER JOIN Users ON Post_Replies.user_id = Users.id WHERE Post_Replies.post_id = :p_id", [":p_id" => $post_id]);
         if ($initial_post && $replies) {
-            return [$initial_post, $replies];
+        return [
+            'code'=>200,
+            'message'=> 'Successfully grabbed discussion',
+            'success' => true,
+            'initial_post' => $initial_post,
+            'replies' => $replies
+
+        ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to grab discussion',
+                'success' => false
+            ];
         }
     }
 }

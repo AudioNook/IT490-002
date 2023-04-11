@@ -20,10 +20,15 @@ class Marketplace extends db
         $selectParams = [':user_id' => (int) $uid, ':collection_item_id' => (int) $cid];
         $result = $this->exec_query($selectQuery, $selectParams);
         if ($result) {
-            $userCollectedItemId = $result['id'];
+            $userCollectedItemId = $result[0]['id'];
         } else {
-            return false;
+            return [
+                'code'=>400,
+                'message'=> 'Unable to find user collected item',
+                'success' => false
+            ];
         }
+
         $insertQuery = "INSERT INTO Marketplace_Items (user_collected_item_id, item_condition, item_description, price) VALUES (:user_collected_item_id, :condition, :description, :price)";
         $insertParams = [
             ':user_collected_item_id' => $userCollectedItemId,
@@ -33,8 +38,21 @@ class Marketplace extends db
         ];
         $r = $this->exec_query($insertQuery, $insertParams);
         if ($r) {
-            return true;
+            return [
+                'code'=>200,
+                'message'=> 'Successfully added item to marketplace',
+                'success' => true
+            ];
         }
+        else
+        {
+            return [
+                'code'=>400,
+                'message'=> 'Unable to list item in marketplace',
+                'success' => false
+            ];
+        }
+        
     }
 
     function get_marketplace()
@@ -50,6 +68,19 @@ class Marketplace extends db
         INNER JOIN Genres_Collection AS gc ON ci.id = gc.collection_item_id
         INNER JOIN Genres AS g ON gc.genre_id = g.id
         GROUP BY mi.id";
-        return $this->exec_query($query);
+        $result = $this->exec_query($query);
+        if ($result !== false && !empty($result)){
+            return [
+                'code'=>200,
+                'message'=> 'Sending marketplace data',
+                'userid' => $result
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve marketplace data',
+            ];
+        }
     }
 }

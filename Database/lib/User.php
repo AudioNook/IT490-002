@@ -33,19 +33,25 @@ class User extends db
             unset($user["password"]);
             if (password_verify($password, $hash)) {
              $session = new JWTSessions();
-             $jwt=$session->create_db_session($user);
+             $jwt = $session->create_db_session($user);
              if($jwt){
                 return [
-                    'success'=>true,
+                    'code'=>200,
                     'message'=>' Generated user session',
                     'token' => $jwt['token'],
                     'expiry' => $jwt['expiry']
                 ];
              } else{
-                return ['success'=>false,'message'=>'unable generate user session'];
+                return [
+                    'code'=>400,
+                    'message'=>'unable generate user session'
+                ];
              }
             }else{
-                return ['success'=>false,'message'=>'Invalid login credentials'];
+                return [
+                    'code'=>401,
+                    'message'=>'Invalid login credentials'
+                ];
             }
         }
     }
@@ -56,6 +62,7 @@ class User extends db
      * @param $password
      * @return array
      */
+
     public function register($email, $username, $hash)
     {
         $table_name = 'Users';
@@ -65,14 +72,41 @@ class User extends db
             ":username" => $username,
             ":password" => $hash
         ];
+        $result = $this->exec_query($query, $params);
+        if ($result !== false){
+            return [
+                'code'=>200,
+                'message'=> 'Successfully registered user'
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to register user'
+            ];
+        }
 
-        return $this->exec_query($query, $params);
     }
+
+
     public function logout($jwt){
         $table = 'JWT_Sessions';
         $query = "DELETE FROM $table WHERE token = :token";
         $params = [':token' => $jwt];
-        return $this->exec_query($query,$params);
+        $result = $this->exec_query($query,$params);
+        if ($result !== false){
+            return [
+                'code'=>200,
+                'message'=> 'Successfully logged out'
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to logout'
+            ];
+        }
+
     }
 
     public function get_user_by_id($uid)
@@ -80,15 +114,42 @@ class User extends db
         $table = 'Users';
         $query = "SELECT username, email FROM $table WHERE id = :uid";
         $params = [':uid' => (int) $uid];
-        return $this->exec_query($query, $params);
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)){
+            return [
+                'code'=>200,
+                'message'=> 'Sending user id',
+                'userid' => $result
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve user id'
+            ];
+        }
+        
     }
     public function get_user_by_username($user)
     {
         $table = 'Users';
         $query = "SELECT id, username, email FROM $table WHERE username = :username or email = :username";
         $params = [':username' => $user];
-
-        return $this->exec_query($query, $params);
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)){
+            return [
+                'code'=>200,
+                'message'=> 'Sending username',
+                'username' => $result
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve username'
+            ];
+        }
+        
     }
 
 }

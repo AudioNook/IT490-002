@@ -55,7 +55,11 @@ class Collection extends db{
             ];
             $result = $this->exec_query($userCollectionInsertQuery, $userCollectionParams);
             if (!$result) {
-                return false;
+                return [
+                    'code'=>400,
+                    'message'=> 'Unable to add itme to collection',
+                    'success' => false
+                ];
             }
 
             $genre_arr = strpos($item['genre'], ', ') !== false ? explode(",", $item['genre']) : [$item['genre']];
@@ -80,12 +84,20 @@ class Collection extends db{
                 ];
                 $result = $this->exec_query($genreCollectionInsertQuery, $genreCollectionParams);
                 if (!$result) {
-                    return false;
+                    return [
+                        'code'=>400,
+                        'message'=> 'Unable to add genre to collection table',
+                        'success' => false
+                    ];
                 }
             }
         }
 
-        return true;
+        return [
+            'code'=>200,
+            'message'=> 'Successfully added item to collection',
+            'success' => true
+        ];
     }
     /**
      * Get all items in a user's collection
@@ -100,8 +112,23 @@ class Collection extends db{
         INNER JOIN Collection_Items ON User_Collected_Items.collection_item_id = Collection_Items.id
         WHERE User_Collected_Items.user_id = :uid;";
         $params = [':uid' => "$user_id"];
-        return $this->exec_query($query, $params);
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)){
+            return [
+                'code'=>200,
+                'message'=> 'Sending user collection',
+                'collection' => $result
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve user collection',
+            ];
+        }
+        
     }
+    
 
     /**
      * Get a single item in a user's collection
@@ -134,7 +161,21 @@ class Collection extends db{
             ':cid' => $collection_item_id,
         ];
     
-        return $this->exec_query($query, $params);
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)){
+            return [
+                'code'=>200,
+                'message'=> 'Sending collection item data',
+                'collection' => $result
+            ];
+        }
+        else{
+            return [
+                'code'=>400,
+                'message'=> 'Unable to retrieve collection item data',
+            ];
+        }
+        
+    }
     }
 
-}
