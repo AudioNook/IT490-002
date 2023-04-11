@@ -4,7 +4,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 
 // DB functions
 require_once(__DIR__ . "/../vendor/autoload.php");
-use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart, Products};
+use Database\{User, JWTSessions, Forums, Collection, Marketplace, Cart, Products, Reviews};
 use RabbitMQ\RabbitMQServer;
 function requestProcessor($request)
 {
@@ -20,8 +20,10 @@ function requestProcessor($request)
     $db_forums = new Forums();
     $db_collection = new Collection();
     $db_market = new Marketplace();
-   // $db_reviews = new Reviews();
+    $db_reviews = new Reviews();
     $db_products = new Products();
+    $db_cart = new Cart();
+
     switch ($request['type']) {
         // Handling User Login and Sessions
         case "login": 
@@ -76,11 +78,11 @@ function requestProcessor($request)
         case "list_item":
             $response = $db_market->list_item($request['uid'],$request['cid'],$request['condition'],$request['description'],$request['price']);
             break;
-        // Handling Cart
-        // case "cart":
-            // $response = $db_cart->cart($request);
-           // break;
-        /* // TODO: Add more cases for Reviews, Products, Orders, and Payments
+        // Handling Products
+        case "products":
+            $response = $db_products->get_products($request['id'],$request['name'],$request['category'],$request['stock'],$request['cost'],$request['image']);
+            break;
+         // TODO: Add more cases for Reviews, Products, Orders, and Payments
         // Handling Reviews
         case "get_reviews":
             $response = $db_reviews->get_reviews($request['id'], $request['product_id'],$request['comment'], $request['created']);
@@ -91,13 +93,12 @@ function requestProcessor($request)
         case "create_review":
             $response = $db_reviews->create_review($request['id'], $request['user_id'], $request['product_id'],$request['comment'], $request['created']);
             break;
-        // Handling Products
-        case "products":
-            $response = $db_products->get_products($request['id'],$request['name'],$request['category'],$request['stock'],$request['cost'],$request['image']);
-            break;
         // Handling Orders
         // Handling Payments
-        */
+        //Handling Cart
+        case "cart":
+            $response = $db_cart->cart($request);
+            break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
             break;
