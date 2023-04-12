@@ -11,12 +11,13 @@ if (!isset($_GET["id"])|| is_null($topic_id) > 0 || $topic_id < 0) {
     redirect(get_url("forums.php"));
 }
 
-
+$rbMQCOL = rbmqc_db();
 $msg = "Sending discussion topic request";
 
 $posts_req = array();
 $posts_req['type'] = 'posts';
 $posts_req['topic_id'] = $topic_id;
+$rbMQCOL->close();
 $posts;
 $response = json_decode($rbMQCOL->send_request($posts_req), true);
 if ($response['type'] == 'posts') {
@@ -59,7 +60,7 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
             // add case for checking valid password
     }
     if (!$hasError && isset($_GET['id'])) {
-
+        $rbMQc = rbmqc_db();
         $user_id = get_user_id();
 
         $create_post_req = array();
@@ -68,6 +69,7 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
         $create_post_req['reply_msg'] = $content;
         $create_post_req['user_id'] = $user_id;
         $create_post_req['topic_id'] = $topic_id;
+        $rbMQc->close();
 
         $created_post = json_decode($rbMQc->send_request($create_post_req), true);
         error_log("REEEEEEEE");

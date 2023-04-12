@@ -112,19 +112,18 @@ function get_item($user_id, $collect_id,$rbMQCOL){
 function check_jwt(){
     if (isset($_COOKIE["jwt"]) && !empty($_COOKIE["jwt"])) {
         $jwt = $_COOKIE["jwt"];
-        $rbMQCJWT = rbmqc_db();;
+        $rbMQCJWT = rbmqc_db();
         $jwt_req = array();
         $jwt_req['type'] = 'validate_jwt';
         $jwt_req['token'] = $jwt;
         $response = json_decode($rbMQCJWT->send_request($jwt_req), true);
+        $rbMQCJWT->close();
         switch($response['code']){
         case 200:
             error_log("check_jwt: Good little cookie");
-            $rbMQCJWT->close();
             break;
         case 401:
             // Remove JWT cookie
-            $rbMQCJWT->close();
             unset($_COOKIE["jwt"]);
             setcookie("jwt", "", -1, "/");
             // Session no longer valid please log back in
@@ -132,7 +131,6 @@ function check_jwt(){
             redirect("login.php");
             break;
         default:
-            $rbMQCJWT->close();
             unset($_COOKIE["jwt"]);
             setcookie("jwt", "", -1, "/");
             error_log($response['message']);

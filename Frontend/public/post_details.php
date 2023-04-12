@@ -9,13 +9,14 @@ if (!isset($_GET["id"]) || is_null($post_id) > 0 || $post_id < 0) {
     error_log("Empty discussion!");
     redirect(get_url("forums.php"));
 }
-// Fetch and display discussion
+$rbMQCOL = rbmqc_db();// Fetch and display discussion
 $msg = "Sending discussion topic request";
 
 $discussionreq = array();
 $discussion_req['type'] = 'discussion';
 $discussion_req['post_id'] = $post_id;
 $initial_post;
+$rbMQCOL->close();
 // $replies to said post
 $response = json_decode($rbMQCOL->send_request($discussion_req), true);
 if ($response['type'] == 'discussion') {
@@ -57,8 +58,9 @@ if (isset($_POST['reply_msg']) && isset($_GET["id"])) {
         $reply_req = array();
         $reply_req['type'] = 'reply';
         $reply_req['reply_msg'] = $reply_msg;
-        $reply_req['user_id'] = $user_id;
+        $rbMQc = rbmqc_db();        $reply_req['user_id'] = $user_id;
         $reply_req['post_id'] = $post_id;
+        $rbMQc->close();
 
         $created_post = json_decode($rbMQc->send_request($reply_req), true);
         if ($reply_req['type'] == 'reply') {

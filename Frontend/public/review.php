@@ -1,5 +1,6 @@
 <?php require(__DIR__ . "/../partials/nav.php"); 
    logged_in(true);
+   $rbMQCOL = rbmqc_db();
    
    $reviews_req = array();
    $reviews_req['type'] = 'reviews';
@@ -7,7 +8,7 @@
    $reviews;
 
    $response = json_decode($rbMQCOL->send_request($reviews_req), true);
-   
+   $rbMQCOL->close();
    if ($response['type'] == 'reviews') {
      switch ($response['code']) {
        case 200:
@@ -45,8 +46,9 @@
       $new_reviews_req['message'] = "Sending new reviews request";
       $new_reviews_req['product_id'] = $product_id;
       $new_reviews_req['comment'] = $comment;
-
+      $rbMQc = rbmqc_db();
       $created_new_reviews = json_decode($rbMQc->send_request($new_reviews_req), true);
+      $rbMQc->close();
       error_log("hello?");
         if ($created_new_reviews['type'] == 'new_review') {
             switch ($created_new_reviews['code']) {
