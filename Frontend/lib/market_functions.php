@@ -2,11 +2,11 @@
 require_once(__DIR__ . "/functions.php");
 require_once(__DIR__ . "/config.php");
 
-function get_market($rbMQCOL){
+function get_market($rbMQc){
     $req_market = array();
-    $req_market['type'] = 'req_market';
+    $req_market['type'] = 'get_marketplace';
     $req_market['message'] = 'Requesting ENTIRE MARKETPLACE PLEASE';
-    $response = json_decode($rbMQCOL->send_request($req_market), true);
+    $response = json_decode($rbMQc->send_request($req_market), true);
 
     switch ($response['code']) {
         case 200:

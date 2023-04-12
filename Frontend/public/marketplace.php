@@ -3,10 +3,11 @@
    require(__DIR__ . "/../partials/nav.php");
    //logged_in(true);
    //TODO uncomment login 
-
-   $response = get_market($rbMQCOL);
+   $rbMQc = rbmqc_db();
+     $response = get_market($rbMQc);
+     $rbMQc->close();
    //TODO Fatal error: Uncaught Error: Call to undefined function get_market() in /Users/luanda/IT490-002/Frontend/public/marketplace.php:7 Stack trace: #0 {main} thrown in /Users/luanda/IT490-002/Frontend/public/marketplace.php on line 7
-   $market_arr = $response['market_place_items'];
+   $market_arr = $response['marketplace_items'];
    ?>
    
 <!DOCTYPE html>
