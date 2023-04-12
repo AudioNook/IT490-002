@@ -4,7 +4,7 @@ namespace Database;
 
 use PDO;
 use PDOException;
-require_once(__DIR__ . "/config.php");
+require_once(__DIR__ . "/Config.php");
 use Database\Config;
 class db extends PDO
 {

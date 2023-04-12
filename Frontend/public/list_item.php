@@ -25,7 +25,9 @@ if(isset($_POST['list'])){
     $description = $_POST['description'];
     $price = $_POST['price'];
     /*if(list_item($user_id,$collect_id,$condition,$description,$price,$rbMQc)){
-        redirect(get_url('marketplace.php'));
+       
+    $rbMQc = rbmqc_db();
+ redirect(get_url('marketplace.php'));
     }*/
     $list_item= array();
     $list_item['type'] = 'list_item';
@@ -34,6 +36,7 @@ if(isset($_POST['list'])){
     $list_item['condition'] = $condition;
     $list_item['description'] = $description;
     $list_item['price'] = $price;
+    $rbMQc->close();
     $response = json_decode($rbMQc->send_request($list_item), true);
     switch ($response['code']) {
         case 200:

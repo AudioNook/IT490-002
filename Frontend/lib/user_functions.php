@@ -1,7 +1,8 @@
 <?php
- require_once(__DIR__ . "/functions.php");
+require_once(__DIR__ . "/functions.php");
 require_once(__DIR__ . "/../../vendor/autoload.php");
 require_once(__DIR__ . "/config.php");
+use Database\Config;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -28,23 +29,24 @@ function logged_in($redirect = false, $destination = "login.php") {
 
 function get_user_id(){
     $user_id = null;
+    $config= new Config();
     if (logged_in()) {
         $jwt = $_COOKIE["jwt"];
-        $key = JWT_SECRET;
+        $key = $config->key;
         $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
         $user_id = $decoded->userid;
     }
     return $user_id;
 }
 
-function get_credentials($user_id,$rbMQc){
+function get_credentials($user_id){
     $user_cred = array();
     $user_cred['type'] = 'user_cred';
     $user_cred['message'] = "Sending user_creds request";
     $user_cred['user_id'] = (int)$user_id;
-
+    $rbMQc = rbmqc_db();
     $response = json_decode($rbMQc->send_request($user_cred), true);
-
+    $rbMQc->close();
     switch ($response['code']) {
         case 200:
             return $response;
@@ -61,14 +63,14 @@ function get_credentials($user_id,$rbMQc){
     return $response;
 
 }
-function get_collection($user_id,$rbMQc){
+function get_collection($user_id){
     $collect_req = array();
     $collect_req['type'] = 'user_collect';
     $collect_req['message'] = "Sending collection request";
     $collect_req['user_id'] = (int)htmlspecialchars($user_id);
-
+    $rbMQc = rbmqc_db();
     $response = json_decode($rbMQc->send_request($collect_req), true);
-
+    $rbMQc->close();
     switch ($response['code']) {
         case 200:
             return $response;
@@ -112,11 +114,12 @@ function get_item($user_id, $collect_id,$rbMQCOL){
 function check_jwt(){
     if (isset($_COOKIE["jwt"]) && !empty($_COOKIE["jwt"])) {
         $jwt = $_COOKIE["jwt"];
-        global $rbMQCJWT;
+        $rbMQCJWT = rbmqc_db();
         $jwt_req = array();
         $jwt_req['type'] = 'validate_jwt';
         $jwt_req['token'] = $jwt;
         $response = json_decode($rbMQCJWT->send_request($jwt_req), true);
+        $rbMQCJWT->close();
         switch($response['code']){
         case 200:
             error_log("check_jwt: Good little cookie");

@@ -73,7 +73,7 @@ class Marketplace extends db
             return [
                 'code'=>200,
                 'message'=> 'Sending marketplace data',
-                'userid' => $result
+                'marketplace_items' => $result
             ];
         }
         else{

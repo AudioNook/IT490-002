@@ -1,14 +1,15 @@
 <?php require(__DIR__ . "/../partials/nav.php"); 
    logged_in(true);
+   $rbMQCOL = rbmqc_db();
    
    $reviews_req = array();
-   $reviews_req['type'] = 'reviews';
+   $reviews_req['type'] = 'get_reviews';
    $reviews_req['message'] = "Sending reviews request";
    $reviews;
 
    $response = json_decode($rbMQCOL->send_request($reviews_req), true);
-   
-   if ($response['type'] == 'reviews') {
+   $rbMQCOL->close();
+
      switch ($response['code']) {
        case 200:
          $reviews = $response['reviews'];
@@ -20,7 +21,7 @@
          break;
        default:
          echo ($response['message']);
-     }
+     
    }
    if (isset($_POST['product_id']) && isset($_POST['comment'])) {
       $bad_msg = "You must be logged in to this!!";
@@ -28,8 +29,7 @@
           echo '<script language="javascript">';
           echo 'alert("' . $bad_msg . '")';
           echo '</script>';
-         //  redirect(get_url("login.php"));
-         //TODO ADD LINE BACK IN 
+          redirect(get_url("login.php"));
 
       }
 }
@@ -41,14 +41,15 @@
       $product_id = $_GET['product_id'];
       $comment = $_GET['comment'];
       $new_reviews_req = array();
-      $new_reviews_req['type'] = 'new_review';
+      $new_reviews_req['type'] = 'create_review';
       $new_reviews_req['message'] = "Sending new reviews request";
       $new_reviews_req['product_id'] = $product_id;
       $new_reviews_req['comment'] = $comment;
-
+      $rbMQc = rbmqc_db();
       $created_new_reviews = json_decode($rbMQc->send_request($new_reviews_req), true);
+      $rbMQc->close();
       error_log("hello?");
-        if ($created_new_reviews['type'] == 'new_review') {
+
             switch ($created_new_reviews['code']) {
                 case 200:
                     error_log("Sucessfully uploaded new review");
@@ -65,7 +66,7 @@
                 default:
                     error_log($response['message']);
             }
-        }
+        
    }
 
    ?>

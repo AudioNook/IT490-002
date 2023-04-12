@@ -11,7 +11,7 @@ if (!isset($_GET["id"])|| is_null($topic_id) > 0 || $topic_id < 0) {
     redirect(get_url("forums.php"));
 }
 
-
+$rbMQCOL = rbmqc_db();
 $msg = "Sending discussion topic request";
 
 $posts_req = array();
@@ -19,7 +19,7 @@ $posts_req['type'] = 'posts';
 $posts_req['topic_id'] = $topic_id;
 $posts;
 $response = json_decode($rbMQCOL->send_request($posts_req), true);
-if ($response['type'] == 'posts') {
+$rbMQCOL->close();
     switch ($response['code']) {
         case 200:
             $posts = $response['posts'];
@@ -32,7 +32,7 @@ if ($response['type'] == 'posts') {
             break;
         default:
             echo ($response['message']);
-    }
+    
 }
 if (isset($_POST['title']) && isset($_POST['content'])) {
     $bad_msg = "You must be logged in to this!!";
@@ -59,7 +59,7 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
             // add case for checking valid password
     }
     if (!$hasError && isset($_GET['id'])) {
-
+        $rbMQc = rbmqc_db();
         $user_id = get_user_id();
 
         $create_post_req = array();
@@ -70,6 +70,7 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
         $create_post_req['topic_id'] = $topic_id;
 
         $created_post = json_decode($rbMQc->send_request($create_post_req), true);
+        $rbMQc->close();
         error_log("REEEEEEEE");
         if ($created_post['type'] == 'create_post') {
             switch ($created_post['code']) {

@@ -69,15 +69,14 @@ class Reviews extends db
      * @param $id
      * @return array
      */
-    public function create_review($id, $user_id, $product_id, $comment, $created)
+    public function create_review($id, $user_id, $product_id, $comment)
     {
-        $query = "INSERT INTO Reviews (id, user_id, product_id, comment, created) VALUES(:id, :user_id, :product_id, :comment, :created)";
+        $query = "INSERT INTO Reviews (id, user_id, product_id, comment) VALUES(:id, :user_id, :product_id, :comment)";
         $params = [
             ':id' => $id,
             ':user_id' => $user_id,
             ':product_id' => $product_id,
-            ':comment' => $comment,
-            ':created' => $created
+            ':comment' => $comment
 
         ];
         

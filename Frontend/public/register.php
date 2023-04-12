@@ -81,7 +81,8 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
     if(!$hasError){
         $hash = password_hash($password, PASSWORD_BCRYPT);
         //opening a rabbitMQclient connection
-        global $rbMQc;
+        $rbMQc = rbmqc_db();
+
         $msg = "Sending register request";
 
         //creating a register array to store values
@@ -94,8 +95,9 @@ if (isset($_POST["username"]) && isset($_POST["email"]) && isset($_POST["passwor
     
         //sending received form responses to rabbitMQ
         //TODO Fatal error: Uncaught Error: Call to a member function send_request() on null in /Users/luanda/IT490-002/Frontend/public/register.php:96 Stack trace: #0 {main} thrown in /Users/luanda/IT490-002/Frontend/public/register.php on line 96
+               
         $response = json_decode($rbMQc->send_request($register_req), true);
-
+        $rbMQc->close(); 
         //checking whether or not register was processed successfully/unsuccessfully
         switch($response['code']){
             case 200:

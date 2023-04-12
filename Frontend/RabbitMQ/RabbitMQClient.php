@@ -106,7 +106,7 @@ class rabbitMQClient
 	{
 		$correlation_id = uniqid(); // create a unique id for the request
 
-		$json_message = json_encode($request);
+		$json_message = json_encode($request, JSON_FORCE_OBJECT);
 
 		try {
 

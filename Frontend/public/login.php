@@ -54,8 +54,8 @@ if (isset($_POST["username"]) && isset($_POST["password"])){
     //If there are no validation errors
     if(!$hasError){
     // Rabbit MQ Client Connection
-    init_rbMQc();
-    global $rbMQc;
+    
+    $rbMQc = rbmqc_db();
 
     $msg = "Sending login request";
 
@@ -64,9 +64,9 @@ if (isset($_POST["username"]) && isset($_POST["password"])){
     $login_req['username'] = $username;
     $login_req['password'] = $password;
     $login_req['response'] = $msg;
-
+    echo "before response";
     $response = json_decode($rbMQc->send_request($login_req), true);
-
+    echo "after resposne";
     switch($response['code']){
         case 200:
             $token = $response['token'];
@@ -83,7 +83,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])){
             echo($response['message']);
 
     }
-    
+    $rbMQc->close();
     }else {
         echo '<script language="javascript">';
         echo 'alert("' . $errorMsg . '")';

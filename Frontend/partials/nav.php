@@ -3,7 +3,7 @@ require_once(__DIR__ . "/../lib/functions.php");
 check_jwt();
 $is_logged_in = true;
 if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current page is not login.php
-   //$is_logged_in = logged_in();
+   $is_logged_in = logged_in();
 }
 ?>
 
