@@ -53,7 +53,7 @@ function requestProcessor($request)
             $response = $db_forums->get_posts($request['topic_id']);
             break;
         case "create_post":
-            $response = $db_forums->create_post($request['topic_id'], $request['user_id'], $request['title'], $request['content']);
+            $response = $db_forums->create_post($request['topic_id'], $request['user_id'], $request['title'], $request['reply_msg']);
             break;
         case "discussion":
             $response = $db_forums->get_discussion($request['post_id']);
@@ -70,6 +70,7 @@ function requestProcessor($request)
             break;
         case "get_collection_item":
             $response = $db_collection->get_collection_item($request['user_id'],$request['collection_item_id']);
+            var_dump($response);
             break;
         // Handling Marketplace
         case "get_marketplace":
