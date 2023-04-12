@@ -2,7 +2,7 @@
 namespace Database;
 require_once(__DIR__ . "/db.php");
 use Database\db;
-require_once(__DIR__ . "/sessions.php");
+require_once(__DIR__ . "/JWTSessions.php");
 use Database\JWTSessions;
 
 /**

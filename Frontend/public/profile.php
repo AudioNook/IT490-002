@@ -1,5 +1,5 @@
 <?php require(__DIR__ . "/../partials/nav.php"); 
-//logged_in(true); TODO uncomment
+logged_in(true);
 
 $email = 'email not found';
 $username = 'username not found';
@@ -8,12 +8,12 @@ $collection = [];
 
 $user_id = get_user_id();
 if(!empty($user_id) && !is_null($user_id)){
-   //$creds = get_credentials($user_id,$rbMQc);
-   //$email = $creds['email'];
+   $creds = get_credentials($user_id);
+   $email = $creds['email'];
    $email = htmlspecialchars('carlos.segarrajf@gmail.com');
-   //$username = $creds['username'];
+   $username = $creds['username'];
    $username = htmlspecialchars("Carlomos");
-   $results = get_collection($user_id,$rbMQc);
+   $results = get_collection($user_id);
    $collection = $results['collection'];
 }
 //var_dump($collection);
@@ -23,14 +23,14 @@ if(!empty($user_id) && !is_null($user_id)){
 <html>
 <head>
   <script>
-    //validateJWT();
+    validateJWT();
   </script>
   <title>UserCreds</title>
 
 <html>
    <head>
       <script>
-         //validateJWT();
+         validateJWT();
       </script>
       <title>My Profile</title>
    </head>

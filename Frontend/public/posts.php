@@ -17,10 +17,9 @@ $msg = "Sending discussion topic request";
 $posts_req = array();
 $posts_req['type'] = 'posts';
 $posts_req['topic_id'] = $topic_id;
-$rbMQCOL->close();
 $posts;
 $response = json_decode($rbMQCOL->send_request($posts_req), true);
-if ($response['type'] == 'posts') {
+$rbMQCOL->close();
     switch ($response['code']) {
         case 200:
             $posts = $response['posts'];
@@ -33,7 +32,7 @@ if ($response['type'] == 'posts') {
             break;
         default:
             echo ($response['message']);
-    }
+    
 }
 if (isset($_POST['title']) && isset($_POST['content'])) {
     $bad_msg = "You must be logged in to this!!";
@@ -69,9 +68,9 @@ if (isset($_POST['title']) && isset($_POST['content'])) {
         $create_post_req['reply_msg'] = $content;
         $create_post_req['user_id'] = $user_id;
         $create_post_req['topic_id'] = $topic_id;
-        $rbMQc->close();
 
         $created_post = json_decode($rbMQc->send_request($create_post_req), true);
+        $rbMQc->close();
         error_log("REEEEEEEE");
         if ($created_post['type'] == 'create_post') {
             switch ($created_post['code']) {

@@ -11,7 +11,7 @@ require(__DIR__. "/utils/util_functions.php");
 require(__DIR__ . "/user_functions.php");
 
 //Market functions
-require(__DIR__ . "/market_functions.php");
+require(__DIR__ . "/request_functions.php");
 // Request Handling functions
 
 // Forum Handling functions

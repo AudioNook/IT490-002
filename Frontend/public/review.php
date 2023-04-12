@@ -3,13 +3,13 @@
    $rbMQCOL = rbmqc_db();
    
    $reviews_req = array();
-   $reviews_req['type'] = 'reviews';
+   $reviews_req['type'] = 'get_reviews';
    $reviews_req['message'] = "Sending reviews request";
    $reviews;
 
    $response = json_decode($rbMQCOL->send_request($reviews_req), true);
    $rbMQCOL->close();
-   if ($response['type'] == 'reviews') {
+
      switch ($response['code']) {
        case 200:
          $reviews = $response['reviews'];
@@ -21,7 +21,7 @@
          break;
        default:
          echo ($response['message']);
-     }
+     
    }
    if (isset($_POST['product_id']) && isset($_POST['comment'])) {
       $bad_msg = "You must be logged in to this!!";
@@ -29,8 +29,7 @@
           echo '<script language="javascript">';
           echo 'alert("' . $bad_msg . '")';
           echo '</script>';
-         //  redirect(get_url("login.php"));
-         //TODO ADD LINE BACK IN 
+          redirect(get_url("login.php"));
 
       }
 }

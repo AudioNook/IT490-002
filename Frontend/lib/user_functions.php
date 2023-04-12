@@ -37,14 +37,14 @@ function get_user_id(){
     return $user_id;
 }
 
-function get_credentials($user_id,$rbMQc){
+function get_credentials($user_id){
     $user_cred = array();
     $user_cred['type'] = 'user_cred';
     $user_cred['message'] = "Sending user_creds request";
     $user_cred['user_id'] = (int)$user_id;
-
+    $rbMQc = rbmqc_db();
     $response = json_decode($rbMQc->send_request($user_cred), true);
-
+    $rbMQc->close();
     switch ($response['code']) {
         case 200:
             return $response;
@@ -61,14 +61,14 @@ function get_credentials($user_id,$rbMQc){
     return $response;
 
 }
-function get_collection($user_id,$rbMQc){
+function get_collection($user_id){
     $collect_req = array();
     $collect_req['type'] = 'user_collect';
     $collect_req['message'] = "Sending collection request";
     $collect_req['user_id'] = (int)htmlspecialchars($user_id);
-
+    $rbMQc = rbmqc_db();
     $response = json_decode($rbMQc->send_request($collect_req), true);
-
+    $rbMQc->close();
     switch ($response['code']) {
         case 200:
             return $response;
