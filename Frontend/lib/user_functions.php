@@ -1,7 +1,8 @@
 <?php
- require_once(__DIR__ . "/functions.php");
+require_once(__DIR__ . "/functions.php");
 require_once(__DIR__ . "/../../vendor/autoload.php");
 require_once(__DIR__ . "/config.php");
+use Database\Config;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
@@ -28,9 +29,10 @@ function logged_in($redirect = false, $destination = "login.php") {
 
 function get_user_id(){
     $user_id = null;
+    $config= new Config();
     if (logged_in()) {
         $jwt = $_COOKIE["jwt"];
-        $key = JWT_SECRET;
+        $key = $config->key;
         $decoded = JWT::decode($jwt, new Key($key, 'HS256'));
         $user_id = $decoded->userid;
     }

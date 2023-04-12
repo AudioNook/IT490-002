@@ -3,7 +3,7 @@ namespace Database;
 require_once(__DIR__ . "/db.php");
 use Database\db;
 
-require_once(__DIR__ . "/config.php");
+require_once(__DIR__ . "/Config.php");
 use Database\Config;
 
 require_once(__DIR__ . "/../../vendor/autoload.php");

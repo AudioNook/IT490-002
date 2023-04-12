@@ -59,7 +59,7 @@ function requestProcessor($request)
             $response = $db_forums->get_discussion($request['post_id']);
             break;
         case "reply":
-            $response = $db_forums->create_reply($request['post_id'], $request['user_id'], $request['content']);
+            $response = $db_forums->create_reply($request['post_id'], $request['user_id'], $request['reply_msg']);
             break;
         // Handling collections
         case "add_collect":
@@ -100,7 +100,11 @@ function requestProcessor($request)
             $response = $db_cart->cart($request);
             break;
         default:
-            $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
+            $response = array("type" => "default", 
+            "code" => '204', 
+            "status" => "success", 
+            'message' => "Did not match any type."
+        );
             break;
     }
 
