@@ -9,48 +9,27 @@ $genres = [];
 $search = "";
 
 if (isset($_GET['searching'])) {
-    $search = htmlspecialchars($_GET['searching']);
-
-    // Initialize query parameters array
-    $query_params = [];
-
-    // Add search term if set in GET data
-    if (isset($_GET['searching'])) {
-        $query_params['q'] = $search;
+  $search = htmlspecialchars($_GET['searching']);
+  $dmzRequest = new DMZRequests();
+  $results = $dmzRequest->search($search, $format, $genres, 1);
+  $results = $results['results'];
+  $total_items = 0;
+  $per_page = 18;
+  if (isset($response_data['pagination']['items'])) {
+    $total_items = $response_data['pagination']['items'];
+    foreach ($results as $result) {
+      if (isset($result['genre']) && is_array($result['genre'])) {
+        $genres = array_merge($genres, $result['genre']);
+      }
     }
-
-    // Add format if set in GET data
-    if (isset($_GET['format'])) {
-        $format = htmlspecialchars($_GET['format']);
-        if (in_array($format, ["Vinyl", "Cassette", "CD"])) {
-            $query_params['format'] = $format;
-        }
-    } else {
-        $query_params['format'] = $format;
+    if (!empty($genres)) {
+      $genres = array_unique($genres);
+      sort($genres);
     }
-
-    // Add genre if set in GET data
-    if (isset($_GET['genre']) && !empty($_GET['genre']) && !is_null($_GET['genre'])) {
-        $genre = htmlspecialchars($_GET['genre']);
-        $query_params['genre'] = $genre;
-    }
-    $query_params['type'] = 'master';
-
-    $query_params['per_page'] = 12;
-    $page = (int)htmlspecialchars($_GET['page'] ?? 1, ENT_QUOTES, 'UTF-8');
-    $query_params['page'] = $page;
-
-    // Create the request array to be sent through RabbitMQ
-    $request = [
-        'type' => 'search',
-        'url' => "https://api.discogs.com/database/search",
-        'query_params' => $query_params,
-    ];
-
-    // Send the request array through RabbitMQ for further processing
-    // ...
+  }
 }
-
+//var_dump($results);
+var_dump($genres)
 ?>
 <!doctype html>
 <html lang="en">
@@ -106,24 +85,24 @@ if (isset($_GET['searching'])) {
             <div class="card bg-light mb-3" style="width: 18rem;">
               <img class="card-img-top" src="<?php echo !empty($result['cover_image']) ? $result['cover_image'] : 'https://tinyurl.com/5n7fs4w8'; ?>" alt="Album Covers" onerror="this.onerror=null;this.src='https://tinyurl.com/5n7fs4w8';" width="300" height="300">
               <div class="card-body" style="max-height: 350px ">
-                <h5 class="card-title"><?php echo htmlspecialchars($result['title'] ?? "N/A"); ?></h5>
+                <h5 class="card-title"><?php echo isset($result['title']) ? htmlspecialchars($result['title']) : "N/A"; ?></h5>
                 <p class="details1 card-text"><?php echo htmlspecialchars(($result['year'] ?? "N/A") . " " . ($result['country'] ?? "N/A")) . '<br><br>' . "Genre: <br>" . (isset($result['genre']) ? implode(", ", $result['genre']) : "N/A"); ?></p>
                 <p class="details2 card-text"><?php echo "Formats: <br>" . (isset($result['format']) ? implode(", ", $result['format']) : "N/A") . '<br><br>'; ?></p>
                 <form onsubmit="add_items(this, event)">
                   <input type="hidden" name="release_id" value="<?php echo intval($result['id'] ?? 0) ?>" />
                   <input type="hidden" name="title" value="<?php echo is_string($result['title']) ? htmlspecialchars($result['title']) : "N/A"; ?>" />
-                  <input type="hidden" name="cover_image" value="<?php echo !empty($result['cover_image']) ? $result['cover_image'] : "N/A"?>" />
+                  <input type="hidden" name="cover_image" value="<?php echo !empty($result['cover_image']) ? $result['cover_image'] : "N/A" ?>" />
                   <?php $genre_strings;
                   if (isset($result['genre']) && is_array($result['genre'])) {
-                      $genre_arr = array_map(function ($arr) {
-                          return htmlspecialchars($arr);
-                      }, $result['genre']);
-                      $genre_strings = implode(", ", $genre_arr);
+                    $genre_arr = array_map(function ($arr) {
+                      return htmlspecialchars($arr);
+                    }, $result['genre']);
+                    $genre_strings = implode(", ", $genre_arr);
                   } else {
-                      $genre_strings = "N/A";
+                    $genre_strings = "N/A";
                   } ?>
-                  <input type="hidden" name="genres" value="<?php echo $genre_strings?>" />
-                  <input type="hidden" name="format" value="<?php echo isset($result['format']) ? htmlspecialchars(implode(", ", $result['format'])) : "N/A";?>" />
+                  <input type="hidden" name="genres" value="<?php echo $genre_strings ?>" />
+                  <input type="hidden" name="format" value="<?php echo isset($result['format']) ? htmlspecialchars(implode(", ", $result['format'])) : "N/A"; ?>" />
                   <input type="hidden" name="action" value="add" />
                   <input type="submit" class="btn btn-success" value="Add to Collection" />
                 </form>

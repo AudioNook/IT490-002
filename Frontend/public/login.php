@@ -54,36 +54,8 @@ if (isset($_POST["username"]) && isset($_POST["password"])){
     //If there are no validation errors
     if(!$hasError){
     // Rabbit MQ Client Connection
-    
-    $rbMQc = rbmqc_db();
-
-    $msg = "Sending login request";
-
-    $login_req = array();
-    $login_req['type'] = 'login';
-    $login_req['username'] = $username;
-    $login_req['password'] = $password;
-    $login_req['response'] = $msg;
-    echo "before response";
-    $response = json_decode($rbMQc->send_request($login_req), true);
-    echo "after resposne";
-    switch($response['code']){
-        case 200:
-            $token = $response['token'];
-            $expiry = $response['expiry'];
-            setcookie("jwt", $token, $expiry, "/");
-            redirect(get_url("marketplace.php"));
-            break;
-        case 401:
-            echo '<script language="javascript">';
-            echo 'alert("' . $response['message'] . '")';
-            echo '</script>';
-            break;
-        default:
-            echo($response['message']);
-
-    }
-    $rbMQc->close();
+    $loginReq = new DBRequests();
+    $loginReq->login($username, $password);
     }else {
         echo '<script language="javascript">';
         echo 'alert("' . $errorMsg . '")';
