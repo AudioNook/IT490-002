@@ -1,7 +1,10 @@
 <?php
 namespace DMZ;
+
 require_once(__DIR__ . "/config.php");
+
 use DMZ\DMZConfig;
+
 class Curl
 {
     private $user_agent;
@@ -26,7 +29,10 @@ class Curl
      * Set the options for the curl request
      * @param string $url
      */
-    public function set_options($url){
+    public function set_options($url, $query_params)
+    {
+        $url .= '?' . http_build_query($query_params);
+
         curl_setopt($this->ch, CURLOPT_URL, $url);
         curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($this->ch, CURLOPT_HTTPHEADER, [
@@ -57,5 +63,37 @@ class Curl
     public function close()
     {
         curl_close($this->ch);
+    }
+
+    /**
+     * Perform a search request to Discogs API
+     * @param string $searchTerm
+     * @param string $format
+     * @param string $genre
+     * @param int $page
+     * @return mixed
+     * @throws \Exception
+     */
+    public function search($searchTerm, $format = "Vinyl", $genre = null, $page = 1)
+    {
+        $base_url = "https://api.discogs.com/database/search";
+
+        // Initialize query parameters array
+        $query_params = [
+            'q' => $searchTerm,
+            'type' => 'master',
+            'format' => $format,
+            'per_page' => 12,
+            'page' => $page,
+        ];
+
+        // Add genre if set
+        if (!empty($genre)) {
+            $query_params['genre'] = $genre;
+        }
+
+        // Set options and execute the request
+        $this->set_options($base_url, $query_params);
+        return $this->execute();
     }
 }

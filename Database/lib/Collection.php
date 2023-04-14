@@ -138,9 +138,8 @@ class Collection extends db{
      */
     public function get_collection_item($user_id, $collection_item_id) 
     {
-        $user_id = (int)$user_id;
-        $collection_item_id = (int)$collection_item_id;
-    
+        //$user_id = (int)$user_id;
+        //$collection_item_id = (int)$collection_item_id;
         $query = "SELECT
                     Collection_Items.id AS collection_item_id,
                     Collection_Items.title,
@@ -155,18 +154,18 @@ class Collection extends db{
                     AND Collection_Items.id = :cid
                   GROUP BY Collection_Items.id
                   LIMIT 1;";
-    
+        //TODO CARLOS SELECT STATEMENT NOT WORKING :( SOS 911 HELP
         $params = [
-            ':uid' => $user_id,
-            ':cid' => $collection_item_id,
+            ':uid' => (int)$user_id,
+            ':cid' => (int)$collection_item_id,
         ];
-    
+        var_dump($params);
         $result = $this->exec_query($query, $params);
         if ($result !== false && !empty($result)){
             return [
                 'code'=>200,
                 'message'=> 'Sending collection item data',
-                'collection' => $result
+                'item' => $result
             ];
         }
         else{

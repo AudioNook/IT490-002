@@ -8,12 +8,11 @@ $collection = [];
 
 $user_id = get_user_id();
 if(!empty($user_id) && !is_null($user_id)){
-   $creds = get_credentials($user_id);
+   $profileRequest = new DBRequests();
+   $creds = $profileRequest->getUserCreds($user_id);
    $email = $creds['email'];
-   $email = htmlspecialchars('carlos.segarrajf@gmail.com');
    $username = $creds['username'];
-   $username = htmlspecialchars("Carlomos");
-   $results = get_collection($user_id);
+   $results = $profileRequest->getCollection($user_id);
    $collection = $results['collection'];
 }
 //var_dump($collection);
