@@ -19,9 +19,14 @@ function requestProcessor($request)
     switch ($request['type']) {
         // Handling request to DMZ
         case "search": // example
-            $dmz_curl->set_options($request['url']);
-            $response = $dmz_curl->execute();
-            $dmz_curl->close();
+            try {
+                $response = $dmz_curl->search($request['searchTerm'], $request['format'],$request['genre'],$request['page']);
+                // process $results as needed
+              } catch (\Exception $e) {
+                echo 'Error: ' . $e->getMessage();
+              } finally {
+                $dmz_curl->close(); // close curl session
+              }
             break;
         default:
             $response = array("type" => "default", "code" => '204', "status" => "success", 'message' => "Server received request and processed");
@@ -34,7 +39,7 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQs = new rabbitMQServer("rabbitMQ.ini","testServer");
+$rbMQs = new rabbitMQServer("rabbitMQ.ini","jwtServer");
 
 echo "RabbitMQServer BEGIN".PHP_EOL;
 $rbMQs->process_requests('requestProcessor');
