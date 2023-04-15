@@ -10,8 +10,9 @@ if(isset($_GET['id'])){
 if(isset($_GET['uid'])){
     $user_id = $_GET['uid'];
 }
-// TODO Warning: Undefined variable $rbMQCOL in /Users/luanda/IT490-002/Frontend/public/list_item.php on line 14
-$response = get_item($user_id,$collect_id,$rbMQCOL);
+// TODO Warning: Undefined variable $rbMQCOL in IT490-002/Frontend/public/list_item.php on line 14
+$request = new DBRequests();
+$response = $request->getItem($user_id,$collect_id);
 if(count($response['item'][0])>0){
     $item = $response['item'][0];
     $img = $item['cover_image'];
@@ -24,38 +25,8 @@ if(isset($_POST['list'])){
     $condition = $_POST['condition'];
     $description = $_POST['description'];
     $price = $_POST['price'];
-    /*if(list_item($user_id,$collect_id,$condition,$description,$price,$rbMQc)){
-       
-    $rbMQc = rbmqc_db();
- redirect(get_url('marketplace.php'));
-    }*/
-    $list_item= array();
-    $list_item['type'] = 'list_item';
-    $list_item['uid'] = $user_id;
-    $list_item['cid'] = $collect_id;
-    $list_item['condition'] = $condition;
-    $list_item['description'] = $description;
-    $list_item['price'] = $price;
-    $rbMQc->close();
-    $response = json_decode($rbMQc->send_request($list_item), true);
-    switch ($response['code']) {
-        case 200:
-            error_log($response['message']);
-            //redirect(get_url('marketplace.php'));
-            //return true;
-            break;
-        case 401:
-            $error_msg = 'Unauthorized: ' . $response['message'];
-            error_log($error_msg);
-            //window.alert($error_msg);
-            break;
-        default:
-            $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
-            error_log($error_msg);
-            //alert($error_msg);
-            break;
-
-    }
+    $listRequest = new DBRequests();
+    $listResponse = $listRequest->listItem($user_id,$collect_id, $condition, $description,$price);
 
 }
 
