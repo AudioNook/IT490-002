@@ -116,8 +116,8 @@ class DBRequests
         $response = $this->send($request);
         switch ($response['code']) {
             case 200:
-                var_dump($response);
-                return $response;
+                //var_dump($response);
+                return $response['marketplace_items'];
             case 401:
                 $error_msg = 'Unauthorized: ' . $response['message'];
                 error_log($error_msg);
@@ -130,18 +130,18 @@ class DBRequests
         return $response;
     }
 
-    public function getUserCreds($user_id)
+    public function getByUserId($user_id)
     {
         $request = [
-            'type' => 'user_cred',
+            'type' => 'by_user_id',
             'message' => 'Sending user_creds request',
-            'user_id' => (int)$user_id,
+            'uid' => (int)$user_id,
         ];
 
         $response = $this->send($request);
         switch ($response['code']) {
             case 200:
-                return $response;
+                return $response['userid'][0];
             case 401:
                 $error_msg = 'Unauthorized: ' . $response['message'];
                 error_log($error_msg);
@@ -163,7 +163,7 @@ class DBRequests
         ];
 
         $response = $this->send($request);
-        echo $response;
+        //echo $response;
         switch ($response['code']) {
             case 200:
                 $response['success'] = true;
@@ -179,6 +179,7 @@ class DBRequests
                 error_log($error_msg);
                 break;
         }
+        return $response;
     }
     public function getCollection($user_id)
     {
@@ -207,10 +208,10 @@ class DBRequests
     public function getItem($user_id, $collect_id)
     {
         $request = [
-            'type' => 'req_item',
+            'type' => 'get_collection_item',
             'message' => 'Requesting item from Collection',
             'user_id' => (int)$user_id,
-            'collect_id' => (int)$collect_id,
+            'collection_item_id' => (int)$collect_id,
         ];
         $response = $this->send($request);
         switch ($response['code']) {
@@ -226,6 +227,33 @@ class DBRequests
                 break;
         }
         return $response;
+    }
+    public function listItem($user_id, $collect_id, $condition, $description, $price)
+    {
+        $request = [
+            'type' => 'list_item',
+            'message' => 'Requesting item from Collection',
+            'uid' => (int)$user_id,
+            'cid' => (int)$collect_id,
+            'condition' => $condition,
+            'description' => $description,
+            'price' => (int)$price,
+        ];
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                error_log($response['message']);
+                redirect(get_url('marketplace.php'));
+                return true;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
     }
 
     public function validateJWT($jwt)

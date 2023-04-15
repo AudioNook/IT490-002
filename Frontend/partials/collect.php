@@ -1,4 +1,5 @@
 <?php require_once(__DIR__ . "/../lib/user_functions.php") ?>
+</style>
 <div class="container-fluid">
   <div class="collection-sidebar card">
     <h2>Added Items:</h2>
