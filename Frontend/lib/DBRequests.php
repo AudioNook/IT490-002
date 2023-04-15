@@ -163,7 +163,7 @@ class DBRequests
         ];
 
         $response = $this->send($request);
-        echo $response;
+        //echo $response;
         switch ($response['code']) {
             case 200:
                 $response['success'] = true;
@@ -179,6 +179,7 @@ class DBRequests
                 error_log($error_msg);
                 break;
         }
+        return $response;
     }
     public function getCollection($user_id)
     {
