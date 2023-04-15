@@ -9,7 +9,8 @@ $collection = [];
 $user_id = get_user_id();
 if(!empty($user_id) && !is_null($user_id)){
    $profileRequest = new DBRequests();
-   $creds = $profileRequest->getUserCreds($user_id);
+   $creds = $profileRequest->getByUserId($user_id);
+   //var_dump($creds);
    $email = $creds['email'];
    $username = $creds['username'];
    $results = $profileRequest->getCollection($user_id);
