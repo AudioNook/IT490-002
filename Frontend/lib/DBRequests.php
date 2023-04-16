@@ -142,7 +142,7 @@ class DBRequests
         }
 
         if ($action != null) {
-            $request['action'] = (int)$action;
+            $request['action'] = $action;
         }
 
         if ($cart_id != null) {
