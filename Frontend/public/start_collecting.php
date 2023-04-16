@@ -13,6 +13,7 @@ if (isset($_GET['searching'])) {
   $dmzRequest = new DMZRequests();
   $results = $dmzRequest->search($search, $format, $genres, 1);
   $results = $results['results'];
+  $response_data = $results;
   $total_items = 0;
   $per_page = 18;
   if (isset($response_data['pagination']['items'])) {
@@ -29,7 +30,7 @@ if (isset($_GET['searching'])) {
   }
 }
 //var_dump($results);
-var_dump($genres)
+var_dump($genres);
 ?>
 <!doctype html>
 <html lang="en">
@@ -37,9 +38,11 @@ var_dump($genres)
 <head>
   <title>AudioNook Collecting</title>
   <link rel="stylesheet" href="<?php echo get_url('/css/collect.css'); ?>">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body>
+  <?php include(__DIR__ . "/../partials/collect.php"); ?>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -70,14 +73,14 @@ var_dump($genres)
           </div>
           <div class="row">
             <div class="col-md-12">
-              <a href="#" class="btn btn-primary" id="contact-btn">Details View</a>
+              <a href="#" class="btn btn-primary details-btn" id="contact-btn">Details View</a>
             </div>
           </div>
         </form>
         <!-- End Search Form -->
       </div>
     </div>
-    <?php include(__DIR__ . "/../partials/collect.php"); ?>
+
     <?php if (isset($results) && !empty($results)) : ?>
       <div class="row">
         <?php foreach ($results as $result) : ?>
@@ -130,16 +133,13 @@ var_dump($genres)
   <script>
     $(document).ready(function() {
       load_collected_items();
-      $('.details1, .details2').hide();
+      $('.card .details1, .card .details2').hide();
 
-      function toggleFields() {
-        $('.details1, .details2').toggle("slow");
-      }
-
-      $('#contact-btn').on('click', function(e) { // Updated selector
+      $('.details-btn').on('click', function(e) {
         e.preventDefault();
-        toggleFields();
+        $('.card .details1, .card .details2').slideToggle("slow");
       });
+
       $('#genre-select').on('change', function() {
         var genre = $(this).val();
         var currentUrl = window.location.href;
