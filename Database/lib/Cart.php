@@ -21,9 +21,9 @@ class Cart extends db
     }
     //cart actions
     public function cart($request)
-    {
-        $action = strtolower($request['action']);
-        if (!empty($action)) {
+    {       
+        if (array_key_exists('action', $request)) {
+            $action = strtolower($request['action']);
             switch ($action) {
                 case "add": // add item to cart
                     $query = "INSERT INTO Cart (product_id, unit_price, user_id)
@@ -120,9 +120,21 @@ class Cart extends db
                     break;
             }
         }
-        $query = "SELECT cart.id, cart.product_id, product.stock, product.name, cart.unit_price, (cart.unit_price) as subtotal
-                FROM Marketplace_Items as product JOIN Cart as cart on product.id = cart.product_id
-                WHERE cart.user_id = :uid";
+        $query = "SELECT 
+                    cart.id, 
+                    cart.product_id, 
+                    marketplace_items.id AS marketplace_item_id,
+                    collection_items.title AS name,
+                    cart.unit_price, 
+                    (cart.unit_price) as subtotal
+                    FROM 
+                    Cart as cart
+                    JOIN 
+                    Marketplace_Items as marketplace_items ON cart.product_id = marketplace_items.id
+                    JOIN 
+                    Collection_Items as collection_items ON marketplace_items.user_collected_item_id = collection_items.id
+                    WHERE 
+                        cart.user_id = :uid";
         $stmt = $this->prepare($query);
         $cart = [];
         try {
@@ -135,6 +147,7 @@ class Cart extends db
                     'code' => 200,
                     'status' => 'Success',
                     'message' => 'Created cart',
+                    'cart' => $cart
                 ];
             }
         } catch (PDOException $e) {
@@ -143,7 +156,7 @@ class Cart extends db
                 'type' => 'req_cart',
                 'code' => 401,
                 'status' => 'Error',
-                'message' => 'Error Creating in cart',
+                'message' => 'Error Creating cart: ' . $e->getMessage()
             ];
         }
     }
