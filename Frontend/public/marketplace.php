@@ -113,7 +113,12 @@ $market_arr = $marketRequest->getMarket();
                         <h4 class="mt-1 mb-0 text-muted small">Date Listed: <?php echo $products['created']; ?>/5</h4>
                       </div>
                       <!-- Add to cart button-->
-                      <button class="btn btn-success btn-sm" type="button">Add to Cart</button>
+                      <form method="POST" action="cart.php">
+                        <input type="hidden" name="product_id" value="<?php echo $products['id']; ?>" />
+                        <input type="hidden" name="user_id" value="<?php echo get_user_id(); ?>" />
+                        <input type="hidden" name="action" value="add" />
+                        <input type="submit" id="blue-button" class="btn" value="Add to Cart" />
+                      </form>
 
                     </div>
                   </div>
