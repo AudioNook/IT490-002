@@ -159,16 +159,20 @@ class Cart extends db
                     cart.product_id, 
                     marketplace_items.id AS marketplace_item_id,
                     collection_items.title AS name,
+                    collection_items.cover_image,
                     cart.unit_price, 
                     (cart.unit_price) as subtotal
-                    FROM 
+                FROM 
                     Cart as cart
-                    JOIN 
+                JOIN 
                     Marketplace_Items as marketplace_items ON cart.product_id = marketplace_items.id
-                    JOIN 
-                    Collection_Items as collection_items ON marketplace_items.user_collected_item_id = collection_items.id
-                    WHERE 
-                        cart.user_id = :uid";
+                JOIN 
+                    User_Collected_Items as user_collected_items ON marketplace_items.user_collected_item_id = user_collected_items.id
+                JOIN 
+                    Collection_Items as collection_items ON user_collected_items.collection_item_id = collection_items.id
+                WHERE 
+                    cart.user_id = :uid";
+
         $stmt = $this->prepare($query);
         $cart = [];
         try {
