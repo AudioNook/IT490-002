@@ -129,6 +129,72 @@ class DBRequests
         }
         return $response;
     }
+    public function doCart($user_id, $product_id = null, $action = null, $cart_id = null)
+    {
+        $request = [
+            'type' => 'cart',
+            'message' => 'Requesting cart',
+            'user_id' => (int)$user_id
+        ];
+
+        if ($product_id != null) {
+            $request['product_id'] = (int)$product_id;
+        }
+
+        if ($action != null) {
+            $request['action'] = (int)$action;
+        }
+
+        if ($cart_id != null) {
+            $request['cart_id'] = (int)$cart_id;
+        }
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+
+    public function updateCart($action, $user_id, $product_id = null, $cart_id = null)
+    {
+        $request = [
+            'type' => 'cart',
+            'message' => 'Updating cart',
+            'user_id' => (int)$user_id,
+            'action' => $action
+        ];
+        if ($cart_id != null) {
+            $request['cart_id'] = (int)$cart_id;
+        }
+        if ($product_id != null) {
+            $request['product_id'] = (int)$product_id;
+        }
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
 
     public function getByUserId($user_id)
     {
