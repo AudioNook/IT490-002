@@ -22,6 +22,7 @@ $market_arr = $marketRequest->getMarket();
 
   <!-- Core theme CSS (includes Bootstrap)-->
   <link href="css/styles.css" rel="stylesheet" />
+  <title>Marketplace</title>
 </head>
 
 <body>
@@ -59,7 +60,7 @@ $market_arr = $marketRequest->getMarket();
                     <div class="bg-image hover-zoom ripple rounded ripple-surface">
                       <!-- Product image-->
                       <img src="<?php echo stripslashes(htmlspecialchars($products['cover_image'])) ?>" onerror="this.src='https://tinyurl.com/5n7fs4w8';" class="w-100" />
-                      <a href="#!">
+                      <a href="product_details.php?id=<?php echo ($products['id']); ?>">
                         <div class="hover-overlay">
                           <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);"></div>
                         </div>
@@ -68,7 +69,7 @@ $market_arr = $marketRequest->getMarket();
                   </div>
                   <div class="col-md-6 col-lg-6 col-xl-6">
                     <!-- Product Title-->
-                    <h5><?php echo ($products['title']); ?></h5>
+                    <h5><a class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="product_details.php?id=<?php echo ($products['id']); ?>"><?php echo ($products['title']); ?></a></h5>
                     <div class="d-flex flex-row">
                       <!-- Potential Ratings
                 <div>
