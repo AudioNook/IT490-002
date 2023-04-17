@@ -9,9 +9,12 @@
  * 4. Implemented namespace RabbitMQ
  * 5. Seperated RabbitMQClient and RabbitMQServer into two files
  */
+
 namespace RabbitMQ;
+
 require_once(__DIR__ . "/../../vendor/autoload.php");
 require_once(__DIR__ . "/get_host_info.php");
+
 use function RabbitMQ\get_host_info;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 //use PhpAmqpLib\Channel\AMQPChannel;
@@ -37,7 +40,7 @@ class rabbitMQClient
 	private $auto_delete = false; // default to false
 	private $response_queue = array();
 	private $connection;
-    private $channel;
+	private $channel;
 
 	/**
 	 * Initializes RabbitMQ client by the getting the 
@@ -118,7 +121,7 @@ class rabbitMQClient
 				$this->password,
 				$this->vhost
 			);
-	
+
 			$channel = $connection->channel();
 
 			$this->connection = $connection;
@@ -131,15 +134,18 @@ class rabbitMQClient
 				$this->exchange_type,
 				true,
 				false,
-				false
+				$this->auto_delete
 			);
 			$channel->queue_bind($this->queue, $this->exchange, $this->routing_key);
 
 			// callback queue
 			$cbq_name = $this->queue . "_response"; // [c]all[b]ack [q]ueue name
 			$channel->queue_declare($cbq_name, false, true, false, true);
-			$channel->queue_bind($cbq_name, $this->exchange, 
-				$this->routing_key . ".response");
+			$channel->queue_bind(
+				$cbq_name,
+				$this->exchange,
+				$this->routing_key . ".response"
+			);
 
 			// create the message
 			$msg = new AMQPMessage(
@@ -205,7 +211,7 @@ class rabbitMQClient
 			// Declare the queue if it does not exist
 			$channel->queue_declare($this->queue, false, true, false, $this->auto_delete);
 			// Declare the exchange if it does not exist
-			$channel->exchange_declare($this->exchange, $this->exchange_type, false, true, false);
+			$channel->exchange_declare($this->exchange, $this->exchange_type, false, true,  $this->auto_delete);
 			// 
 			$channel->queue_bind($this->queue, $this->exchange, $this->routing_key);
 			// publish the message to the exchange
@@ -223,5 +229,14 @@ class rabbitMQClient
 		// http://php-amqplib.github.io/php-amqplib/classes/PhpAmqpLib-Channel-AMQPChannel.html#method_close
 		$this->channel->close();
 		$this->connection->close();
+	}
+
+	/**
+	 * Destructor for the RabbitMQClient class
+	 * Calls the close() function to close the connection and the channel
+	 */
+	function __destruct()
+	{
+		$this->close();
 	}
 }
