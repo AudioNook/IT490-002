@@ -4,7 +4,7 @@ error_reporting(E_ALL ^ E_DEPRECATED);
 
 require_once(__DIR__ . "/../vendor/autoload.php");
 use DMZ\{Curl};
-use RabbitMQ\rabbitMQServer;
+use RabbitMQ\RabbitMQServer;
 function requestProcessor($request)
 {
     echo "========================".PHP_EOL;
@@ -39,7 +39,7 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQs = new rabbitMQServer("rabbitMQ.ini","jwtServer");
+$rbMQs = new RabbitMQServer("rabbitMQ.ini","jwtServer");
 
 echo "RabbitMQServer BEGIN".PHP_EOL;
 $rbMQs->process_requests('requestProcessor');
