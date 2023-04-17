@@ -154,7 +154,6 @@ class Collection extends db{
                     AND Collection_Items.id = :cid
                   GROUP BY Collection_Items.id
                   LIMIT 1;";
-        //TODO CARLOS SELECT STATEMENT NOT WORKING :( SOS 911 HELP
         $params = [
             ':uid' => (int)$user_id,
             ':cid' => (int)$collection_item_id,

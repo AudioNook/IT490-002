@@ -1,7 +1,7 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
-
-//logged_in(true); TODO uncomment
+//TODO implement forum logic as part of DBRequests.php
+logged_in(true);
 $rbMQc = rbmqc_db();
 
 $topics_req = array();

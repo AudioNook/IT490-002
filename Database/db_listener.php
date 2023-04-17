@@ -79,11 +79,11 @@ function requestProcessor($request)
         case "list_item":
             $response = $db_market->list_item($request['uid'],$request['cid'],$request['condition'],$request['description'],$request['price']);
             break;
+        // TODO: Add more and fix cases for Reviews, Products, Orders, and Payments
         // Handling Products
         case "products":
             $response = $db_products->get_products($request['id'],$request['name'],$request['category'],$request['stock'],$request['cost'],$request['image']);
             break;
-         // TODO: Add more cases for Reviews, Products, Orders, and Payments
         // Handling Reviews
         case "get_reviews":
             $response = $db_reviews->get_reviews($request['id'], $request['product_id'],$request['comment'], $request['created']);
