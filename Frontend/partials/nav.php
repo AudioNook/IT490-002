@@ -35,7 +35,7 @@ if (basename($_SERVER['PHP_SELF']) !== 'login.php') { // check if the current pa
          <?php if ($is_logged_in) : ?>
             <a class="navbar-brand" href="<?php echo get_url('marketplace.php'); ?>">AudioNook</a>
             <li class="nav-item">
-               <a class="nav-link" href="<?php echo get_url('start_collecting.php'); ?>">Add to Collection</a>
+               <a class="nav-link" href="<?php echo get_url('start_collecting.php'); ?>">Collection Search</a>
             </li>
             <li class="nav-item">
                <a class="nav-link" href="<?php echo get_url('marketplace.php'); ?>">Marketplace</a>
