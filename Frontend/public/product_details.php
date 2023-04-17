@@ -6,6 +6,12 @@
             <div class="main-img">
                 <img class="img-fluid" src="https://i.discogs.com/EB6i3MltuGKX7DuCF4TDeqxK-ReTBPAf2cInVw5kX0c/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcyNjg5/NDMtMTQzNzYzNTcy/Ni00NzU5LmpwZWc.jpeg" alt="ProductS">
             </div>
+            <br>
+            <div class="d-flex justify-content-center">
+                <div class="embed-responsive embed-responsive-21by9" style="width: 100%; max-width: 560px;">
+                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/NMRhx71bGo4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
         </div>
         <div class="col-md-7">
             <div class="main-description px-2">
@@ -46,11 +52,11 @@
                 </div>
                 <div class="col-md-11 text">
                     <h4 class="details-title text-color mb-1">Song List</h4>
-                        <p>1. Something - by something Feat something </p>
-                        <p>2. Something - by something Feat something </p>
-                        <p>3. Something - by something Feat something </p>
-                        <p>4. Something - by something Feat something </p>
-                        <p>5. Something - by something Feat something </p>   
+                    <p>1. Something - by something Feat something </p>
+                    <p>2. Something - by something Feat something </p>
+                    <p>3. Something - by something Feat something </p>
+                    <p>4. Something - by something Feat something </p>
+                    <p>5. Something - by something Feat something </p>
                 </div>
             </div>
 
