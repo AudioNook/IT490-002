@@ -4,8 +4,22 @@ require(__DIR__ . "/../partials/nav.php");
 logged_in(true);
 $marketRequest = new DBRequests();
 $market_arr = $marketRequest->getMarket();
-//echo "\n market_arr: \n";
-//var_dump($market_arr);
+$user_id = get_user_id();
+if (isset($_POST['action'])) {
+  $action = strtolower(trim(htmlspecialchars($_POST['action'])));
+  if (!empty($action)) {
+      if (isset($_POST['product_id'])) {
+          $product_id = $_POST['product_id'];
+          $cartOpt = new DBRequests();
+          if (array_key_exists('cart_id', $_POST)) {
+              $cart_id = $_POST['cart_id'];
+              $response = $cartOpt->doCart($user_id, $product_id, $action, $cart_id);
+          } else {
+              $response = $cartOpt->doCart($user_id, $product_id, $action);
+          }
+      }
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -114,11 +128,16 @@ $market_arr = $marketRequest->getMarket();
                         <h4 class="mt-1 mb-0 text-muted small">Date Listed: <?php echo $products['created']; ?>/5</h4>
                       </div>
                       <!-- Add to cart button-->
-                      <form method="POST" action="cart.php">
+                      <form id="add-to-cart-form" method="POST">
                         <input type="hidden" name="product_id" value="<?php echo $products['id']; ?>" />
                         <input type="hidden" name="user_id" value="<?php echo get_user_id(); ?>" />
                         <input type="hidden" name="action" value="add" />
-                        <input type="submit" class="btn btn-primary" value="Add to Cart" />
+                        <button type="submit" class="btn btn-outline-dark">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                          </svg>
+                          Add to Cart
+                        </button>
                       </form>
 
                     </div>
@@ -135,7 +154,7 @@ $market_arr = $marketRequest->getMarket();
       </style>
     </section>
     <!-- Bootstrap core JS-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></scrip>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
 </body>
