@@ -39,7 +39,7 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQs = new RabbitMQServer("rabbitMQ.ini","jwtServer");
+$rbMQs = new rabbitMQServer("rabbitMQ.ini","jwtServer");
 
 echo "RabbitMQServer BEGIN".PHP_EOL;
 $rbMQs->process_requests('requestProcessor');
