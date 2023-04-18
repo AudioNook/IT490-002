@@ -30,7 +30,7 @@ if (isset($_GET['searching'])) {
   }
 }
 //var_dump($results);
-var_dump($genres);
+//var_dump($genres);
 ?>
 <!doctype html>
 <html lang="en">
