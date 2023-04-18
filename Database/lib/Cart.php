@@ -27,7 +27,7 @@ class Cart extends db
             switch ($action) {
                 case "add": // add item to cart
                     $query = "INSERT INTO Cart (product_id, unit_price, user_id)
-                    VALUES (:iid, (SELECT price FROM marketplace_items where id = :iid), :uid)";
+                    VALUES (:iid, (SELECT price FROM Marketplace_Items where id = :iid), :uid)";
                     $stmt = $this->prepare($query);
                     $stmt->bindValue(":iid", $request['product_id'], PDO::PARAM_INT);
                     $stmt->bindValue(":uid", $request['user_id'], PDO::PARAM_INT);
