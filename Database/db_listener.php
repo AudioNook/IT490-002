@@ -79,6 +79,9 @@ function requestProcessor($request)
         case "list_item":
             $response = $db_market->list_item($request['uid'],$request['cid'],$request['condition'],$request['description'],$request['price']);
             break;
+        case "get_item_details":
+            $response = $db_market->get_item_details($request['item_id']);
+            break;
         // TODO: Add more and fix cases for Reviews, Products, Orders, and Payments
         // Handling Products
         case "products":
