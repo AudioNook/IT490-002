@@ -1,4 +1,7 @@
 <?php require(__DIR__ . "/../partials/nav.php");
+
+$product_id = $_GET['id'];
+
 ?>
 <div class="container my-5">
     <div class="row">
@@ -26,18 +29,25 @@
                     <p class="text-secondary mb-1"><?php echo "Genres: [Genres]" ?></p>
                 </div>
 
-                <div class="buttons d-flex my-5">
-                    <div class="block">
-                        <a href="#" class="btn btn-primary">Wishlist</a>
-                    </div>
-                    <div class="block">
-                        <button class="btn btn-success">Add to cart</button>
-                    </div>
+                <div class="buttons d-flex align-items-center my-5">
 
-                    <div class="block quantity">
-                        <input type="number" class="form-control" id="cart_quantity" value="1" min="0" max="5" placeholder="Enter email" name="cart_quantity">
-                    </div>
+                    <form id="add-to-cart-form" class="d-flex ms-2" method="POST">
+                        <a disabled href="#" class="btn btn-outline-primary">Wishlist</a>
+                        <input type="hidden" name="product_id" value="<?php echo $products['id']; ?>" />
+                        <input type="hidden" name="user_id" value="<?php echo get_user_id(); ?>" />
+                        <input type="hidden" name="action" value="add" />
+                        <button type="submit" class="btn btn-outline-dark text-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                            </svg>
+                            Add to Cart
+                        </button>
+                        <input type="number" readonly class="form-control small-input ms-2" id="disabledTextInput" name="desired_quantity" value="<?php echo 1; ?>" min="0" max="<?php echo 1; ?>" />
+                    </form>
                 </div>
+
+
+
 
             </div>
 
