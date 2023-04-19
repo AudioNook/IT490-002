@@ -88,7 +88,7 @@ class Marketplace extends db
         $id = (int) $id;
         $query = "SELECT mi.id, mi.item_condition, mi.item_description, mi.price, mi.created, mi.modified,
         ci.title, ci.cover_image, ci.format,
-        u.email, u.username,
+        u.email, u.username, ci.id AS collection_item_id,
         GROUP_CONCAT(g.name SEPARATOR ', ') AS genres
         FROM Marketplace_Items AS mi
         INNER JOIN User_Collected_Items AS uci ON mi.user_collected_item_id = uci.id
