@@ -1,6 +1,10 @@
 <?php require(__DIR__ . "/../partials/nav.php");
 
 $product_id = $_GET['id'];
+if(is_null($product_id) > 0 || $product_id < 0){
+	// message
+	redirect("/marketplace.php");
+}
 $itemDetails = new DBRequests();
 $item = $itemDetails->getItemDetails($product_id)["marketplace_item"];
 var_dump($item);
@@ -19,15 +23,25 @@ var_dump($item);
             </div>
 
             <div class="container py-5">
-                <div class="card text-black border-dark" style="border-radius: 15px;">
+                <div class="card text-black border-dark" style="border-radius: 10px;">
                     <div class="card-body p-4">
                         <div class="d-flex align-items-center">
-                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Generic placeholder image" class="rounded-circle border border-dark border-3" style="width: 70px;">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Generic placeholder image" class="rounded-circle border border-dark border-1" style="width: 70px;">
                             <div class="ms-3">
                                 <p class="mb-0">@<?php echo $item['username'] ?></p>
                                 <div>
-                                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">Message</button>
-                                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">See profile</button>
+                                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                                        </svg>
+                                        View Profile
+                                    </button>
+                                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-left" viewBox="0 0 16 16">
+                                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
+                                        </svg>
+                                        Message
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +67,11 @@ var_dump($item);
                 <div class="buttons d-flex align-items-center my-5">
 
                     <form id="add-to-cart-form" class="d-flex ms-2" method="POST">
-                        <a disabled href="#" class="btn btn-outline-primary">Wishlist</a>
+                        <button disabled href="#" class="btn btn-outline-primary text-nowrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                                <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                            </svg>
+                            Wishlist</button>
                         <input type="hidden" name="product_id" value="<?php echo $products['id']; ?>" />
                         <input type="hidden" name="user_id" value="<?php echo get_user_id(); ?>" />
                         <input type="hidden" name="action" value="add" />
