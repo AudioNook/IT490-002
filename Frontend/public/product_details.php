@@ -23,7 +23,6 @@ if ($reviewResponse['code'] == 200) {
     $averageRating = 0;
     $reviewsAmt = 0;
 }
-var_dump($reviews);
 if (isset($_POST["submitreview"])) {
     $review = $_POST["review"];
     $rating = (int) $_POST["rating"];
@@ -51,6 +50,9 @@ if (isset($_POST["submitreview"])) {
 }
 
 ?>
+<head>
+    <title><?php echo $item['title'] ?></title>
+</head>
 <div class="container my-5">
     <div class="row">
         <div class="col-md-5">

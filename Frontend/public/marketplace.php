@@ -75,7 +75,7 @@ if (isset($_POST['action'])) {
                     <!-- Product Title-->
                     <h5><a class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="product_details.php?id=<?php echo ($products['id']); ?>"><?php echo ($products['title']); ?></a></h5>
                     <div class="d-flex flex-row">
-                      <!-- Potential Ratings TODO:
+                      <!-- Potential Ratings TODO
                 <div>
                   <b-form-rating v-model="value"></b-form-rating>
                   <p class="mt-2">Value: <?php ?></p>
