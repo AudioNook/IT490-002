@@ -153,7 +153,53 @@ class DBRequests
         }
         return $response;
     }
+    public function getAlbumReviews($collection_id){
+        $request = [
+            'type' => 'get_album_reviews',
+            'message' => 'Requesting album reviews',
+            'collection_id' => (int)$collection_id
+        ];
 
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+    public function reviewAlbum($user_id, $collection_id, $review, $rating){
+        $request = [
+            'type' => 'review_album',
+            'message' => 'Creating album review',
+            'user_id' => (int)$user_id,
+            'collection_id' => (int)$collection_id,
+            'review' => $review,
+            'rating' => (int)$rating
+        ];
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
     public function doCart($user_id, $product_id = null, $action = null, $cart_id = null)
     {
         $request = [
