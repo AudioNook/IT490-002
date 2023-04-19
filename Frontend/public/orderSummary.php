@@ -43,12 +43,14 @@ $userInfo = $getCreds->getByUserId($user_id);
   <title>Responsive Order Confirmation</title>
 </head>
 
-<section class="h-100 h-custom" style="background-color: #eee;">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col-lg-8 col-xl-6">
-        <div class="card border-top border-bottom border-3" style="border-color: #14171a !important;">
-          <div class="card-body p-5">
+<body>
+  <!-- TODO grey part -->
+  <section class="h-100 h-custom relative" style="background-color: #eee;">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-lg-8 col-xl-6">
+          <div class="card border-top border-bottom border-3" style="border-color: #14171a !important;">
+            <div class="card-body p-5">
 
               <p class="lead fw-bold mb-5" style="color: #14171a;">Thank You For Your Purchase!</p>
 
@@ -60,46 +62,75 @@ $userInfo = $getCreds->getByUserId($user_id);
                   </p>
 
 
+                </div>
+                <div class="col mb-3">
+                  <p class="small text-muted mb-1">Order No.</p>
+                  <p>
+                    0245504156780015819297
+                  </p>
+                </div>
               </div>
-              <div class="col mb-3">
-                <p class="small text-muted mb-1">Order No.</p>
-                <p> <?php echo htmlspecialchars($orderNum); ?></p>
-              </div>
-            </div>
 
-            <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
-              <div class="row">
-                <div class="col-md-8 col-lg-9">
-                  <p>Subtotal </p>
-                </div>
-                <div class="col-md-4 col-lg-3">
-                <p> $<?php echo htmlspecialchars($subtotal); ?></p>
+              <div class="mx-n5 px-5 py-4 overflow:scroll" style="background-color: #f2f2f2;">
+                <?php if (count($cart) > 0): ?>
+                  <?php foreach ($cart as $c): ?>
+                    <div class="row mb-3">
+                      <div class="col-md-2 col-lg-2 col-xl-2">
+                        <img src="<?php echo stripslashes(htmlspecialchars($c['cover_image'])) ?>"
+                          class="img-fluid rounded-3" alt="Cotton T-shirt">
+                      </div>
+                      <div class="col-md-6 col-lg-6 col-xl-6">
+                        <p class="lead fw-normal mb-2">
+                          <?php echo ($c["name"]); ?>
+                        </p>
+                        <p class="text-muted">
+                          <span>Product ID:</span>
+                          <?php echo ($c["product_id"]); ?>
+                        </p>
+                      </div>
+                      <div class="col-md-4 col-lg-4 col-xl-4">
+                        <p>$
+                          <?php echo (float) $c["unit_price"]; ?>
+                        </p>
+                      </div>
+                    </div>
+                    <?php $subtotal += (float) $c["unit_price"]; ?>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                  <div class="card mt-3">
+                    <div class="card-body">
+                      No Order
+                    </div>
+                  </div>
+                <?php endif; ?>
+                <div class="row">
+                  <div class="col-md-8 col-lg-9">
+                    <p class="mb-0">Shipping:</p>
+                    <p class="mb-0">Subtotal:</p>
+                    <p class="mb-0">Total:</p>
+                  </div>
+                  <div class="col-md-4 col-lg-3">
+                    <p class="mb-0">$6.99</p>
+                    <?php $total = $subtotal + 6.99; ?>
+                    <p class="mb-0">$
+                      <?php echo ($subtotal); ?>
+                    </p>
+                    <p class="mb-0">$
+                      <?php echo ($total); ?>
+                    </p>
+                  </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-8 col-lg-9">
-                  <p class="mb-0">Shipping</p>
-                </div>
-                <div class="col-md-4 col-lg-3">
-                  <!-- shipping wont change regardlesss of oder  -->
-                  <p class="mb-0"> $<?php echo htmlspecialchars($shipping); ?>
-</p>
-                </div>
-              </div>
-            </div>
 
               <div class="row my-4">
               </div>
-            </div>
+              <div class="row">
+                <div class="col mb-3">
 
-            <p class="lead fw-bold mb-4 pb-2" style="color: #14171a;">Tracking Order</p>
-
-
-            <div class="row">
-              <div class="col-lg-12">
-
-              <p class="mb-0">Check email for tracking updates:</p>
-              <p class="lead fw-bold mb-0" style="color: #14171a;"><?php echo htmlspecialchars($email); ?></p>
+                  <p class="mb-0">Check email for tracking updates:</p>
+                  <p class="lead fw-bold mb-0" style="color: #14171a;">
+                    <?php echo $userInfo['email']; ?>
+                  </p>
 
                 </div>
                 <div class="col mb-3">
