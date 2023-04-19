@@ -1,6 +1,7 @@
 <?php require(__DIR__ . "/../partials/nav.php");
 
 $product_id = $_GET['id'];
+$user_id = get_user_id();
 if (is_null($product_id) > 0 || $product_id < 0) {
     // message
     redirect("/marketplace.php");
@@ -26,7 +27,6 @@ if ($reviewResponse['code'] == 200) {
 if (isset($_POST["submitreview"])) {
     $review = $_POST["review"];
     $rating = (int) $_POST["rating"];
-    $user_id = get_user_id();
     $collection_id = $item['collection_item_id'];
     $hasError = false;
     if ($rating < 1) {
@@ -48,8 +48,23 @@ if (isset($_POST["submitreview"])) {
     $reviewAlbum->reviewAlbum($user_id, $collection_id, $review, $rating);
     redirect("/product_details.php?id=" . $product_id);
 }
-
+if (isset($_POST['action'])) {
+    $action = strtolower(trim(htmlspecialchars($_POST['action'])));
+    if (!empty($action)) {
+        if (isset($_POST['product_id'])) {
+            $product_id = $_POST['product_id'];
+            $cartOpt = new DBRequests();
+            if (array_key_exists('cart_id', $_POST)) {
+                $cart_id = $_POST['cart_id'];
+                $response = $cartOpt->doCart($user_id, $product_id, $action, $cart_id);
+            } else {
+                $response = $cartOpt->doCart($user_id, $product_id, $action);
+            }
+        }
+    }
+}
 ?>
+
 <head>
     <title><?php echo $item['title'] ?></title>
 </head>
@@ -116,7 +131,7 @@ if (isset($_POST["submitreview"])) {
                                 <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
                             </svg>
                             Wishlist</button>
-                        <input type="hidden" name="product_id" value="<?php echo $products['id']; ?>" />
+                        <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
                         <input type="hidden" name="user_id" value="<?php echo get_user_id(); ?>" />
                         <input type="hidden" name="action" value="add" />
                         <button type="submit" class="btn btn-outline-dark text-nowrap">
