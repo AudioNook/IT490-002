@@ -35,7 +35,7 @@ $subtotal = 0;
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
                     <div>
-                        <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price <i class="fas fa-angle-down mt-1"></i></a></p>
+                        <p class="mb-0"><span class="text-muted">Sort by:</span> <a href="#!" class="text-body">price:<i class="fas fa-angle-down mt-1"></i></a></p>
                     </div>
                 </div>
                 <div class="card rounded-3 mb-4">
@@ -68,7 +68,7 @@ $subtotal = 0;
                                             </form>
                                         </div>
                                         <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                            <p><span class="text-muted">Price: </span><?php echo htmlspecialchars($c["unit_price"]); ?>
+                                            <p><span class="text-muted">Price: $ </span><?php echo htmlspecialchars($c["unit_price"]); ?>
                                         </div>
                                         <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                             <form method="POST">
@@ -116,7 +116,7 @@ $subtotal = 0;
                         </div>
                         <div style="position:relative; left:100px; top:2px;">
 
-                            <button type="button" class="btn btn-dark" onclick="<?php echo get_url('checkout.php'); ?>">Continue to Check Out</button>
+                            <button type="button" class="btn btn-dark echo get_url('checkout.php')">Continue to Check Out</button>
                         </div>
                     </div>
                 </div>
