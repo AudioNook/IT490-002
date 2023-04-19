@@ -1,13 +1,73 @@
 <?php require(__DIR__ . "/../partials/nav.php");
 
 $product_id = $_GET['id'];
-if(is_null($product_id) > 0 || $product_id < 0){
-	// message
-	redirect("/marketplace.php");
+$user_id = get_user_id();
+if (is_null($product_id) > 0 || $product_id < 0) {
+    // message
+    redirect("/marketplace.php");
 }
 $itemDetails = new DBRequests();
 $item = $itemDetails->getItemDetails($product_id)["marketplace_item"];
+
+$reviewsRequest = new DBRequests();
+$reviewResponse = $reviewsRequest->getAlbumReviews($item['collection_item_id']);
+if ($reviewResponse['code'] == 200) {
+    $reviews = $reviewResponse['reviews'];
+    $averageRating = 0;
+    $reviewsAmt = count($reviews);
+    foreach ($reviews as $review) {
+        $averageRating += $review['rating'];
+    }
+    $averageRating = $averageRating / $reviewsAmt;
+} else {
+    $reviews = [];
+    $averageRating = 0;
+    $reviewsAmt = 0;
+}
+if (isset($_POST["submitreview"])) {
+    $review = $_POST["review"];
+    $rating = (int) $_POST["rating"];
+    $collection_id = $item['collection_item_id'];
+    $hasError = false;
+    if ($rating < 1) {
+        $hasError = true;
+    }
+    if (strlen($review) <= 0) {
+        $hasError = true;
+    }
+    if (!isset($_GET["id"]) || is_null($product_id) > 0 || $product_id < 0) {
+        $hasError = true;
+    }
+    // TODO maybe check if user has the album in their collection
+    if (!$hasError) {
+        $reviewAlbum = new DBRequests();
+        $reviewAlbum->reviewAlbum($user_id, $collection_id, $review, $rating);
+        redirect("/product_details.php?id=" . $product_id);
+    }
+    $reviewAlbum = new DBRequests();
+    $reviewAlbum->reviewAlbum($user_id, $collection_id, $review, $rating);
+    redirect("/product_details.php?id=" . $product_id);
+}
+if (isset($_POST['action'])) {
+    $action = strtolower(trim(htmlspecialchars($_POST['action'])));
+    if (!empty($action)) {
+        if (isset($_POST['product_id'])) {
+            $product_id = $_POST['product_id'];
+            $cartOpt = new DBRequests();
+            if (array_key_exists('cart_id', $_POST)) {
+                $cart_id = $_POST['cart_id'];
+                $response = $cartOpt->doCart($user_id, $product_id, $action, $cart_id);
+            } else {
+                $response = $cartOpt->doCart($user_id, $product_id, $action);
+            }
+        }
+    }
+}
 ?>
+
+<head>
+    <title><?php echo $item['title'] ?></title>
+</head>
 <div class="container my-5">
     <div class="row">
         <div class="col-md-5">
@@ -71,7 +131,7 @@ $item = $itemDetails->getItemDetails($product_id)["marketplace_item"];
                                 <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
                             </svg>
                             Wishlist</button>
-                        <input type="hidden" name="product_id" value="<?php echo $products['id']; ?>" />
+                        <input type="hidden" name="product_id" value="<?php echo $product_id; ?>" />
                         <input type="hidden" name="user_id" value="<?php echo get_user_id(); ?>" />
                         <input type="hidden" name="action" value="add" />
                         <button type="submit" class="btn btn-outline-dark text-nowrap">
@@ -121,7 +181,73 @@ $item = $itemDetails->getItemDetails($product_id)["marketplace_item"];
 <div class="container similar-products my-4">
     <hr>
     <p class="display-5">Album Reviews</p>
-    <!-- Seller Reviews -->
+
+    <div class="container py-5">
+        <div class="card bg-light">
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-md-4 d-flex flex-column align-items-center">
+                        <div class="rating-box fluid bg-dark text-white p-3 rounded aspect-ratio-1x1 w-50 d-flex flex-column align-items-center justify-content-center">
+                            <h1 class="pt-4"><?php echo $averageRating; ?></h1>
+                            <p class="">out of 5</p>
+                            <div>
+                                <?php for ($i = 0; $i < 5; $i++) {
+                                    echo renderStar($i, $averageRating);
+                                } ?>
+                            </div>
+                            <div><?php echo $reviewsAmt; ?> Reviews</div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="text-center mb-4">Review and Rate this Album!</h4>
+                        <form class="fluid" method="POST">
+                            <div class="form-outline mb-4 d-flex justify-content-center">
+                                <?php for ($i = 0; $i < 5; $i++) : ?>
+                                    <input type="radio" class="btn-check" name="rating" id="<?php echo "Option" . $i + 1 ?>" value="<?php echo $i + 1 ?>" autocomplete="off">
+                                    <label class="btn btn-outline-dark btn-sm" for="<?php echo "Option" . $i + 1 ?>"><?php echo getEmptyStar(); ?></label>
+                                <?php endfor; ?>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <textarea class="form-control" placeholder="What'd you think?" name="review" rows="4"></textarea>
+                                <!-- Submit and Clear button -->
+                                <button type="reset" class="btn btn-outline-secondary btn-block mb-4">Clear</button>
+                                <button type="submit" name="submitreview" class="btn btn-outline-dark btn-block mb-4">
+                                    Post
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php if (count($reviews) > 0) : ?>
+        <?php foreach ($reviews as $review) : ?>
+            <div class="container py-5">
+                <div class="d-flex align-items-start">
+                    <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Generic placeholder image" class="rounded-circle border border-dark border-1" style="width: 70px;">
+                    <div class="ms-3">
+                        <h3 class="mt-2 mb-0">@<?php echo $review['username'] ?></h3>
+                        <p class="text-left"><span class="text-muted"><?php echo getFullStar() . "(" . (int)$review['rating'] . ")" ?></span></p>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <div class="review-description">
+                        <p><?php echo $review['review'] ?></p>
+                    </div>
+                    <span class="publish py-3 d-inline-block w-100">Published <?php echo $review['created'] ?></span>
+                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0Zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4Zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10Z" />
+                        </svg>
+                        View Profile
+                    </button>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <h2>No Reviews</h2>
+    <?php endif; ?>
 </div>
 <div class="container similar-products my-4">
     <hr>
