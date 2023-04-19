@@ -7,7 +7,6 @@ if(is_null($product_id) > 0 || $product_id < 0){
 }
 $itemDetails = new DBRequests();
 $item = $itemDetails->getItemDetails($product_id)["marketplace_item"];
-var_dump($item);
 ?>
 <div class="container my-5">
     <div class="row">
