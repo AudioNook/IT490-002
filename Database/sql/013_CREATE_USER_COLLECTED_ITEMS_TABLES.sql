@@ -1,5 +1,5 @@
 /* A table that maps the user to the collection item */
-CREATE IF NOT EXISTS TABLE User_Collected_Items (
+CREATE TABLE IF NOT EXISTS User_Collected_Items (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   collection_item_id INT NOT NULL,
