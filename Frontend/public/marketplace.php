@@ -4,7 +4,7 @@ require(__DIR__ . "/../partials/nav.php");
 logged_in(true);
 $marketRequest = new DBRequests();
 $market_arr = $marketRequest->getMarket();
-if ($market_arr['code'] == 400) {
+if (isset($market_arr['code']) && $market_arr['code'] == 400) {
   $market_arr = [];
 }
 $user_id = get_user_id();
@@ -118,7 +118,7 @@ if (isset($_POST['action'])) {
                           <h4 class="mt-1 mb-0 text-muted small">Item Id: <?php echo $products['id']; ?></h4>
                         </div>
                         <div class="d-flex flex-row align-items-center mb-1">
-                          <h4 class="mt-1 mb-0 text-muted small">Date Listed: <?php echo $products['created']; ?>/5</h4>
+                          <h4 class="mt-1 mb-0 text-muted small">Date Listed: <?php echo $products['created']; ?></h4>
                         </div>
                         <!-- Add to cart button-->
                         <form id="add-to-cart-form" method="POST">
@@ -139,19 +139,19 @@ if (isset($_POST['action'])) {
                 </div>
               </div>
             </div>
-          <?php endforeach; ?>
           </div>
-        <?php else : ?>
-          <div class="row justify-content-center mb-3">
-            <div class="col">
-              <div class="row">
-                <div class="col">
-                  <h1>Nothing being sold ☹</h1>
-                </div>
+        <?php endforeach; ?>
+      <?php else : ?>
+        <div class="row justify-content-center mb-3">
+          <div class="col">
+            <div class="row">
+              <div class="col">
+                <h1>Nothing being sold ☹</h1>
               </div>
             </div>
           </div>
-        <?php endif; ?>
+        </div>
+      <?php endif; ?>
   </section>
 </body>
 <?php
