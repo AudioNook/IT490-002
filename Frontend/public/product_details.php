@@ -1,13 +1,15 @@
 <?php require(__DIR__ . "/../partials/nav.php");
 
 $product_id = $_GET['id'];
-
+$itemDetails = new DBRequests();
+$item = $itemDetails->getItemDetails($product_id)["marketplace_item"];
+var_dump($item);
 ?>
 <div class="container my-5">
     <div class="row">
         <div class="col-md-5">
             <div class="main-img">
-                <img class="img-fluid" src="https://i.discogs.com/EB6i3MltuGKX7DuCF4TDeqxK-ReTBPAf2cInVw5kX0c/rs:fit/g:sm/q:90/h:600/w:600/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTcyNjg5/NDMtMTQzNzYzNTcy/Ni00NzU5LmpwZWc.jpeg" alt="ProductS">
+                <img class="img-fluid" src="<?php echo $item['cover_image'] ?>" alt="ProductS">
             </div>
             <br>
             <div class="d-flex justify-content-center">
@@ -15,18 +17,37 @@ $product_id = $_GET['id'];
                     <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/NMRhx71bGo4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                 </div>
             </div>
+
+            <div class="container py-5">
+                <div class="card text-black border-dark" style="border-radius: 15px;">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center">
+                            <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Generic placeholder image" class="rounded-circle border border-dark border-3" style="width: 70px;">
+                            <div class="ms-3">
+                                <p class="mb-0">@<?php echo $item['username'] ?></p>
+                                <div>
+                                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">Message</button>
+                                    <button type="button" class="btn btn-outline-dark btn-sm" data-mdb-ripple-color="dark">See profile</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="col-md-7">
             <div class="main-description px-2">
                 <div class="category text-bold">
-                    <?php echo "Format: [Format]" ?>
+                    <?php echo "Condition: " . $item['item_condition'] ?>
                 </div>
                 <h3 class="product-title text-bold my-3">
-                    <?php echo "Product Title"; ?>
+                    <?php echo $item['title']; ?>
                 </h3>
                 <div class="price-area my-4">
-                    <p class="new-price text-bold mb-1"> Price: $80</p>
-                    <p class="text-secondary mb-1"><?php echo "Genres: [Genres]" ?></p>
+                    <p class="new-price text-bold mb-1"><strong> <?php echo "Format: " . $item['format'] ?> </strong></p>
+                    <p class="new-price text-bold mb-1"> <?php echo "Price: " . $item['price'] ?></p>
+                    <p class="text-secondary mb-1"><?php echo "Genres: " . $item['genres'] ?></p>
                 </div>
 
                 <div class="buttons d-flex align-items-center my-5">
@@ -45,15 +66,11 @@ $product_id = $_GET['id'];
                         <input type="number" readonly class="form-control small-input ms-2" id="disabledTextInput" name="desired_quantity" value="<?php echo 1; ?>" min="0" max="<?php echo 1; ?>" />
                     </form>
                 </div>
-
-
-
-
             </div>
 
             <div class="product-details my-4">
                 <h4 class="details-title text-color mb-1">Description</h4>
-                <p class="description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat excepturi odio recusandae aliquid ad impedit autem commodi earum voluptatem laboriosam? </p>
+                <p class="description"> <?php echo $item['item_description'] ?> </p>
             </div>
 
             <div class="row questions bg-light p-3">
