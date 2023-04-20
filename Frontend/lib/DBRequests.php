@@ -116,7 +116,113 @@ class DBRequests
         $response = $this->send($request);
         switch ($response['code']) {
             case 200:
-                var_dump($response);
+                //var_dump($response);
+                return $response['marketplace_items'];
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+
+    public function getItemDetails($item_id)
+    {
+        $request = [
+            'type' => 'get_item_details',
+            'message' => 'Requesting item details',
+            'item_id' => (int)$item_id
+        ];
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+    public function getAlbumReviews($collection_id){
+        $request = [
+            'type' => 'get_album_reviews',
+            'message' => 'Requesting album reviews',
+            'collection_id' => (int)$collection_id
+        ];
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+    public function reviewAlbum($user_id, $collection_id, $review, $rating){
+        $request = [
+            'type' => 'review_album',
+            'message' => 'Creating album review',
+            'user_id' => (int)$user_id,
+            'collection_id' => (int)$collection_id,
+            'review' => $review,
+            'rating' => (int)$rating
+        ];
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+    public function doCart($user_id, $product_id = null, $action = null, $cart_id = null)
+    {
+        $request = [
+            'type' => 'cart',
+            'message' => 'Requesting cart',
+            'user_id' => (int)$user_id
+        ];
+
+        if ($product_id != null) {
+            $request['product_id'] = (int)$product_id;
+        }
+
+        if ($action != null) {
+            $request['action'] = $action;
+        }
+
+        if ($cart_id != null) {
+            $request['cart_id'] = (int)$cart_id;
+        }
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
                 return $response;
             case 401:
                 $error_msg = 'Unauthorized: ' . $response['message'];
@@ -130,18 +236,49 @@ class DBRequests
         return $response;
     }
 
-    public function getUserCreds($user_id)
+    public function updateCart($action, $user_id, $product_id = null, $cart_id = null)
     {
         $request = [
-            'type' => 'user_cred',
-            'message' => 'Sending user_creds request',
+            'type' => 'cart',
+            'message' => 'Updating cart',
             'user_id' => (int)$user_id,
+            'action' => $action
         ];
+        if ($cart_id != null) {
+            $request['cart_id'] = (int)$cart_id;
+        }
+        if ($product_id != null) {
+            $request['product_id'] = (int)$product_id;
+        }
 
         $response = $this->send($request);
         switch ($response['code']) {
             case 200:
                 return $response;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+
+    public function getByUserId($user_id)
+    {
+        $request = [
+            'type' => 'by_user_id',
+            'message' => 'Sending user_creds request',
+            'uid' => (int)$user_id,
+        ];
+
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response['userid'][0];
             case 401:
                 $error_msg = 'Unauthorized: ' . $response['message'];
                 error_log($error_msg);
@@ -163,7 +300,7 @@ class DBRequests
         ];
 
         $response = $this->send($request);
-        echo $response;
+        //echo $response;
         switch ($response['code']) {
             case 200:
                 $response['success'] = true;
@@ -179,6 +316,7 @@ class DBRequests
                 error_log($error_msg);
                 break;
         }
+        return $response;
     }
     public function getCollection($user_id)
     {
@@ -207,10 +345,10 @@ class DBRequests
     public function getItem($user_id, $collect_id)
     {
         $request = [
-            'type' => 'req_item',
+            'type' => 'get_collection_item',
             'message' => 'Requesting item from Collection',
             'user_id' => (int)$user_id,
-            'collect_id' => (int)$collect_id,
+            'collection_item_id' => (int)$collect_id,
         ];
         $response = $this->send($request);
         switch ($response['code']) {
@@ -226,6 +364,33 @@ class DBRequests
                 break;
         }
         return $response;
+    }
+    public function listItem($user_id, $collect_id, $condition, $description, $price)
+    {
+        $request = [
+            'type' => 'list_item',
+            'message' => 'Requesting item from Collection',
+            'uid' => (int)$user_id,
+            'cid' => (int)$collect_id,
+            'condition' => $condition,
+            'description' => $description,
+            'price' => (int)$price,
+        ];
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                error_log($response['message']);
+                redirect(get_url('marketplace.php'));
+                return true;
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
     }
 
     public function validateJWT($jwt)

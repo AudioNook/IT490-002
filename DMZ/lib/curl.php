@@ -1,7 +1,7 @@
 <?php
 namespace DMZ;
 
-require_once(__DIR__ . "/config.php");
+require_once(__DIR__ . "/DMZConfig.php");
 
 use DMZ\DMZConfig;
 

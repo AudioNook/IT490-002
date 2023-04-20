@@ -1,13 +1,17 @@
 <?php
+
 namespace Database;
+
 require_once(__DIR__ . "/db.php");
+
 use Database\db;
 
 /**
  * Class Collection: Database class for collection
  * @package Database
  */
-class Collection extends db{
+class Collection extends db
+{
 
     /**
      * Collection constructor.
@@ -22,7 +26,8 @@ class Collection extends db{
      * @param $user_id
      * @return array
      */
-    public function add_to_collection($user_id, $items) {
+    public function add_to_collection($user_id, $items)
+    {
         $user_id = (int)htmlspecialchars($user_id);
         $collectionTable = 'Collection_Items';
         $userCollectionTable = 'User_Collected_Items';
@@ -56,8 +61,8 @@ class Collection extends db{
             $result = $this->exec_query($userCollectionInsertQuery, $userCollectionParams);
             if (!$result) {
                 return [
-                    'code'=>400,
-                    'message'=> 'Unable to add itme to collection',
+                    'code' => 400,
+                    'message' => 'Unable to add itme to collection',
                     'success' => false
                 ];
             }
@@ -85,8 +90,8 @@ class Collection extends db{
                 $result = $this->exec_query($genreCollectionInsertQuery, $genreCollectionParams);
                 if (!$result) {
                     return [
-                        'code'=>400,
-                        'message'=> 'Unable to add genre to collection table',
+                        'code' => 400,
+                        'message' => 'Unable to add genre to collection table',
                         'success' => false
                     ];
                 }
@@ -94,8 +99,8 @@ class Collection extends db{
         }
 
         return [
-            'code'=>200,
-            'message'=> 'Successfully added item to collection',
+            'code' => 200,
+            'message' => 'Successfully added item to collection',
             'success' => true
         ];
     }
@@ -105,7 +110,7 @@ class Collection extends db{
      * @return array
      */
     public function get_user_collection($user_id)
-     {
+    {
         $user_id = (int)htmlspecialchars($user_id);
         $query = "SELECT Collection_Items.id, Collection_Items.title, Collection_Items.cover_image, Collection_Items.format
         FROM User_Collected_Items
@@ -113,22 +118,20 @@ class Collection extends db{
         WHERE User_Collected_Items.user_id = :uid;";
         $params = [':uid' => "$user_id"];
         $result = $this->exec_query($query, $params);
-        if ($result !== false && !empty($result)){
+        if ($result !== false && !empty($result)) {
             return [
-                'code'=>200,
-                'message'=> 'Sending user collection',
+                'code' => 200,
+                'message' => 'Sending user collection',
                 'collection' => $result
             ];
-        }
-        else{
+        } else {
             return [
-                'code'=>400,
-                'message'=> 'Unable to retrieve user collection',
+                'code' => 400,
+                'message' => 'Unable to retrieve user collection',
             ];
         }
-        
     }
-    
+
 
     /**
      * Get a single item in a user's collection
@@ -136,7 +139,7 @@ class Collection extends db{
      * @param $collection_item_id
      * @return array
      */
-    public function get_collection_item($user_id, $collection_item_id) 
+    public function get_collection_item($user_id, $collection_item_id)
     {
         //$user_id = (int)$user_id;
         //$collection_item_id = (int)$collection_item_id;
@@ -154,27 +157,115 @@ class Collection extends db{
                     AND Collection_Items.id = :cid
                   GROUP BY Collection_Items.id
                   LIMIT 1;";
-        //TODO CARLOS SELECT STATEMENT NOT WORKING :( SOS 911 HELP
         $params = [
             ':uid' => (int)$user_id,
             ':cid' => (int)$collection_item_id,
         ];
         var_dump($params);
         $result = $this->exec_query($query, $params);
-        if ($result !== false && !empty($result)){
+        if ($result !== false && !empty($result)) {
             return [
-                'code'=>200,
-                'message'=> 'Sending collection item data',
+                'code' => 200,
+                'message' => 'Sending collection item data',
                 'item' => $result
             ];
-        }
-        else{
+        } else {
             return [
-                'code'=>400,
-                'message'=> 'Unable to retrieve collection item data',
+                'code' => 400,
+                'message' => 'Unable to retrieve collection item data',
             ];
         }
-        
     }
+    public function review_album($user_id, $collection_item_id, $review, $rating)
+    {
+        // Check if the user has already reviewed the album
+        $query = "SELECT id FROM Album_Reviews WHERE user_id = :uid AND collection_item_id = :cid";
+        $params = [
+            ':uid' => (int)$user_id,
+            ':cid' => (int)$collection_item_id
+        ];
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)) {
+            // User has already reviewed the album
+            return [
+                'code' => 400,
+                'message' => 'User has already reviewed this album',
+                'success' => false
+            ];
+        }
+
+        // Insert the new review
+        $query = "INSERT INTO Album_Reviews (user_id, collection_item_id, review, rating) VALUES (:uid, :cid, :review, :rating)";
+        $params = [
+            ':uid' => (int)$user_id,
+            ':cid' => (int)$collection_item_id,
+            ':review' => htmlspecialchars($review),
+            ':rating' => (int)$rating
+        ];
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)) {
+            return [
+                'code' => 200,
+                'message' => 'Successfully added review',
+                'success' => true
+            ];
+        } else {
+            return [
+                'code' => 400,
+                'message' => 'Unable to add review',
+                'success' => false
+            ];
+        }
     }
 
+    public function get_album_reviews($collection_item_id)
+    {
+        $query = "SELECT
+                    Album_Reviews.id,
+                    Album_Reviews.review,
+                    Album_Reviews.rating,
+                    Album_Reviews.created,
+                    Users.username
+                  FROM Album_Reviews
+                  JOIN Users ON Album_Reviews.user_id = Users.id
+                  WHERE Album_Reviews.collection_item_id = :cid";
+        $params = [
+            ':cid' => (int)$collection_item_id
+        ];
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)) {
+            return [
+                'code' => 200,
+                'message' => 'Sending album reviews',
+                'reviews' => $result
+            ];
+        } else {
+            return [
+                'code' => 400,
+                'message' => 'Unable to retrieve album reviews',
+            ];
+        }
+    }
+    public function get_avg_rating($collection_item_id) {
+        $query = "SELECT AVG(rating) AS average_rating FROM Album_Reviews WHERE collection_item_id = :cid";
+        $params = [
+            ':cid' => (int)$collection_item_id
+        ];
+        $result = $this->exec_query($query, $params);
+        if ($result !== false && !empty($result)) {
+            $average_rating = round($result[0]['average_rating'], 1);
+            return [
+                'code' => 200,
+                'message' => 'Average rating retrieved successfully',
+                'average_rating' => $average_rating
+            ];
+        } else {
+            return [
+                'code' => 400,
+                'message' => 'Unable to retrieve average rating',
+                'average_rating' => null
+            ];
+        }
+    }
+    
+}
