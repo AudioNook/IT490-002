@@ -2,7 +2,7 @@
 //TODO Reirects to forums.php
 
 require(__DIR__ . "/../partials/nav.php");
-
+redirect("marketplace.php");
 $topic_id= $_GET["id"];
 
 

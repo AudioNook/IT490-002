@@ -153,7 +153,8 @@ class DBRequests
         }
         return $response;
     }
-    public function getAlbumReviews($collection_id){
+    public function getAlbumReviews($collection_id)
+    {
         $request = [
             'type' => 'get_album_reviews',
             'message' => 'Requesting album reviews',
@@ -175,7 +176,8 @@ class DBRequests
         }
         return $response;
     }
-    public function reviewAlbum($user_id, $collection_id, $review, $rating){
+    public function reviewAlbum($user_id, $collection_id, $review, $rating)
+    {
         $request = [
             'type' => 'review_album',
             'message' => 'Creating album review',
@@ -392,25 +394,34 @@ class DBRequests
                 break;
         }
     }
-
-    public function validateJWT($jwt)
+    public function validateSession()
     {
-        $request = [
-            'type' => 'validate_jwt',
-            'token' => $jwt,
-        ];
-
-        return $this->send($request);
-    }
-    public function checkJWT()
-    {
-        if (isset($_COOKIE['jwt'])) {
+        if (isset($_COOKIE["jwt"]) && !empty($_COOKIE["jwt"])) {
             $jwt = $_COOKIE['jwt'];
-            $response = $this->validateJWT($jwt);
-            if ($response['code'] == 200) {
-                return true;
+            $request = [
+                'type' => 'validate_jwt',
+                'token' => $jwt,
+                'messge' => 'Validating JWT'
+            ];
+            $response = $this->send($request);
+            switch ($response['code']) {
+                case 200:
+                    error_log("check_jwt: Good little cookie");
+                    break;
+                case 401:
+                    // Remove JWT cookie
+                    unset($_COOKIE["jwt"]);
+                    setcookie("jwt", "", -1, "/");
+                    // Session no longer valid please log back in
+                    // Redirect to login page
+                    redirect("login.php");
+                    break;
+                default:
+                    unset($_COOKIE["jwt"]);
+                    setcookie("jwt", "", -1, "/");
+                    error_log($response['message']);
+                    redirect("login.php");
             }
         }
-        return false;
     }
 }
