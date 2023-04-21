@@ -12,7 +12,7 @@ class DBRequests
     public function __construct()
     {
         // TODO: Make this a DB Specific Rabbitserver @jmpearson135
-        $this->rabbitMQClient = new RabbitMQClient("rabbitMQ.ini", "testServer");
+        $this->rabbitMQClient = new RabbitMQClient("rabbitMQ.ini", "AudioDB");
     }
 
     public function send($request)
