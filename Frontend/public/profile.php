@@ -16,6 +16,7 @@ if (!empty($user_id) && !is_null($user_id)) {
    $results = $profileRequest->getCollection($user_id);
    $collection = $results['collection'];
 }
+$collection_count = count($collection);
 //var_dump($collection);
 
 ?>
@@ -72,8 +73,8 @@ if (!empty($user_id) && !is_null($user_id)) {
                <div class="p-4 text-black" style="background-color: #f8f9fa;">
                   <div class="d-flex justify-content-end text-center py-1">
                      <div>
-                        <p class="mb-1 h5">253</p>
-                        <p class="small text-muted mb-0">Photos</p>
+                        <p class="mb-1 h5"><?php echo $collection_count; ?></p>
+                        <p class="small text-muted mb-0">Collected</p>
                      </div>
                      <div class="px-3">
                         <p class="mb-1 h5">1026</p>
