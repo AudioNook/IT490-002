@@ -106,7 +106,7 @@ if (!empty($user_id) && !is_null($user_id)) {
                               <div class="overlay d-flex flex-column justify-content-center align-items-center position-absolute w-100 h-100">
                                  <h5 class="fw-bolder mb-3 text-white"><?php echo htmlspecialchars($c['title']); ?></h5>
                                  <form method="POST" action="list_item.php?id=<?php echo (int)htmlspecialchars($c['id']) . "&uid=" . (int) htmlspecialchars(get_user_id()) ?>">
-                                    <input type="submit" value="List" class="btn btn-outline-dark btn-success" />
+                                    <input type="submit" value="List" class="btn btn-outline-light" />
                                  </form>
                               </div>
                            </div>
