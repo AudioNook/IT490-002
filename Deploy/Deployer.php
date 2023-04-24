@@ -21,7 +21,7 @@ class Deployer
         $this->create_zip($source_connection, $source_directory, $zip_file);
         $this->store_zip($source_connection, $zip_file, $local_directory . $zip_file);
         ssh2_exec($source_connection, 'rm ' . dirname($source_directory) . '/' . $zip_file);
-        echo 'ZIP file retrieved and stored in local builds folder';
+        echo 'ZIP file retrieved and stored in local builds folder'. "\n";
     }
 
     public function send_to_dest()
@@ -35,14 +35,14 @@ class Deployer
         $this->unzip_file($dest_connection, $dest_directory . $zip_file, $dest_directory);
         ssh2_exec($dest_connection, 'rm ' . $dest_directory . $zip_file);
 
-        echo 'ZIP file transferred and extracted on destination server';
+        echo 'ZIP file transferred and extracted on destination server'. "\n";
     }
 
     private function connect_ssh($host, $user, $pass)
     {
         $connection = ssh2_connect($host, 22);
         if (!ssh2_auth_password($connection, $user, $pass)) {
-            die('Authentication failed for ' . $user . '@' . $host);
+            echo 'Authentication failed for ' . $user . '@' . $host . "\n";
         }
         return $connection;
     }
@@ -56,21 +56,21 @@ class Deployer
         stream_set_blocking($result, true);
         $output = stream_get_contents($result);
         if (!$output) {
-            die("Error creating ZIP file on source server: " . $output);
+            echo "Error creating ZIP file on source server: " . $output . "\n";
         }
     }
 
     private function store_zip($source_connection, $remote_zip_file, $local_zip_file)
     {
         if (!ssh2_scp_recv($source_connection, $remote_zip_file, $local_zip_file)) {
-            die('Failed to retrieve remote ZIP file');
+            echo 'Failed to retrieve remote ZIP file' . "\n";
         }
     }
 
     private function transfer_zip($dest_connection, $local_zip_file, $remote_zip_file)
     {
         if (!ssh2_scp_send($dest_connection, $local_zip_file, $remote_zip_file)) {
-            die('File upload failed to destination server');
+            echo 'File upload failed to destination server'. "\n";
         }
     }
 
