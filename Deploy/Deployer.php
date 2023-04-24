@@ -1,16 +1,27 @@
 <?php
 
 require_once 'Config.php';
-
+/**
+ * Class Deployer
+ * @package Deploy
+ * @property Config $config
+ * Deploys the application to a remote server
+ */
 class Deployer
 {
     private $config;
 
+    /**
+     * Deployer constructor.
+     */
     public function __construct()
     {
         $this->config = new Config();
     }
 
+    /**
+     * Create a ZIP file of the source directory and store it locally
+     */
     public function retrieve_source_zip()
     {
         $source_directory = $this->config->sourceDir;
@@ -24,6 +35,9 @@ class Deployer
         echo 'ZIP file retrieved and stored in local builds folder'. "\n";
     }
 
+    /**
+     * Transfer the ZIP file to the destination server and unzip it
+     */
     public function send_to_dest()
     {
         $local_directory = $this->config->localDir;
@@ -47,6 +61,12 @@ class Deployer
         return $connection;
     }
 
+    /**
+     * Create a ZIP file of the source directory
+     * @param resource $source_connection
+     * @param string $source_directory
+     * @param string $zip_file
+     */
     private function create_zip($source_connection, $source_directory, $zip_file)
     {
         $source_parent_directory = dirname($source_directory);
@@ -67,6 +87,12 @@ class Deployer
         }
     }
 
+    /**
+     * Transfer the ZIP file to the destination server
+     * @param resource $dest_connection
+     * @param string $local_zip_file
+     * @param string $remote_zip_file
+     */
     private function transfer_zip($dest_connection, $local_zip_file, $remote_zip_file)
     {
         if (!ssh2_scp_send($dest_connection, $local_zip_file, $remote_zip_file)) {

@@ -24,7 +24,7 @@ class Config
     public $dbhost;
     public $dbuser;
     public $dbpass;
-    public $dbdeply;
+    public $dbdeploy;
     public $dbdatabase;
 
     public function __construct()
@@ -46,6 +46,11 @@ class Config
             $this->dbpass = $dotenv["DB_PASS"];
             $this->dbdeploy = $dotenv["DB_DATABASE"];
             $this->dbdatabase = $dotenv["DB_DEPLOY"];
+            $this->connection_string = 
+                "mysql:
+                host=$this->dbhost;
+                dbname=$this->dbdeploy;
+                charset=utf8mb4";
 
         } catch (Exception $e) {
             error_log("Error loading .env file: " . $e->getMessage());
