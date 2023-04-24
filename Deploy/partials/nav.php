@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . "/../lib/functions.php");
+require_once(__DIR__ . "/../Deployer.php");
 ?>
 
 <head>

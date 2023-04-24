@@ -119,6 +119,8 @@ class Deployer
     
 }
 
+/*
 $deployer = new Deployer();
 $deployer->retrieve_source_zip();
 $deployer->send_to_dest();
+*/

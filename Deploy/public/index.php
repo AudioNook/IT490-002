@@ -1,15 +1,17 @@
 <?php
 require(__DIR__ . "/../partials/nav.php");
-$button = '<button type="button" class="btn btn-primary">Deploy Cluster</button>';
-$dButton = '<button disabled type="button" class="btn btn-danger">Deploy Cluster</button>';
-$deploy_msg = 'Select a cluster to deploy to.';
+
+if (isset($_POST['submit'])) {
+  $selectedCluster = $_POST['cluster'];
+  $message = "The selected cluster is: " . $selectedCluster;
+  echo "<script>alert('" . addslashes($message) . "');</script>";
+}
 ?>
 <!doctype html>
 <html lang="en">
 
 <head>
   <title>AudioNook Deployment</title>
-  <!-- Custom styles for this template -->
 </head>
 
 <body>
@@ -31,29 +33,25 @@ $deploy_msg = 'Select a cluster to deploy to.';
       </div>
       <div class="card bg-light">
         <div class="card-body">
-          <div class="row">
-            <div class="col-md-auto"><i class="bi bi-arrow-down-up" style="font-size: 2rem;"></i></div>
-            <div class="col-sm-4">
-              <select class="form-select form-select-sm" aria-label="Default select example">
-                <option selected>Select Cluster</option>
-                <option value="1">Dev</option>
-                <option value="2">QA</option>
-                <option value="3">Prod</option>
-              </select>
+          <form id="deploySelection" method="POST" action="">
+            <div class="row">
+              <div class="col-md-auto"><i class="bi bi-arrow-down-up" style="font-size: 2rem;"></i></div>
+              <div class="col-sm-2">
+                <input disabled readonly type="text" class="form-control" value="Select Cluster" id="disabledInput" aria-label="cluster">
+              </div>
+              <div class="col-md-auto">
+                <i class="bi bi-arrow-left" style="font-size: 2rem;"></i>
+              </div>
+              <div class="col-sm-2">
+                <select class="form-select form-select-sm" name="cluster"id="clusterSelect" aria-label="Default select example">
+                  <option selected>Select Cluster</option>
+                  <option value="dev">Dev</option>
+                  <option value="qa">QA</option>
+                </select>
+              </div>
+              <div class="col-md-auto">Select a cluster to deploy from</div>
             </div>
-            <div class="col-md-auto">
-              <i class="bi bi-arrow-left" style="font-size: 2rem;"></i>
-            </div>
-            <div class="col-sm-4">
-              <select class="form-select form-select-sm" aria-label="Default select example">
-                <option selected>Select Cluster</option>
-                <option value="1">Dev</option>
-                <option value="2">QA</option>
-                <option value="3">Prod</option>
-              </select>
-            </div>
-            <div class="col-md-auto"><?php echo $deploy_msg; ?></div>
-          </div>
+          </form>
         </div>
       </div>
       <br>
@@ -63,7 +61,7 @@ $deploy_msg = 'Select a cluster to deploy to.';
             This deployment system <strong>does not use git</strong>, but you can check <a href="https://github.com/AudioNook/IT490-002">AudioNook's Github Repo<a> for the latest code.
           </div>
           <div class="text-start">
-            <?php echo $button ?>
+            <button type="submit" name="submit" form="deploySelection" class="btn btn-primary">Deploy Cluster</button>
           </div>
         </div>
       </div>
@@ -103,6 +101,22 @@ $deploy_msg = 'Select a cluster to deploy to.';
     </main>
   </div>
   </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const disabledInput = document.getElementById("disabledInput");
+      const clusterSelect = document.getElementById("clusterSelect");
+
+      clusterSelect.addEventListener("change", function() {
+        if (clusterSelect.value === "dev") {
+          disabledInput.value = "QA";
+        } else if (clusterSelect.value === "qa") {
+          disabledInput.value = "Prod";
+        } else {
+          disabledInput.value = "Select Cluster";
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
