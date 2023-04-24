@@ -19,6 +19,14 @@ class Config
     // Folder to unzip the file
     public $destDir;
 
+    //DB Crenetials
+    public $connection_string;
+    public $dbhost;
+    public $dbuser;
+    public $dbpass;
+    public $dbdeply;
+    public $dbdatabase;
+
     public function __construct()
     {
         try {
@@ -26,12 +34,18 @@ class Config
             $this->sourceHost = $dotenv["SOURCE_HOST"];
             $this->sourceUser = $dotenv["SOURCE_USER"];
             $this->sourcePass = $dotenv["SOURCE_PASS"];
-            $this->sourceDir = "/home/$this->sourceUser/test/";
+            $this->sourceDir = "/var/www/audionook/";
 
             $this->destHost = $dotenv["DEST_HOST"];
             $this->destUser = $dotenv["DEST_USER"];
             $this->destPass = $dotenv["DEST_PASS"];
-            $this->destDir = "/home/$this->destUser/test/";
+            $this->destDir = "/var/www/audionook/";
+
+            $this->dbhost = $dotenv["DB_HOST"];
+            $this->dbuser = $dotenv["DB_USER"];
+            $this->dbpass = $dotenv["DB_PASS"];
+            $this->dbdeploy = $dotenv["DB_DATABASE"];
+            $this->dbdatabase = $dotenv["DB_DEPLOY"];
 
         } catch (Exception $e) {
             error_log("Error loading .env file: " . $e->getMessage());
