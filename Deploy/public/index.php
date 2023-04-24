@@ -73,8 +73,8 @@ if (isset($_POST['submit'])) {
         <table class="table table-striped table-sm">
           <thead>
             <tr>
+              <th scope="col">Server</th>
               <th scope="col">Environment</th>
-              <th scope="col">Version</th>
               <th scope="col">Name</th>
               <th scope="col">Time</th>
               <th scope="col">Action</th>
@@ -93,7 +93,7 @@ if (isset($_POST['submit'])) {
               <td>random</td>
               <td>tabular</td>
               <td>information</td>
-              <td>text</td>
+              <td><button class="btn btn-outline-primary btn-sm">Roll Back</button></td>
             </tr>
           </tbody>
         </table>

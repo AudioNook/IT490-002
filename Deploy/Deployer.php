@@ -32,13 +32,13 @@ class Deployer
         $this->create_zip($source_connection, $source_directory, $zip_file);
         $this->store_zip($source_connection, $zip_file, $local_directory . $zip_file);
         ssh2_exec($source_connection, 'rm ' . dirname($source_directory) . '/' . $zip_file);
-        echo 'ZIP file retrieved and stored in local builds folder'. "\n";
+        echo 'ZIP file retrieved and stored in local builds folder' . "\n";
     }
 
     /**
      * Transfer the ZIP file to the destination server and unzip it
      */
-    public function send_to_dest()
+    public function send_to_dest($commands = [])
     {
         $local_directory = $this->config->localDir;
         $dest_directory = $this->config->destDir;
@@ -47,9 +47,30 @@ class Deployer
         $dest_connection = $this->connect_ssh($this->config->destHost, $this->config->destUser, $this->config->destPass);
         $this->transfer_zip($dest_connection, $local_directory . $zip_file, $dest_directory . $zip_file);
         $this->unzip_file($dest_connection, $dest_directory . $zip_file, $dest_directory);
+        $this->run_commands($dest_directory, $dest_connection, $commands);
         ssh2_exec($dest_connection, 'rm ' . $dest_directory . $zip_file);
 
-        echo 'ZIP file transferred and extracted on destination server'. "\n";
+        echo 'ZIP file transferred and extracted on destination server' . "\n";
+    }
+    /**
+     * Run commands on the destination server
+     * Take an array of commands as input
+     * @param string $dir
+     * @param resource $connection
+     * @param array $commands
+     */
+    function run_commands($dir,$connection, $commands)
+    {
+        foreach ($commands as $command) {
+            $result = ssh2_exec($connection, 'cd' . $dir . ' && ' . $command);
+            stream_set_blocking($result, true);
+            $output = stream_get_contents($result);
+            if (!$output) {
+                echo "Error executing command: " . $command . "\n";
+            } else {
+                echo "Command executed successfully: " . $command . "\n";
+            }
+        }
     }
 
     private function connect_ssh($host, $user, $pass)
@@ -96,7 +117,7 @@ class Deployer
     private function transfer_zip($dest_connection, $local_zip_file, $remote_zip_file)
     {
         if (!ssh2_scp_send($dest_connection, $local_zip_file, $remote_zip_file)) {
-            echo 'File upload failed to destination server'. "\n";
+            echo 'File upload failed to destination server' . "\n";
         }
     }
 
@@ -105,18 +126,16 @@ class Deployer
         $temp_folder = $extract_to . 'temp_extract/';
         $create_temp_folder = 'mkdir -p ' . $temp_folder;
         ssh2_exec($dest_connection, $create_temp_folder);
-        
+
         $unzip_command = 'unzip -o ' . $zip_file . ' -d ' . $temp_folder;
         ssh2_exec($dest_connection, $unzip_command);
-        
+
         $move_command = 'mv ' . $temp_folder . '*/* ' . $extract_to;
         ssh2_exec($dest_connection, $move_command);
-        
+
         $remove_temp_folder = 'rm -r ' . $temp_folder;
         ssh2_exec($dest_connection, $remove_temp_folder);
     }
-            
-    
 }
 
 /*
