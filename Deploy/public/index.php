@@ -6,6 +6,11 @@ if (isset($_POST['submit'])) {
   $message = "The selected cluster is: " . $selectedCluster;
   echo "<script>alert('" . addslashes($message) . "');</script>";
 }
+
+$packages = [1 => "AudioNook", 2 => "AudioNook-DB", 3 => "AudioNook-Web", 4 => "AudioNook-Web-UI", 5 => "something", 6 => "something else", 7 => "something else again"];
+//$packages = [];
+$index = 0;
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -78,7 +83,7 @@ if (isset($_POST['submit'])) {
         </div>
 
         <!-- Deployment Packages -->
-        <div class="container-fluid">
+        <div class="container-fluid min-vh-100">
 
           <div class="row justify-content-center">
 
@@ -90,66 +95,77 @@ if (isset($_POST['submit'])) {
                   <h2>Deployment Packages</h2>
                 </div>
               </div>
-              <br>
+
+
               <!-- package information -->
-              <div class="container-fluid">
-                <div class="row">
+              <div class="container-fluid overflow-y-scroll">
+                <?php if (count($packages) > 0 && !empty($packages)) : ?>
+                  <?php foreach ($packages as $package) : ?>
+                    <?php $index++; ?>
+                    <br>
+                    <div class="row">
 
-                  <div class="col-3">
-                    <div class="container">
-                      <p class="h2">April 24, 2023 </p> 
-                      <p><i class="bi bi-person"></i>Carlos</p>
-                      <p>AudioNook-Dev</p>
-                      <button class="btn btn-primary">That Was Easy</button>
-                    </div>
-                  </div>
-
-                  <div class="col-9">
-                    <div class="card">
-                      <div class="card-header bg-white">
-                        <h3 class="card-title">2023.04.24</h3>
-                        <br>
-                        <button class="btn btn-primary">Roll Back All</button>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                      </div>
-                      <div class="card-body">
-                        <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePackages" aria-expanded="false" aria-controls="collapseExample">
-                          <i class="bi bi-caret-down-fill"></i>Assets
-                        </button>
-                      </div>
-
-                      <div class="container justify-content-center">
-                        <div class="collapse" id="collapsePackages">
-                          <div class="card">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th scope="col">#</th>
-                                  <th scope="col">Zip</th>
-                                  <th scope="col">Environment</th>
-                                  <th scope="col">Action</th>
-                                </tr>
-                              </thead>
-                              <tbody>
-                                <tr>
-                                  <th scope="row">1</th>
-                                  <td>Mark</td>
-                                  <td>Otto</td>
-                                  <td><button class="btn btn-primary">Roll Back</button></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </div>
+                      <div class="col-3">
+                        <div class="container">
+                          <p class="h2">April 24, 2023 </p>
+                          <p><i class="bi bi-person"></i>Admin</p>
+                          <p>AudioNook-Dev</p>
+                          <button class="btn btn-sm btn-primary">That Was Easy</button>
                         </div>
                       </div>
 
-                      <div class="card-body">
-                        <a href="#" class="card-link">Card link</a>
-                        <a href="#" class="card-link">Another link</a>
+                      <div class="col-9">
+                        <div class="card">
+                          <div class="card-header bg-white">
+                            <h3 class="card-title">2023.04.24</h3>
+                            <br>
+                            <button class="btn btn-sm btn-primary">Roll Back All</button>
+                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                          </div>
+                          <div class="card-body">
+                            <button class="btn" type="button" data-bs-toggle="collapse" data-bs-target="#<?php echo "packge-" . $index; ?>" aria-expanded="false" aria-controls="collapseExample">
+                              <i class="bi bi-caret-down-fill"></i>Assets
+                            </button>
+                          </div>
+
+                          <div class="container justify-content-center">
+                            <div class="collapse" id="<?php echo "packge-" . $index; ?>">
+                              <div class="card">
+                                <table class="table">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">#</th>
+                                      <th scope="col">Zip</th>
+                                      <th scope="col">Server</th>
+                                      <th scope="col">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr>
+                                      <th scope="row">1</th>
+                                      <td>dev_db_2023.04.24.20</td>
+                                      <td>Database</td>
+                                      <td><button class="btn btn-sm btn-primary">Roll Back</button></td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="card-body">
+                            <a href="#" class="card-link">Card link</a>
+                            <a href="#" class="card-link">Another link</a>
+                          </div>
+                        </div>
                       </div>
                     </div>
+                  <?php endforeach; ?>
+                <?php else : ?>
+                  <div class="justify-content-center">
+                    <h2>No Packages Deployed Yet</h2>
                   </div>
-                </div>
+                <?php endif; ?>
               </div>
 
             </div>
@@ -178,5 +194,8 @@ if (isset($_POST['submit'])) {
     });
   </script>
 </body>
+<?php
+include(__DIR__ . '/../partials/footer.php');
+?>
 
 </html>
