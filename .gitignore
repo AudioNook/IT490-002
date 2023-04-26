@@ -3,3 +3,4 @@ vendor/
 .env
 .env.deploy
 .vscode
+builds/
