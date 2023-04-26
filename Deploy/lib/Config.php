@@ -71,12 +71,11 @@ class Config
                     $this->fePass = $ini['prod']['FE_PASS'];
                     break;
                 case "db":
-                    $dotenv = @parse_ini_file(__DIR__ . "/.env.deploy");
-                    $this->dbhost = $dotenv["DB_HOST"];
-                    $this->dbuser = $dotenv["DB_USER"];
-                    $this->dbpass = $dotenv["DB_PASS"];
-                    $this->dbdatabase = $dotenv["DB_DATABASE"];
-                    $this->connection_string = "mysql:host=$this->dbhost;dbname=$this->dbdatabase";
+                    $this->dbhost = $ini['Database']["DB_HOST"];
+                    $this->dbuser = $ini['Database']["DB_USER"];
+                    $this->dbpass = $ini['Database']["DB_PASS"];
+                    $this->dbdatabase = $ini['Database']["DB_DATABASE"];
+                    $this->connection_string = "mysql:host=$this->dbhost;dbname=$this->dbdatabase;charset=utf8mb4";
                     break;
                 default:
                     throw new Exception("Invalid environment");

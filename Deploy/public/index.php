@@ -3,13 +3,46 @@ require(__DIR__ . "/../partials/nav.php");
 
 if (isset($_POST['submit'])) {
   $selectedCluster = $_POST['cluster'];
-  $message = "The selected cluster is: " . $selectedCluster;
-  echo "<script>alert('" . addslashes($message) . "');</script>";
+  $selectedCluster = strtolower($selectedCluster);
+  $deploy = new Deployer();
+  $deploy->deploy_from($selectedCluster);
+}
+if (isset($_POST['rollback_version'])) {
+  $version_id = $_POST['rollback_version'];
+  $deploy = new Deployer();
+  $deploy->rollback_all($version_id);
 }
 
+if (isset($_POST['rollback_package'])) {
+  $package_id = $_POST['rollback_package'];
+  $deploy = new Deployer();
+  $deploy->rollback_package($package_id);
+}
+
+
+try {
+  $db = get_db();
+  $query = 'SELECT v.id AS version_id, v.version_date, p.id AS package_id, p.environment, p.package_type, p.package_name
+            FROM Versions v
+            INNER JOIN Packages p ON v.id = p.version_id
+            ORDER BY v.id, p.id';
+  $stmt = $db->prepare($query);
+  $stmt->execute();
+  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $grouped_versions = [];
+  foreach ($results as $version) {
+    $grouped_versions[$version['version_id']][] = $version;
+  }
+  var_dump($grouped_versions);
+} catch (PDOException $e) {
+  error_log("Database error: " . $e->getMessage());
+}
+
+/* remove this when we have a database */
 $packages = [1 => "AudioNook", 2 => "AudioNook-DB", 3 => "AudioNook-Web", 4 => "AudioNook-Web-UI", 5 => "something", 6 => "something else", 7 => "something else again"];
 //$packages = [];
 $index = 0;
+
 
 ?>
 <!doctype html>
@@ -99,17 +132,19 @@ $index = 0;
 
               <!-- package information -->
               <div class="container-fluid overflow-y-scroll">
-                <?php if (count($packages) > 0 && !empty($packages)) : ?>
-                  <?php foreach ($packages as $package) : ?>
+                <!-- if there are versions -->
+                <?php if (count($grouped_versions) > 0 && !empty($grouped_versions)) : ?>
+                  <!-- for each version -->
+                  <?php foreach ($grouped_versions as $version_id => $packages) : ?>
                     <?php $index++; ?>
                     <br>
                     <div class="row">
 
                       <div class="col-3">
                         <div class="container">
-                          <p class="h2">April 24, 2023 </p>
+                          <p class="h2"><?= date("F j, Y", strtotime($packages[0]['version_date'])) ?></p>
                           <p><i class="bi bi-person"></i>Admin</p>
-                          <p>AudioNook-Dev</p>
+                          <p>AudioNook-<?= strtoupper($packages[0]['environment']) ?></p>
                           <button class="btn btn-sm btn-primary">That Was Easy</button>
                         </div>
                       </div>
@@ -117,9 +152,13 @@ $index = 0;
                       <div class="col-9">
                         <div class="card">
                           <div class="card-header bg-white">
-                            <h3 class="card-title">2023.04.24</h3>
+                          <h3 class="card-title"><?= htmlspecialchars($packages[0]['version_date']) ?></h3>
                             <br>
-                            <button class="btn btn-sm btn-primary">Roll Back All</button>
+                            <form method="post" action="">
+                              <input type="hidden" name="rollback_version" value="<?= htmlspecialchars($version_id) ?>">
+                              <button type="submit" class="btn btn-sm btn-primary">Roll Back All</button>
+                            </form>
+
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                           </div>
                           <div class="card-body">
@@ -141,12 +180,21 @@ $index = 0;
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr>
-                                      <th scope="row">1</th>
-                                      <td>dev_db_2023.04.24.20</td>
-                                      <td>Database</td>
-                                      <td><button class="btn btn-sm btn-primary">Roll Back</button></td>
-                                    </tr>
+                                    <!-- add foreach for each package -->
+                                    <?php foreach ($packages as $package) : ?>
+                                      <tr>
+                                        <th scope="row"><?= htmlspecialchars($package['package_id']) ?></th>
+                                        <td><?= htmlspecialchars($package['package_name']) ?></td>
+                                        <td><?= htmlspecialchars($package['package_type']) ?></td>
+                                        <td>
+                                          <form method="post" action="">
+                                            <input type="hidden" name="rollback_package" value="<?= htmlspecialchars($package['package_id']) ?>">
+                                            <button type="submit" class="btn btn-sm btn-primary">Roll Back</button>
+                                          </form>
+                                      </td>
+                                      </tr>
+                                    <?php endforeach; ?>
+                                    <!-- end foreach -->
                                   </tbody>
                                 </table>
                               </div>
