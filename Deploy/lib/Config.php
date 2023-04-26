@@ -2,8 +2,6 @@
 
 class Config
 {
-    // Folder to deploy to and from
-    public $targetDir = "/var/www/audionook/";
 
     // Cluster credentials
     public $dbHost;
@@ -18,9 +16,6 @@ class Config
     public $feUser;
     public $fePass;
 
-    // Local Folder to store on Deployment Server
-    public $localDir = __DIR__ . "/builds/";
-
     //Deployment DB Credentials
     public $connection_string;
     public $dbhost;
@@ -31,7 +26,7 @@ class Config
     public function __construct($environment)
     {
         try {
-            $ini = @parse_ini_file(__DIR__ . "/deploy.ini", true);
+            $ini = parse_ini_file(__DIR__ . "/deploy.ini", true);
             switch ($environment) {
                 case "dev":
                     // Database VM
