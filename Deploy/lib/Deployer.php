@@ -16,7 +16,7 @@ class Deployer
     private $prodConfig;
     // Target Folder to retrieve from and send to
     //TODO: Change this to the actual target folder: /var/www/audionook/
-    private $targetDir = "/home/audionook/test/";
+    private $targetDir = "/var/www/audionook/";
     // Local Folder to store on Deployment Server
     private $localDir = '';
     /**
@@ -58,7 +58,7 @@ class Deployer
         $zip = new Zip();
         $ssh = new NiceSSH();
         $date = date("Y-m-d-H-i");
-        
+
         // DB package retrieval
         $dbSess = $ssh->start_session($srcConf->dbHost, $srcConf->dbUser, $srcConf->dbPass);
         $dbPackage = $this->name_package($environment, 'db', $date);
@@ -77,7 +77,7 @@ class Deployer
         $ssh->retrieve_file($dmzSess, dirname($this->targetDir) . '/' . $dmzPackage, $this->localDir . $dmzPackage);
         $ssh->remove_file($dmzSess, dirname($this->targetDir) . '/' . $dmzPackage);
         echo "Retrieved and Locally Stored DMZ Package\n";
-        
+
         // FE session and package retrieval
         $feSess = $ssh->start_session($srcConf->feHost, $srcConf->feUser, $srcConf->fePass);
         $fePackage = $this->name_package($environment, 'fe', $date);
@@ -104,7 +104,7 @@ class Deployer
 
     function insert_into_db($environment, $date, $packages)
     {
-        require_once __DIR__ . '/../utils/db.php';
+        require_once __DIR__ . '/utils/get_db.php';
         $db = get_db();
         try {
             $stmt = $db->prepare('INSERT INTO Versions (version_date) VALUES (?)');
@@ -121,6 +121,7 @@ class Deployer
                 $stmt->bindParam(4, $package['name']);
                 $stmt->execute();
             }
+            echo "Insered in DB";
         } catch (PDOException $e) {
             error_log("Database error: " . var_export($e, true));
             $this == null;
@@ -153,5 +154,74 @@ class Deployer
         $ssh->exec_commands($feSess, $unzip_fe);
         $ssh->remove_file($feSess, $this->targetDir . $packages[2]['name']);
     }
-}
 
+    function rollback_version($version_id)
+    {
+        require_once __DIR__ . '/utils/get_db.php';
+        $db = get_db();
+        try {
+            $stmt = $db->prepare('SELECT environment, package_name FROM Packages WHERE version_id = ?');
+            $stmt->bindParam(1, $version_id);
+            $stmt->execute();
+            $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $environment = $packages[0]['environment'];
+            $destConf = null;
+            switch ($environment) {
+                case 'dev':
+                    $destConf = $this->devConfig;
+                    break;
+                case 'qa':
+                    $destConf = $this->qaConfig;
+                    break;
+                default:
+                    echo 'Invalid environment';
+            }
+            $this->send_zips($packages, $destConf);
+        } catch (PDOException $e) {
+            error_log("Database error: " . var_export($e, true));
+            $this == null;
+        }
+    }
+
+    function rollback_package($package_name){
+        $parts = explode('_', $package_name);
+        $environment = $parts[0];
+        $cluster_type = $parts[1];
+        $destConf = null;
+        switch ($environment) {
+            case 'dev':
+                $destConf = $this->devConfig;
+                break;
+            case 'qa':
+                $destConf = $this->qaConfig;
+                break;
+            default:
+                echo 'Invalid environment';
+        }
+        $ssh = new NiceSSH();
+        $zip = new Zip();
+        $session = null;
+        switch($cluster_type){
+            case 'db':
+                $session = $ssh->start_session($destConf->dbHost, $destConf->dbUser, $destConf->dbPass);
+                break;
+            case 'dmz':
+                $session = $ssh->start_session($destConf->dmzHost, $destConf->dmzUser, $destConf->dmzPass);
+                break;
+            case 'fe':
+                $session = $ssh->start_session($destConf->feHost, $destConf->feUser, $destConf->fePass);
+                break;
+            default:
+                echo 'Invalid cluster type';
+        }
+        $ssh->remove_dir($session, $this->targetDir); // clears out the target dir
+        $ssh->send_file($session, $this->localDir . $package_name, $this->targetDir . $package_name);
+        $unzip_db = $zip->unzip($this->targetDir . $package_name, $this->targetDir);
+        $ssh->exec_commands($session, $unzip_db);
+        $ssh->remove_file($session, $this->targetDir . $package_name);
+
+    }
+}
+/*
+$deploy = new Deployer();
+$packages = $deploy->deploy_from('dev');*/
