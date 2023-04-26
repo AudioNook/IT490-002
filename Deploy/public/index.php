@@ -7,9 +7,26 @@ if (isset($_POST['submit'])) {
   echo "<script>alert('" . addslashes($message) . "');</script>";
 }
 
+$versions = [];
+try {
+  $db = get_db();
+  $query = 'SELECT v.id AS version_id, v.version_date, p.id AS package_id, p.environment, p.package_type, p.package_name
+            FROM Versions v
+            INNER JOIN Packages p ON v.id = p.version_id
+            ORDER BY v.id, p.id';
+  $stmt = $db->prepare($query);
+  $stmt->execute();
+  $versions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  var_dump($versions);
+} catch (PDOException $e) {
+  error_log("Database error: " . $e->getMessage());
+} 
+
+
 $packages = [1 => "AudioNook", 2 => "AudioNook-DB", 3 => "AudioNook-Web", 4 => "AudioNook-Web-UI", 5 => "something", 6 => "something else", 7 => "something else again"];
 //$packages = [];
 $index = 0;
+
 
 ?>
 <!doctype html>
@@ -99,8 +116,8 @@ $index = 0;
 
               <!-- package information -->
               <div class="container-fluid overflow-y-scroll">
-                <?php if (count($packages) > 0 && !empty($packages)) : ?>
-                  <?php foreach ($packages as $package) : ?>
+                <?php if (count($versions) > 0 && !empty($versions)) : ?>
+                  <?php foreach ($versions as $version) : ?>
                     <?php $index++; ?>
                     <br>
                     <div class="row">
