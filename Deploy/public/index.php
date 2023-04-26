@@ -3,8 +3,10 @@ require(__DIR__ . "/../partials/nav.php");
 
 if (isset($_POST['submit'])) {
   $selectedCluster = $_POST['cluster'];
-  $message = "The selected cluster is: " . $selectedCluster;
-  echo "<script>alert('" . addslashes($message) . "');</script>";
+  $selectedCluster = strtolower($selectedCluster);
+  $deploy = new Deployer();
+  $deploy->deploy_from($selectedCluster);
+  
 }
 
 $versions = [];
