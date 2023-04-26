@@ -104,9 +104,8 @@ class Deployer
 
     function insert_into_db($environment, $date, $packages)
     {
-        $dbConfig = new Config('db');
-        $db = new PDO($dbConfig->connection_string, $dbConfig->dbuser, $dbConfig->dbpass);
-        $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        require_once __DIR__ . '/../utils/db.php';
+        $db = get_db();
         try {
             $stmt = $db->prepare('INSERT INTO Versions (version_date) VALUES (?)');
             $stmt->bindParam(1, $date);
@@ -155,7 +154,6 @@ class Deployer
         $ssh->remove_file($feSess, $this->targetDir . $packages[2]['name']);
     }
 }
-/*
+
 $deploy = new Deployer();
 $deploy->deploy_from('dev');
-*/
