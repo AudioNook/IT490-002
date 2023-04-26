@@ -7,8 +7,19 @@ if (isset($_POST['submit'])) {
   $deploy = new Deployer();
   $deploy->deploy_from($selectedCluster);
 }
+if (isset($_POST['rollback_version'])) {
+  $version_id = $_POST['rollback_version'];
+  $deploy = new Deployer();
+  $deploy->rollback_all($version_id);
+}
 
-$versions = [];
+if (isset($_POST['rollback_package'])) {
+  $package_id = $_POST['rollback_package'];
+  $deploy = new Deployer();
+  $deploy->rollback_package($package_id);
+}
+
+
 try {
   $db = get_db();
   $query = 'SELECT v.id AS version_id, v.version_date, p.id AS package_id, p.environment, p.package_type, p.package_name
@@ -19,10 +30,10 @@ try {
   $stmt->execute();
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
   $grouped_versions = [];
-  foreach ($versions as $version) {
+  foreach ($results as $version) {
     $grouped_versions[$version['version_id']][] = $version;
   }
-  var_dump($versions);
+  var_dump($grouped_versions);
 } catch (PDOException $e) {
   error_log("Database error: " . $e->getMessage());
 }
@@ -131,9 +142,9 @@ $index = 0;
 
                       <div class="col-3">
                         <div class="container">
-                          <p class="h2">April 24, 2023 </p>
+                          <p class="h2"><?= date("F j, Y", strtotime($packages[0]['version_date'])) ?></p>
                           <p><i class="bi bi-person"></i>Admin</p>
-                          <p>AudioNook-Dev</p>
+                          <p>AudioNook-<?= strtoupper($packages[0]['environment']) ?></p>
                           <button class="btn btn-sm btn-primary">That Was Easy</button>
                         </div>
                       </div>
@@ -141,9 +152,13 @@ $index = 0;
                       <div class="col-9">
                         <div class="card">
                           <div class="card-header bg-white">
-                            <h3 class="card-title">2023.04.24</h3>
+                          <h3 class="card-title"><?= htmlspecialchars($packages[0]['version_date']) ?></h3>
                             <br>
-                            <button class="btn btn-sm btn-primary">Roll Back All</button>
+                            <form method="post" action="">
+                              <input type="hidden" name="rollback_version" value="<?= htmlspecialchars($version_id) ?>">
+                              <button type="submit" class="btn btn-sm btn-primary">Roll Back All</button>
+                            </form>
+
                             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                           </div>
                           <div class="card-body">
@@ -168,10 +183,15 @@ $index = 0;
                                     <!-- add foreach for each package -->
                                     <?php foreach ($packages as $package) : ?>
                                       <tr>
-                                        <th scope="row">1</th>
-                                        <td>package_name</td>
-                                        <td>server_type(e.g., db)</td>
-                                        <td><button class="btn btn-sm btn-primary">Roll Back</button></td>
+                                        <th scope="row"><?= htmlspecialchars($package['package_id']) ?></th>
+                                        <td><?= htmlspecialchars($package['package_name']) ?></td>
+                                        <td><?= htmlspecialchars($package['package_type']) ?></td>
+                                        <td>
+                                          <form method="post" action="">
+                                            <input type="hidden" name="rollback_package" value="<?= htmlspecialchars($package['package_id']) ?>">
+                                            <button type="submit" class="btn btn-sm btn-primary">Roll Back</button>
+                                          </form>
+                                      </td>
                                       </tr>
                                     <?php endforeach; ?>
                                     <!-- end foreach -->
