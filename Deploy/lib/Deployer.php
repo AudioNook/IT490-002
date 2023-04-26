@@ -155,5 +155,3 @@ class Deployer
     }
 }
 
-$deploy = new Deployer();
-$deploy->deploy_from('dev');
