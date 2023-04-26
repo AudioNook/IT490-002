@@ -6,7 +6,6 @@ if (isset($_POST['submit'])) {
   $selectedCluster = strtolower($selectedCluster);
   $deploy = new Deployer();
   $deploy->deploy_from($selectedCluster);
-  
 }
 
 $versions = [];
@@ -18,13 +17,17 @@ try {
             ORDER BY v.id, p.id';
   $stmt = $db->prepare($query);
   $stmt->execute();
-  $versions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $grouped_versions = [];
+  foreach ($versions as $version) {
+    $grouped_versions[$version['version_id']][] = $version;
+  }
   var_dump($versions);
 } catch (PDOException $e) {
   error_log("Database error: " . $e->getMessage());
-} 
+}
 
-
+/* remove this when we have a database */
 $packages = [1 => "AudioNook", 2 => "AudioNook-DB", 3 => "AudioNook-Web", 4 => "AudioNook-Web-UI", 5 => "something", 6 => "something else", 7 => "something else again"];
 //$packages = [];
 $index = 0;
@@ -118,8 +121,10 @@ $index = 0;
 
               <!-- package information -->
               <div class="container-fluid overflow-y-scroll">
-                <?php if (count($versions) > 0 && !empty($versions)) : ?>
-                  <?php foreach ($versions as $version) : ?>
+                <!-- if there are versions -->
+                <?php if (count($grouped_versions) > 0 && !empty($grouped_versions)) : ?>
+                  <!-- for each version -->
+                  <?php foreach ($grouped_versions as $version_id => $packages) : ?>
                     <?php $index++; ?>
                     <br>
                     <div class="row">
@@ -160,12 +165,16 @@ $index = 0;
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <tr>
-                                      <th scope="row">1</th>
-                                      <td>dev_db_2023.04.24.20</td>
-                                      <td>Database</td>
-                                      <td><button class="btn btn-sm btn-primary">Roll Back</button></td>
-                                    </tr>
+                                    <!-- add foreach for each package -->
+                                    <?php foreach ($packages as $package) : ?>
+                                      <tr>
+                                        <th scope="row">1</th>
+                                        <td>package_name</td>
+                                        <td>server_type(e.g., db)</td>
+                                        <td><button class="btn btn-sm btn-primary">Roll Back</button></td>
+                                      </tr>
+                                    <?php endforeach; ?>
+                                    <!-- end foreach -->
                                   </tbody>
                                 </table>
                               </div>
