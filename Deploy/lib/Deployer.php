@@ -43,6 +43,7 @@ class Deployer
                 break;
             default:
                 echo 'Invalid environment';
+                return;
         }
     }
     function deploy($environment, $srcConf, $destConf)
@@ -175,6 +176,7 @@ class Deployer
                     break;
                 default:
                     echo 'Invalid environment';
+                    return;
             }
             $this->send_zips($packages, $destConf);
         } catch (PDOException $e) {
@@ -197,6 +199,7 @@ class Deployer
                 break;
             default:
                 echo 'Invalid environment';
+                return;
         }
         $ssh = new NiceSSH();
         $zip = new Zip();
@@ -213,11 +216,12 @@ class Deployer
                 break;
             default:
                 echo 'Invalid cluster type';
+                return;
         }
         $ssh->remove_dir($session, $this->targetDir); // clears out the target dir
         $ssh->send_file($session, $this->localDir . $package_name, $this->targetDir . $package_name);
-        $unzip_db = $zip->unzip($this->targetDir . $package_name, $this->targetDir);
-        $ssh->exec_commands($session, $unzip_db);
+        $unzip_package = $zip->unzip($this->targetDir . $package_name, $this->targetDir);
+        $ssh->exec_commands($session, $unzip_package);        
         $ssh->remove_file($session, $this->targetDir . $package_name);
 
     }
