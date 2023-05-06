@@ -139,7 +139,8 @@ class Deployer
         $ssh->send_file($dbSess, $this->localDir . $packages[0]['package_name'], $this->targetDir . $packages[0]['package_name']);
         $unzip_db = $zip->unzip($this->targetDir . $packages[0]['package_name'], $this->targetDir);
         $ssh->exec_commands($dbSess, $unzip_db);
-        $ssh->remove_file($dbSess, $this->targetDir . $packages[0]['package_name']);
+        $ssh->remove_file($dbSess, $this->targetDir . $packages[0]['package_name']); 
+        $ssh->exec_command($dbSess, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $destConf->dbPass . '\' | sudo -S service apache2 restart');
         // Sending to DMZ
         $dmzSess = $ssh->start_session($destConf->dmzHost, $destConf->dmzUser, $destConf->dmzPass);
         $ssh->remove_dir($dmzSess, $this->targetDir);
@@ -147,6 +148,7 @@ class Deployer
         $unzip_dmz = $zip->unzip($this->targetDir . $packages[1]['package_name'], $this->targetDir);
         $ssh->exec_commands($dmzSess, $unzip_dmz);
         $ssh->remove_file($dmzSess, $this->targetDir . $packages[1]['package_name']);
+        $ssh->exec_command($dmzSess, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $destConf->dmzPass . '\' | sudo -S service apache2 restart');
         // Sending to Frontend
         $feSess = $ssh->start_session($destConf->feHost, $destConf->feUser, $destConf->fePass);
         $ssh->remove_dir($feSess, $this->targetDir);
@@ -154,6 +156,7 @@ class Deployer
         $unzip_fe = $zip->unzip($this->targetDir . $packages[2]['package_name'], $this->targetDir);
         $ssh->exec_commands($feSess, $unzip_fe);
         $ssh->remove_file($feSess, $this->targetDir . $packages[2]['package_name']);
+        $ssh->exec_command($feSess, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $destConf->fePass . '\' | sudo -S service apache2 restart');
     }
 
     function rollback_version($version_id)
@@ -204,15 +207,19 @@ class Deployer
         $ssh = new NiceSSH();
         $zip = new Zip();
         $session = null;
+        $pass = null;
         switch($cluster_type){
             case 'db':
                 $session = $ssh->start_session($destConf->dbHost, $destConf->dbUser, $destConf->dbPass);
+                $pass = $destConf->dbPass;
                 break;
             case 'dmz':
                 $session = $ssh->start_session($destConf->dmzHost, $destConf->dmzUser, $destConf->dmzPass);
+                $pass = $destConf->dmzPass;
                 break;
             case 'fe':
                 $session = $ssh->start_session($destConf->feHost, $destConf->feUser, $destConf->fePass);
+                $pass = $destConf->fePass;
                 break;
             default:
                 echo 'Invalid cluster type';
@@ -223,6 +230,7 @@ class Deployer
         $unzip_package = $zip->unzip($this->targetDir . $package_name, $this->targetDir);
         $ssh->exec_commands($session, $unzip_package);        
         $ssh->remove_file($session, $this->targetDir . $package_name);
+        $ssh->exec_command($session, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $pass . '\' | sudo -S service apache2 restart');
 
     }
 }
