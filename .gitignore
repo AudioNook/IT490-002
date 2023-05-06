@@ -1,6 +1,5 @@
 .idea
 vendor/
-.env
-.env.deploy
+env.ini
 .vscode
 builds/
