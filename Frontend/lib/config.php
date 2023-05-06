@@ -4,7 +4,7 @@ define('JWT_SECRET', 'this-is-the-secret');
 
 // DB Credentials
 
-$dotenv = @parse_ini_file(__DIR__ . "/.env");
+$dotenv = @parse_ini_file(__DIR__ . "/../../.env");
 
 // load local .env file
 $dbhost = $dotenv["DB_HOST"];
