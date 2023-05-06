@@ -1,7 +1,10 @@
 {
     "require": {
         "firebase/php-jwt": "^6.4",
-        "php-amqplib/php-amqplib": "^3.5.2"
+        "php-amqplib/php-amqplib": "^3.5.2",
+        "bacon/bacon-qr-code": "^2.0",
+        "pragmarx/google2fa-qrcode": "^3.0"
+
     },
     "autoload": {
         "psr-4": {
