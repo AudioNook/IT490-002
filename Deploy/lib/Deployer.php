@@ -90,9 +90,9 @@ class Deployer
         // others
         // Store in DB
         $packages = [
-            ['type' => 'db', 'name' => $dbPackage],
-            ['type' => 'dmz', 'name' => $dmzPackage],
-            ['type' => 'fe', 'name' => $fePackage]
+            ['type' => 'db', 'package_name' => $dbPackage],
+            ['type' => 'dmz', 'package_name' => $dmzPackage],
+            ['type' => 'fe', 'package_name' => $fePackage]
         ];
         $this->insert_into_db($environment, $date, $packages);
         return $packages;
@@ -119,7 +119,7 @@ class Deployer
                 $stmt->bindParam(1, $version_id);
                 $stmt->bindParam(2, $environment);
                 $stmt->bindParam(3, $package['type']);
-                $stmt->bindParam(4, $package['name']);
+                $stmt->bindParam(4, $package['package_name']);
                 $stmt->execute();
             }
             echo "Insered in DB";
@@ -136,24 +136,24 @@ class Deployer
         // Sending to DB
         $dbSess = $ssh->start_session($destConf->dbHost, $destConf->dbUser, $destConf->dbPass);
         $ssh->remove_dir($dbSess, $this->targetDir); // clears out the target dir
-        $ssh->send_file($dbSess, $this->localDir . $packages[0]['name'], $this->targetDir . $packages[0]['name']);
-        $unzip_db = $zip->unzip($this->targetDir . $packages[0]['name'], $this->targetDir);
+        $ssh->send_file($dbSess, $this->localDir . $packages[0]['package_name'], $this->targetDir . $packages[0]['package_name']);
+        $unzip_db = $zip->unzip($this->targetDir . $packages[0]['package_name'], $this->targetDir);
         $ssh->exec_commands($dbSess, $unzip_db);
-        $ssh->remove_file($dbSess, $this->targetDir . $packages[0]['name']);
+        $ssh->remove_file($dbSess, $this->targetDir . $packages[0]['package_name']);
         // Sending to DMZ
         $dmzSess = $ssh->start_session($destConf->dmzHost, $destConf->dmzUser, $destConf->dmzPass);
         $ssh->remove_dir($dmzSess, $this->targetDir);
-        $ssh->send_file($dmzSess, $this->localDir . $packages[1]['name'], $this->targetDir . $packages[1]['name']);
-        $unzip_dmz = $zip->unzip($this->targetDir . $packages[1]['name'], $this->targetDir);
+        $ssh->send_file($dmzSess, $this->localDir . $packages[1]['package_name'], $this->targetDir . $packages[1]['package_name']);
+        $unzip_dmz = $zip->unzip($this->targetDir . $packages[1]['package_name'], $this->targetDir);
         $ssh->exec_commands($dmzSess, $unzip_dmz);
-        $ssh->remove_file($dmzSess, $this->targetDir . $packages[1]['name']);
+        $ssh->remove_file($dmzSess, $this->targetDir . $packages[1]['package_name']);
         // Sending to Frontend
         $feSess = $ssh->start_session($destConf->feHost, $destConf->feUser, $destConf->fePass);
         $ssh->remove_dir($feSess, $this->targetDir);
-        $ssh->send_file($feSess, $this->localDir . $packages[2]['name'], $this->targetDir . $packages[2]['name']);
-        $unzip_fe = $zip->unzip($this->targetDir . $packages[2]['name'], $this->targetDir);
+        $ssh->send_file($feSess, $this->localDir . $packages[2]['package_name'], $this->targetDir . $packages[2]['package_name']);
+        $unzip_fe = $zip->unzip($this->targetDir . $packages[2]['package_name'], $this->targetDir);
         $ssh->exec_commands($feSess, $unzip_fe);
-        $ssh->remove_file($feSess, $this->targetDir . $packages[2]['name']);
+        $ssh->remove_file($feSess, $this->targetDir . $packages[2]['package_name']);
     }
 
     function rollback_version($version_id)
