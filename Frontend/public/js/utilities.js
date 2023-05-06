@@ -29,7 +29,7 @@ function isValidUsername(username) {
 }
 
 function isValidPassword(password) {
-  const rePass = new RegExp('^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$');
+  const rePass = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$');
   return rePass.test(password);
 }
 
@@ -164,6 +164,3 @@ function add_items(form, event) {
   const addedItemsDiv = document.querySelector(".added-items");
   addedItemsDiv.insertAdjacentHTML("beforeend", newItem);
 }
-
-
-
