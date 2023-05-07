@@ -54,40 +54,37 @@ class Deployer
         $this->send_zips($packages, $destConf);
         echo "Deployed to $environment\n";
     }
-    function retrieve_zips($environment, $srcConf)
-    {
+
+    function retrieve_zip($environment, $srcConf, $package_type, $date){
         $zip = new Zip();
         $ssh = new NiceSSH();
+
+        $session = $ssh->start_session($srcConf->dbHost, $srcConf->{$package_type.'Host'}, $srcConf->{$package_type.'User'}, $srcConf->{$package_type.'Pass'});
+        $package = $this->name_package($environment, $package_type, $date);
+        $create_zip = $zip->create_zip($this->targetDir, $package);
+        $ssh->exec_command($session, $create_zip);
+        echo "Created $package \n";
+        $ssh->retrieve_file($session, dirname($this->targetDir) . '/' . $package, $this->localDir . $package);
+        $ssh->remove_file($session, dirname($this->targetDir) . '/' . $package);
+        echo "Retrieved and Locally Stored $package_type Package\n";
+
+        return $package;
+
+    }
+
+    function retrieve_zips($environment, $srcConf)
+    {
         $date = date("Y-m-d-H-i");
 
         // DB package retrieval
-        $dbSess = $ssh->start_session($srcConf->dbHost, $srcConf->dbUser, $srcConf->dbPass);
-        $dbPackage = $this->name_package($environment, 'db', $date);
-        $create_db_zip = $zip->create_zip($this->targetDir, $dbPackage);
-        $ssh->exec_command($dbSess, $create_db_zip);
-        echo "Created $dbPackage \n";
-        $ssh->retrieve_file($dbSess, dirname($this->targetDir) . '/' . $dbPackage, $this->localDir . $dbPackage);
-        $ssh->remove_file($dbSess, dirname($this->targetDir) . '/' . $dbPackage);
-        echo "Retrieved and Locally Stored DB Package\n";
+        $dbPackage = $this->retrieve_zip($environment, $srcConf, 'db', $date);
 
         // DMZ package retrieval
-        $dmzSess = $ssh->start_session($srcConf->dmzHost, $srcConf->dmzUser, $srcConf->dmzPass);
-        $dmzPackage = $this->name_package($environment, 'dmz', $date);
-        $create_dmz_zip = $zip->create_zip($this->targetDir, $dmzPackage);
-        $ssh->exec_command($dmzSess, $create_dmz_zip);
-        $ssh->retrieve_file($dmzSess, dirname($this->targetDir) . '/' . $dmzPackage, $this->localDir . $dmzPackage);
-        $ssh->remove_file($dmzSess, dirname($this->targetDir) . '/' . $dmzPackage);
-        echo "Retrieved and Locally Stored DMZ Package\n";
+        $dmzPackage = $this->retrieve_zip($environment, $srcConf, 'dmz', $date);
 
         // FE session and package retrieval
-        $feSess = $ssh->start_session($srcConf->feHost, $srcConf->feUser, $srcConf->fePass);
-        $fePackage = $this->name_package($environment, 'fe', $date);
-        $create_fe_zip = $zip->create_zip($this->targetDir, $fePackage);
-        $ssh->exec_command($feSess, $create_fe_zip);
-        $ssh->retrieve_file($feSess, dirname($this->targetDir) . '/' . $fePackage, $this->localDir . $fePackage);
-        $ssh->remove_file($feSess, dirname($this->targetDir) . '/' . $fePackage);
-        echo "Retrieved and Locally Stored FE Package\n";
-        // others
+        $fePackage = $this->retrieve_zip($environment, $srcConf, 'fe', $date);
+
         // Store in DB
         $packages = [
             ['type' => 'db', 'package_name' => $dbPackage],
@@ -234,6 +231,3 @@ class Deployer
 
     }
 }
-/*
-$deploy = new Deployer();
-$packages = $deploy->deploy_from('dev');*/
