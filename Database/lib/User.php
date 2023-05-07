@@ -63,14 +63,15 @@ class User extends db
      * @return array
      */
 
-    public function register($email, $username, $hash)
+    public function register($email, $username, $hash, $gkey)
     {
         $table_name = 'Users';
-        $query = "INSERT INTO $table_name (email, username, password) VALUES(:email, :username, :password)";
+        $query = "INSERT INTO $table_name (email, username, password, gkey) VALUES(:email, :username, :password, :gkey)";
         $params = [
             ":email" => $email,
             ":username" => $username,
-            ":password" => $hash
+            ":password" => $hash,
+            ":gkey" => $gkey
         ];
         $result = $this->exec_query($query, $params);
         if ($result !== false){
@@ -133,7 +134,7 @@ class User extends db
     public function get_user_by_username($user)
     {
         $table = 'Users';
-        $query = "SELECT id, username, email FROM $table WHERE username = :username or email = :username";
+        $query = "SELECT id, username, email, gkey FROM $table WHERE username = :username or email = :username";
         $params = [':username' => $user];
         $result = $this->exec_query($query, $params);
         if ($result !== false && !empty($result)){

@@ -3,3 +3,4 @@ vendor/
 env.ini
 .vscode
 builds/
+qrcode.svg
