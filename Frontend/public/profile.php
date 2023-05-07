@@ -2,7 +2,7 @@
 
 use PragmaRX\Google2FAQRCode\Google2FA as Google2FAQRCode;
 use BaconQrCode\Renderer\ImageRenderer;
-use BaconQrCode\Renderer\Image\SVGImageBackEnd;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 
@@ -36,7 +36,7 @@ if (isset($_POST['generate_qr_code'])) {
    // Use BaconQrCode to generate QR code image
    $renderer = new ImageRenderer(
       new RendererStyle(400),
-      new SvgImageBackEnd()
+      new ImagickImageBackEnd()
    );
    $writer = new Writer($renderer);
    $writer->writeFile($qrCodeUrl, 'qrcode.svg');
