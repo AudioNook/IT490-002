@@ -1,10 +1,14 @@
 <?php
-
 require_once(__DIR__ . "/../../vendor/autoload.php");
 //use Database\Config;
 //use Firebase\JWT\{JWT,Key};
 use RabbitMQ\RabbitMQClient;
-
+use PragmaRX\Google2FA\Google2FA;
+use PragmaRX\Google2FAQRCode\Google2FA as Google2FAQRCode;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\SVGImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 class DBRequests
 {
     protected $rabbitMQClient;
@@ -26,11 +30,27 @@ class DBRequests
     public function register($username, $email, $password)
     {
         $hash = password_hash($password, PASSWORD_BCRYPT);
+        $google2fa = new Google2FA();
+        $google2faQrCode = new Google2FAQRCode();
+        $gkey = $google2fa->generateSecretKey();
+        $qrCodeUrl = $google2faQrCode->getQRCodeUrl(
+            'AudioNook',
+            $username,
+            $gkey
+        );
+        // Use BaconQrCode to generate QR code image
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),
+            new SvgImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+        $writer->writeFile($qrCodeUrl, 'qrcode.svg');
         $request = [
             'type' => 'register',
             'email' => $email,
             'username' => $username,
             'password' => $hash,
+            'gkey' => $gkey,
             'response' => 'Sending register request',
         ];
 
@@ -38,7 +58,6 @@ class DBRequests
 
         switch ($response['code']) {
             case 200:
-                redirect(get_url("login.php"));
                 break;
             case 409:
                 echo '<script language="javascript">';
@@ -65,7 +84,7 @@ class DBRequests
                 $token = $response['token'];
                 $expiry = $response['expiry'];
                 setcookie("jwt", $token, $expiry, "/");
-                redirect(get_url("marketplace.php"));
+                redirect("profile.php");
                 break;
             case 401:
                 echo '<script language="javascript">';
@@ -292,6 +311,30 @@ class DBRequests
         }
         return $response;
     }
+
+    public function getByUsername($username)
+    {
+        $request = [
+            'type' => 'by_username',
+            'message' => 'Sending user_creds request',
+            'username' => $username,
+        ];
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response['username'];
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+
     public function addToCollect($user_id, $items)
     {
         $request = [
