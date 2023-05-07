@@ -29,7 +29,7 @@ $qrCode = null;
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content shadow p-3 mb-5 border-0" style="width: 20rem;">
-            <img class="card-img-top" src="qrcode.svg" alt="QR Code">
+            <img class="card-img-top" src="qrcode.png" alt="QR Code">
             <div class="modal-body">
                 <h4 class="heading"><strong>Scan QR Code</strong></h4>
                 <ol class="card-text">
@@ -53,8 +53,8 @@ $qrCode = null;
 // checking if QRScanned clicked
 if(isset($_POST['qrscanned'])){
     // checking if QR file exists and then deleting it
-    if(file_exists('qrcode.svg')){
-    unlink('qrcode.svg');
+    if(file_exists('qrcode.png')){
+    unlink('qrcode.png');
     redirect('login.php');
     }
     redirect('login.php');
