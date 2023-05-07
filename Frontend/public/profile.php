@@ -1,4 +1,11 @@
 <?php require(__DIR__ . "/../partials/nav.php");
+
+use PragmaRX\Google2FAQRCode\Google2FA as Google2FAQRCode;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\SVGImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+
 logged_in(true);
 
 $email = 'email not found';
@@ -15,10 +22,28 @@ if (!empty($user_id) && !is_null($user_id)) {
    $username = $creds['username'];
    $results = $profileRequest->getCollection($user_id);
    $collection = $results['collection'];
-}
-$collection_count = count($collection);
-//var_dump($collection);
 
+   $userinfo = $profileRequest->getByUsername($username);
+}
+if (isset($_POST['generate_qr_code'])) {
+   $google2faQrCode = new Google2FAQRCode();
+   $gkey = $userinfo[0]['gkey'];
+   $qrCodeUrl = $google2faQrCode->getQRCodeUrl(
+      'AudioNook',
+      $username,
+      $gkey
+   );
+   // Use BaconQrCode to generate QR code image
+   $renderer = new ImageRenderer(
+      new RendererStyle(400),
+      new SvgImageBackEnd()
+   );
+   $writer = new Writer($renderer);
+   $writer->writeFile($qrCodeUrl, 'qrcode.svg');
+}
+if (isset($_POST['delete_qr_code'])) {
+   unlink('qrcode.svg');
+}
 ?>
 
 <html>
@@ -72,9 +97,15 @@ $collection_count = count($collection);
                </div>
                <div class="p-4 text-black" style="background-color: #f8f9fa;">
                   <div class="d-flex justify-content-end text-center py-1">
+                     <div class="px-3">
+                        <form method="POST" id="qr-code-form">
+                           <input type="hidden" name="generate_qr_code" value="1">
+                           <input type="submit" class="btn btn-outline-dark" data-mdb-ripple-color="dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop" value="2FA QR Code" />
+                        </form>
+                     </div>
                      <div>
-                        <p class="mb-1 h5"><?php echo $collection_count; ?></p>
-                        <p class="small text-muted mb-0">Collected</p>
+                        <p class="mb-1 h5">253</p>
+                        <p class="small text-muted mb-0">Photos</p>
                      </div>
                      <div class="px-3">
                         <p class="mb-1 h5">1026</p>
@@ -120,7 +151,61 @@ $collection_count = count($collection);
       </div>
    </div>
 </section>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+   <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content shadow p-3 mb-5 border-0" style="width: 20rem;">
+         <img class="card-img-top" src="qrcode.svg" alt="QR Code">
+         <div class="modal-body">
+            <h4 class="heading"><strong>Scan QR Code</strong></h4>
+            <ol class="card-text">
+               <li>Download the Google Authenticator app on your mobile device.</li>
+               <li>Open the app and click the "+" icon to add a new account.</li>
+               <li>Choose the "Scan barcode" option and point your camera at the QR code on the screen.</li>
+               <li>Once scanned, your verification code will appear on the screen in the app.</li>
+            </ol>
+         </div>
+         <div class="modal-footer">
+            <form method="POST" id="delete-qr-code-form">
+               <input type="hidden" name="delete_qr_code" value="1">
+               <input type="submit" name="close" class="btn btn-primary" data-bs-dismiss="modal" value="close" />
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+<script>
+   $(document).ready(function() {
+      $("#qr-code-form").on("submit", function(event) {
+         event.preventDefault();
 
+         $.ajax({
+            type: "POST",
+            url: window.location.href,
+            data: $(this).serialize(),
+            success: function() {
+               $("#staticBackdrop").modal("show");
+               // Add this line to update the QR code image's src after the new image has been generated
+               $("img.card-img-top").attr("src", "qrcode.svg?" + new Date().getTime());
+            }
+         });
+      });
+
+      $("#delete-qr-code-form").on("submit", function(event) {
+         event.preventDefault();
+
+         $.ajax({
+            type: "POST",
+            url: window.location.href,
+            data: $(this).serialize(),
+            success: function() {
+               $("#staticBackdrop").modal("hide");
+               // Add this line to remove the QR code image's src after the image has been deleted
+               $("img.card-img-top").attr("src", "");
+            }
+         });
+      });
+   });
+</script>
 </body>
 
 <?php
