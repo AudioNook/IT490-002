@@ -84,7 +84,6 @@ class DBRequests
                 $token = $response['token'];
                 $expiry = $response['expiry'];
                 setcookie("jwt", $token, $expiry, "/");
-                redirect("profile.php");
                 break;
             case 401:
                 echo '<script language="javascript">';

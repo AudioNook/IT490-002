@@ -113,7 +113,7 @@ class User extends db
     public function get_user_by_id($uid)
     {
         $table = 'Users';
-        $query = "SELECT username, email FROM $table WHERE id = :uid";
+        $query = "SELECT username, email, gkey FROM $table WHERE id = :uid";
         $params = [':uid' => (int) $uid];
         $result = $this->exec_query($query, $params);
         if ($result !== false && !empty($result)){
