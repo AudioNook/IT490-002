@@ -52,20 +52,18 @@ function validate_register(form) {
     return false;
   }
 
-
   if (!isValidUsername(username)) {
     isValid = false;
     display_msg("Invalid Username: \n Minimum four characters, at least one letter and one number.", "warning");
-
   }
 
-  if (confirm == password) {
+  if (confirm != password) {
+    isValid = false;
+    display_msg("Passwords do not match");
+  } else {
     if (!isValidPassword(password)) {
       isValid = false;
       display_msg("Invalid Password: \n Minimum eight characters, at least one letter, one number and one special character", "warning");
-    }
-    else {
-      display_msg("Passwords do not match");
     }
   }
 
@@ -74,7 +72,6 @@ function validate_register(form) {
     display_msg("Invalid Email", "warning");
   }
   return isValid;
-
 }
 function validate_login(form) {
   let isValid = true;
