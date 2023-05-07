@@ -44,7 +44,7 @@ class DBRequests
             new ImagickImageBackEnd()
         );
         $writer = new Writer($renderer);
-        $writer->writeFile($qrCodeUrl, 'qrcode.svg');
+        $writer->writeFile($qrCodeUrl, 'qrcode.png');
         $request = [
             'type' => 'register',
             'email' => $email,

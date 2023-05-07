@@ -39,10 +39,10 @@ if (isset($_POST['generate_qr_code'])) {
       new ImagickImageBackEnd()
    );
    $writer = new Writer($renderer);
-   $writer->writeFile($qrCodeUrl, 'qrcode.svg');
+   $writer->writeFile($qrCodeUrl, 'qrcode.png');
 }
 if (isset($_POST['delete_qr_code'])) {
-   unlink('qrcode.svg');
+   unlink('qrcode.png');
 }
 ?>
 
@@ -154,7 +154,7 @@ if (isset($_POST['delete_qr_code'])) {
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
    <div class="modal-dialog modal-dialog-scrollable">
       <div class="modal-content shadow p-3 mb-5 border-0" style="width: 20rem;">
-         <img class="card-img-top" src="qrcode.svg" alt="QR Code">
+         <img class="card-img-top" src="qrcode.png" alt="QR Code">
          <div class="modal-body">
             <h4 class="heading"><strong>Scan QR Code</strong></h4>
             <ol class="card-text">
@@ -185,7 +185,7 @@ if (isset($_POST['delete_qr_code'])) {
             success: function() {
                $("#staticBackdrop").modal("show");
                // Add this line to update the QR code image's src after the new image has been generated
-               $("img.card-img-top").attr("src", "qrcode.svg?" + new Date().getTime());
+               $("img.card-img-top").attr("src", "qrcode.png?" + new Date().getTime());
             }
          });
       });
