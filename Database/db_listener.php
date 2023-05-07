@@ -126,7 +126,7 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQs = new RabbitMQServer("rabbitMQ.ini", "testServer");
+$rbMQs = new RabbitMQServer("rabbitMQ.ini", "AudioDB");
 
 echo "RabbitMQServer BEGIN" . PHP_EOL;
 $rbMQs->process_requests('requestProcessor');
