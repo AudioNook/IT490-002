@@ -1,5 +1,4 @@
 <?php
-
 require_once(__DIR__ . "/../../vendor/autoload.php");
 //use Database\Config;
 //use Firebase\JWT\{JWT,Key};
@@ -10,7 +9,6 @@ use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\Image\SVGImageBackEnd;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
-
 class DBRequests
 {
     protected $rabbitMQClient;
@@ -34,11 +32,11 @@ class DBRequests
         $hash = password_hash($password, PASSWORD_BCRYPT);
         $google2fa = new Google2FA();
         $google2faQrCode = new Google2FAQRCode();
-        $gKey = $google2fa->generateSecretKey();
+        $gkey = $google2fa->generateSecretKey();
         $qrCodeUrl = $google2faQrCode->getQRCodeUrl(
             'AudioNook',
             $username,
-            $gKey
+            $gkey
         );
         // Use BaconQrCode to generate QR code image
         $renderer = new ImageRenderer(
@@ -52,7 +50,7 @@ class DBRequests
             'email' => $email,
             'username' => $username,
             'password' => $hash,
-            '2fa_key' => $gKey,
+            'gkey' => $gkey,
             'response' => 'Sending register request',
         ];
 
@@ -60,8 +58,7 @@ class DBRequests
 
         switch ($response['code']) {
             case 200:
-                $qrcode = __DIR__ . '/qrcode.svg';
-                return $qrcode;
+                break;
             case 409:
                 echo '<script language="javascript">';
                 echo 'alert("' . $response['message'] . '")';
@@ -87,7 +84,7 @@ class DBRequests
                 $token = $response['token'];
                 $expiry = $response['expiry'];
                 setcookie("jwt", $token, $expiry, "/");
-                redirect(get_url("marketplace.php"));
+                redirect("profile.php");
                 break;
             case 401:
                 echo '<script language="javascript">';
@@ -314,6 +311,30 @@ class DBRequests
         }
         return $response;
     }
+
+    public function getByUsername($username)
+    {
+        $request = [
+            'type' => 'by_username',
+            'message' => 'Sending user_creds request',
+            'username' => $username,
+        ];
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response['username'];
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+
     public function addToCollect($user_id, $items)
     {
         $request = [
