@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . "/../lib/functions.php");
+require __DIR__ . "/../../vendor/autoload.php";
 $checkSession = new DBRequests();
 $checkSession->validateSession();
 $is_logged_in = true;
