@@ -16,7 +16,7 @@ class Config
     {
         // Load local .env file
         try{
-            $dotenv = @parse_ini_file(__DIR__ . "/.env");
+            $dotenv = @parse_ini_file(__DIR__ . "/../../env.ini");
             //error_log("Dotenv: " . print_r($dotenv, true));
             // DB Credentials
             $this->dbhost = $dotenv["DB_HOST"];

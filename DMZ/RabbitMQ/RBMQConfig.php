@@ -3,12 +3,12 @@ namespace RabbitMQ;
 class RBMQConfig{
     public $rabbit_ini = "rabbitMQ.ini";
     public $rabbit_ini2 = "rabbitMQ.ini";
-    public $rabbit_server = "testServer";
+    public $rabbit_server = "AudioDB";
     public $rabbit_FELS = 'FELogServer';
     public $rabbit_APILS = 'APILogServer';
     public $rabbit_DBLS = 'DBLogServer';
     public $rabbit_RBMQLS = 'RBMQLogServer';
-    public $jwtServer = 'jwtServer';
+    public $jwtServer = 'AudioDMZ';
     public $OLServer = 'onLoadServer';
 }
 

@@ -31,7 +31,7 @@ function requestProcessor($request)
             $response = $db_user->login($request["username"], $request["password"]);
             break;
         case "register":
-            $response = $db_user->register($request["email"], $request["username"], $request["password"]);
+            $response = $db_user->register($request["email"], $request["username"], $request["password"],$request["gkey"] );
             break;
         case "logout":
             $response = $db_user->logout($request['token']);
@@ -126,7 +126,7 @@ function requestProcessor($request)
 
     return json_encode($response);
 }
-$rbMQs = new RabbitMQServer("rabbitMQ.ini", "testServer");
+$rbMQs = new RabbitMQServer("rabbitMQ.ini", "AudioDB");
 
 echo "RabbitMQServer BEGIN" . PHP_EOL;
 $rbMQs->process_requests('requestProcessor');

@@ -12,7 +12,7 @@ class DMZRequests
     public function __construct()
     {
         // TODO: Make this a DMZ Specific Rabbitserver @jmpearson135
-        $this->rabbitMQClient = new RabbitMQClient("rabbitMQ.ini", "jwtServer");
+        $this->rabbitMQClient = new RabbitMQClient("rabbitMQ.ini", "AudioDMZ");
     }
     public function send($request)
     {

@@ -1,10 +1,14 @@
 <?php
-
 require_once(__DIR__ . "/../../vendor/autoload.php");
 //use Database\Config;
 //use Firebase\JWT\{JWT,Key};
 use RabbitMQ\RabbitMQClient;
-
+use PragmaRX\Google2FA\Google2FA;
+use PragmaRX\Google2FAQRCode\Google2FA as Google2FAQRCode;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
 class DBRequests
 {
     protected $rabbitMQClient;
@@ -12,7 +16,7 @@ class DBRequests
     public function __construct()
     {
         // TODO: Make this a DB Specific Rabbitserver @jmpearson135
-        $this->rabbitMQClient = new RabbitMQClient("rabbitMQ.ini", "testServer");
+        $this->rabbitMQClient = new RabbitMQClient("rabbitMQ.ini", "AudioDB");
     }
 
     public function send($request)
@@ -26,11 +30,27 @@ class DBRequests
     public function register($username, $email, $password)
     {
         $hash = password_hash($password, PASSWORD_BCRYPT);
+        $google2fa = new Google2FA();
+        $google2faQrCode = new Google2FAQRCode();
+        $gkey = $google2fa->generateSecretKey();
+        $qrCodeUrl = $google2faQrCode->getQRCodeUrl(
+            'AudioNook',
+            $username,
+            $gkey
+        );
+        // Use BaconQrCode to generate QR code image
+        $renderer = new ImageRenderer(
+            new RendererStyle(400),
+            new ImagickImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+        $writer->writeFile($qrCodeUrl, 'qrcode.png');
         $request = [
             'type' => 'register',
             'email' => $email,
             'username' => $username,
             'password' => $hash,
+            'gkey' => $gkey,
             'response' => 'Sending register request',
         ];
 
@@ -38,7 +58,6 @@ class DBRequests
 
         switch ($response['code']) {
             case 200:
-                redirect(get_url("login.php"));
                 break;
             case 409:
                 echo '<script language="javascript">';
@@ -65,7 +84,6 @@ class DBRequests
                 $token = $response['token'];
                 $expiry = $response['expiry'];
                 setcookie("jwt", $token, $expiry, "/");
-                redirect(get_url("marketplace.php"));
                 break;
             case 401:
                 echo '<script language="javascript">';
@@ -153,7 +171,8 @@ class DBRequests
         }
         return $response;
     }
-    public function getAlbumReviews($collection_id){
+    public function getAlbumReviews($collection_id)
+    {
         $request = [
             'type' => 'get_album_reviews',
             'message' => 'Requesting album reviews',
@@ -175,7 +194,8 @@ class DBRequests
         }
         return $response;
     }
-    public function reviewAlbum($user_id, $collection_id, $review, $rating){
+    public function reviewAlbum($user_id, $collection_id, $review, $rating)
+    {
         $request = [
             'type' => 'review_album',
             'message' => 'Creating album review',
@@ -290,6 +310,30 @@ class DBRequests
         }
         return $response;
     }
+
+    public function getByUsername($username)
+    {
+        $request = [
+            'type' => 'by_username',
+            'message' => 'Sending user_creds request',
+            'username' => $username,
+        ];
+        $response = $this->send($request);
+        switch ($response['code']) {
+            case 200:
+                return $response['username'];
+            case 401:
+                $error_msg = 'Unauthorized: ' . $response['message'];
+                error_log($error_msg);
+                break;
+            default:
+                $error_msg = 'Unexpected response code from server: ' . $response['code'] . ' ' . $response['message'];
+                error_log($error_msg);
+                break;
+        }
+        return $response;
+    }
+
     public function addToCollect($user_id, $items)
     {
         $request = [
@@ -392,25 +436,34 @@ class DBRequests
                 break;
         }
     }
-
-    public function validateJWT($jwt)
+    public function validateSession()
     {
-        $request = [
-            'type' => 'validate_jwt',
-            'token' => $jwt,
-        ];
-
-        return $this->send($request);
-    }
-    public function checkJWT()
-    {
-        if (isset($_COOKIE['jwt'])) {
+        if (isset($_COOKIE["jwt"]) && !empty($_COOKIE["jwt"])) {
             $jwt = $_COOKIE['jwt'];
-            $response = $this->validateJWT($jwt);
-            if ($response['code'] == 200) {
-                return true;
+            $request = [
+                'type' => 'validate_jwt',
+                'token' => $jwt,
+                'messge' => 'Validating JWT'
+            ];
+            $response = $this->send($request);
+            switch ($response['code']) {
+                case 200:
+                    error_log("check_jwt: Good little cookie");
+                    break;
+                case 401:
+                    // Remove JWT cookie
+                    unset($_COOKIE["jwt"]);
+                    setcookie("jwt", "", -1, "/");
+                    // Session no longer valid please log back in
+                    // Redirect to login page
+                    redirect("login.php");
+                    break;
+                default:
+                    unset($_COOKIE["jwt"]);
+                    setcookie("jwt", "", -1, "/");
+                    error_log($response['message']);
+                    redirect("login.php");
             }
         }
-        return false;
     }
 }
