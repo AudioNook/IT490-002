@@ -5,6 +5,7 @@ function validate_jwt() {
   if (!token) {
     // redirect to login page
     window.location.href = '/src/public/login.php';
+    console.log("Bad little cookie");
     return;
   }
 
