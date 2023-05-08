@@ -72,7 +72,7 @@ class Deployer
         //retrieve and stores zips from source
         $version = $this->get_version_num();
         $package = $this->retrieve_zip($cluster, $srcConf, $type, $version);
-        $packages[] = ['type' => $type, 'package_name' => $package];
+        $packages[] = ['package_type' => $type, 'package_name' => $package];
         $this->insert_into_db($cluster, $packages, $version);
         // send zips and unzip at destination
         $this->send_zip($cluster, $packages[0], $destConf, $type);
@@ -107,15 +107,15 @@ class Deployer
         $version = $this->get_version_num();
         // DB package retrieval
         $dbPackage = $this->retrieve_zip($cluster, $srcConf, 'db', $version);
-        $packages[] = ['type' => 'db', 'package_name' => $dbPackage];
+        $packages[] = ['package_type' => 'db', 'package_name' => $dbPackage];
 
         // DMZ package retrieval
         $dmzPackage = $this->retrieve_zip($cluster, $srcConf, 'dmz', $version);
-        $packages[] = ['type' => 'dmz', 'package_name' => $dmzPackage];
+        $packages[] = ['package_type' => 'dmz', 'package_name' => $dmzPackage];
 
         // FE session and package retrieval
         $fePackage = $this->retrieve_zip($cluster, $srcConf, 'fe', $version);
-        $packages[] = ['type' => 'fe', 'package_name' => $fePackage];
+        $packages[] = ['package_type' => 'fe', 'package_name' => $fePackage];
 
         $this->insert_into_db($cluster, $packages, $version);
 
@@ -152,7 +152,7 @@ class Deployer
             $stmt = $db->prepare('INSERT INTO Deployments (environment, package_type, version, package_name) VALUES (?, ?, ?, ?)');
             foreach ($packages as $package) {
                 $stmt->bindParam(1, $cluster);
-                $stmt->bindParam(2, $package['type']);
+                $stmt->bindParam(2, $package['package_type']);
                 $stmt->bindParam(3, $version);
                 $stmt->bindParam(4, $package['package_name']);
                 $stmt->execute();
@@ -174,7 +174,7 @@ class Deployer
     function send_zips($cluster, $packages, $destConf)
     {
         foreach ($packages as $package) {
-            $this->send_zip($cluster, $package, $destConf, $package['type']);
+            $this->send_zip($cluster, $package, $destConf, $package['package_type']);
         }
     }
 
@@ -217,6 +217,7 @@ class Deployer
             case 'db':
                 // TODO: place holder for db restart
                 $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S systemctl restart db_listner.service');
+                $ssh->exec_command($session, 'cd ' . $this->targetDir .'&& echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S php Database/sql/init_db.php');
                 break;
             default:
                 echo 'Invalid package type';
@@ -265,6 +266,7 @@ class Deployer
             $stmt->execute();
             $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $environment = $packages[0]['environment'];
+            $type = $packages[0]['package_type'];
             $destConf = null;
             switch ($environment) {
                 case 'dev':
@@ -277,7 +279,7 @@ class Deployer
                     echo 'Invalid environment';
                     return;
             }
-            $this->send_zips($cluster, $packages, $destConf);
+            $this->send_zips($environment, $packages, $destConf);
         } catch (PDOException $e) {
             error_log("Database error: " . var_export($e, true));
         }
