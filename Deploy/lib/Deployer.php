@@ -19,6 +19,7 @@ class Deployer
     private $targetDir = "/var/www/audionook/";
     // Local Folder to store on Deployment Server
     private $localDir = '';
+    private $localRBini = '';
     /**
      * Deployer constructor.
      */
@@ -28,147 +29,244 @@ class Deployer
         $this->qaConfig = new Config('qa');
         $this->prodConfig = new Config('prod');
         $this->localDir = realpath(__DIR__ . "/../builds") . '/';
+        $this->localRBini = realpath(__DIR__ . "/../cluster_inis");
     }
 
-    function deploy_from($environment)
+    function deploy_from($cluster, $type = null)
     {
-        switch ($environment) {
+        switch ($cluster) {
             case 'dev':
-                echo "Deploying to QA\n";
-                $this->deploy($environment, $this->devConfig, $this->qaConfig);
+                if (is_null($type)) {
+                    echo "Deploying DEV to QA\n";
+                    $this->deploy_cluster($cluster, $this->devConfig, $this->qaConfig);
+                } else {
+                    echo "Deploying DEV $type to QA\n";
+                    $this->deploy_package($cluster, $type, $this->devConfig, $this->qaConfig);
+                }
                 break;
             case 'qa':
-                echo "Deploying to PROD\n";
-                $this->deploy($environment, $this->qaConfig, $this->prodConfig);
+                if (is_null($type)) {
+                    echo "Deploying QA to PROD\n";
+                    $this->deploy_cluster($cluster, $this->qaConfig, $this->prodConfig);
+                } else {
+                    echo "Deploying QA $type to PROD\n";
+                    $this->deploy_package($cluster, $type, $this->qaConfig, $this->prodConfig);
+                }
                 break;
             default:
-                echo 'Invalid environment';
+                echo 'Invalid cluster';
                 return;
         }
     }
-    function deploy($environment, $srcConf, $destConf)
+    function deploy_cluster($cluster, $srcConf, $destConf)
     {
         //retrieve and stores zips from source
-        $packages = $this->retrieve_zips($environment, $srcConf);
+        $packages = $this->retrieve_zips($cluster, $srcConf);
         // send zips and unzip at destination
-        $this->send_zips($packages, $destConf);
-        echo "Deployed to $environment\n";
+        $this->send_zips($cluster, $packages, $destConf);
+        echo "Deployed to $cluster\n";
     }
-    function retrieve_zips($environment, $srcConf)
+    function deploy_package($cluster, $type, $srcConf, $destConf)
+    {
+        $packages = [];
+        //retrieve and stores zips from source
+        $version = $this->get_version_num();
+        $package = $this->retrieve_zip($cluster, $srcConf, $type, $version);
+        $packages[] = ['package_type' => $type, 'package_name' => $package];
+        $this->insert_into_db($cluster, $packages, $version);
+        // send zips and unzip at destination
+        $this->send_zip($cluster, $packages[0], $destConf, $type);
+    }
+
+    function retrieve_zip($cluster, $srcConf, $package_type, $version)
     {
         $zip = new Zip();
         $ssh = new NiceSSH();
-        $date = date("Y-m-d-H-i");
 
+        $session = $ssh->start_session($srcConf->{$package_type . 'Host'}, $srcConf->{$package_type . 'User'}, $srcConf->{$package_type . 'Pass'});
+        //chmod -R 777 parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $srcConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . dirname($this->targetDir));
+        // change ownership of parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $srcConf->{$package_type . 'Pass'} . '\' | sudo -S chown -R ' . $srcConf->{$package_type . 'User'} . ':' . $srcConf->{$package_type . 'User'} . ' ' . dirname($this->targetDir));
+
+        $package = "{$cluster}_{$package_type}_{$version}.zip";
+        $create_zip = $zip->create_zip($this->targetDir, $package);
+        $ssh->exec_command($session, $create_zip);
+        echo "Created $package \n";
+        $ssh->retrieve_file($session, dirname($this->targetDir) . '/' . $package, $this->localDir . $package);
+        $ssh->remove_file($session, dirname($this->targetDir) . '/' . $package);
+        echo "Retrieved and Locally Stored $package_type Package\n";
+
+        return $package;
+    }
+
+
+    function retrieve_zips($cluster, $srcConf)
+    {
+        $packages = [];
+        $version = $this->get_version_num();
         // DB package retrieval
-        $dbSess = $ssh->start_session($srcConf->dbHost, $srcConf->dbUser, $srcConf->dbPass);
-        $dbPackage = $this->name_package($environment, 'db', $date);
-        $create_db_zip = $zip->create_zip($this->targetDir, $dbPackage);
-        $ssh->exec_command($dbSess, $create_db_zip);
-        echo "Created $dbPackage \n";
-        $ssh->retrieve_file($dbSess, dirname($this->targetDir) . '/' . $dbPackage, $this->localDir . $dbPackage);
-        $ssh->remove_file($dbSess, dirname($this->targetDir) . '/' . $dbPackage);
-        echo "Retrieved and Locally Stored DB Package\n";
+        $dbPackage = $this->retrieve_zip($cluster, $srcConf, 'db', $version);
+        $packages[] = ['package_type' => 'db', 'package_name' => $dbPackage];
 
         // DMZ package retrieval
-        $dmzSess = $ssh->start_session($srcConf->dmzHost, $srcConf->dmzUser, $srcConf->dmzPass);
-        $dmzPackage = $this->name_package($environment, 'dmz', $date);
-        $create_dmz_zip = $zip->create_zip($this->targetDir, $dmzPackage);
-        $ssh->exec_command($dmzSess, $create_dmz_zip);
-        $ssh->retrieve_file($dmzSess, dirname($this->targetDir) . '/' . $dmzPackage, $this->localDir . $dmzPackage);
-        $ssh->remove_file($dmzSess, dirname($this->targetDir) . '/' . $dmzPackage);
-        echo "Retrieved and Locally Stored DMZ Package\n";
+        $dmzPackage = $this->retrieve_zip($cluster, $srcConf, 'dmz', $version);
+        $packages[] = ['package_type' => 'dmz', 'package_name' => $dmzPackage];
 
         // FE session and package retrieval
-        $feSess = $ssh->start_session($srcConf->feHost, $srcConf->feUser, $srcConf->fePass);
-        $fePackage = $this->name_package($environment, 'fe', $date);
-        $create_fe_zip = $zip->create_zip($this->targetDir, $fePackage);
-        $ssh->exec_command($feSess, $create_fe_zip);
-        $ssh->retrieve_file($feSess, dirname($this->targetDir) . '/' . $fePackage, $this->localDir . $fePackage);
-        $ssh->remove_file($feSess, dirname($this->targetDir) . '/' . $fePackage);
-        echo "Retrieved and Locally Stored FE Package\n";
-        // others
-        // Store in DB
-        $packages = [
-            ['type' => 'db', 'package_name' => $dbPackage],
-            ['type' => 'dmz', 'package_name' => $dmzPackage],
-            ['type' => 'fe', 'package_name' => $fePackage]
-        ];
-        $this->insert_into_db($environment, $date, $packages);
+        $fePackage = $this->retrieve_zip($cluster, $srcConf, 'fe', $version);
+        $packages[] = ['package_type' => 'fe', 'package_name' => $fePackage];
+
+        $this->insert_into_db($cluster, $packages, $version);
+
         return $packages;
     }
-    function name_package($environment, $package_type, $version_date)
-    {
-        $package_name = $environment . '_' . $package_type . '_' . $version_date . '.zip';
-        return $package_name;
-    }
 
-    function insert_into_db($environment, $date, $packages)
+    function get_version_num()
     {
         require_once __DIR__ . '/utils/get_db.php';
         $db = get_db();
         try {
-            $stmt = $db->prepare('INSERT INTO Versions (version_date) VALUES (?)');
-            $stmt->bindParam(1, $date);
+            // Retrieve the maximum version number for the given cluster
+            $stmt = $db->prepare('SELECT MAX(version) FROM Deployments');
             $stmt->execute();
+            $max_version = $stmt->fetchColumn();
+            // Increment the version number for each package being deployed
+            $version = $max_version + 1;
+            return $version;
+        } catch (PDOException $e) {
+            error_log("Database error: " . var_export($e, true));
+        }
+    }
 
-            $version_id = $db->lastInsertId();
+    function insert_into_db($cluster, $packages, $version)
+    {
+        require_once __DIR__ . '/utils/get_db.php';
+        $db = get_db();
+        try {
 
-            $stmt = $db->prepare('INSERT INTO Packages (version_id, environment, package_type, package_name) VALUES (?, ?, ?, ?)');
+            // Start the transaction
+            $db->beginTransaction();
+
+            // Insert the deployments
+            $stmt = $db->prepare('INSERT INTO Deployments (environment, package_type, version, package_name) VALUES (?, ?, ?, ?)');
             foreach ($packages as $package) {
-                $stmt->bindParam(1, $version_id);
-                $stmt->bindParam(2, $environment);
-                $stmt->bindParam(3, $package['type']);
+                $stmt->bindParam(1, $cluster);
+                $stmt->bindParam(2, $package['package_type']);
+                $stmt->bindParam(3, $version);
                 $stmt->bindParam(4, $package['package_name']);
                 $stmt->execute();
             }
-            echo "Insered in DB";
+
+            // Commit the transaction
+            $db->commit();
+
+            echo "Inserted into Deployments table \n";
         } catch (PDOException $e) {
+            // Roll back the transaction
+            $db->rollBack();
             error_log("Database error: " . var_export($e, true));
             $this == null;
         }
     }
-    function send_zips($packages, $destConf)
+
+
+    function send_zips($cluster, $packages, $destConf)
+    {
+        foreach ($packages as $package) {
+            $this->send_zip($cluster, $package, $destConf, $package['package_type']);
+        }
+    }
+
+    function send_zip($cluster, $package, $destConf, $package_type)
     {
         $zip = new Zip();
         $ssh = new NiceSSH();
 
-        // Sending to DB
-        $dbSess = $ssh->start_session($destConf->dbHost, $destConf->dbUser, $destConf->dbPass);
-        $ssh->remove_dir($dbSess, $this->targetDir); // clears out the target dir
-        $ssh->send_file($dbSess, $this->localDir . $packages[0]['package_name'], $this->targetDir . $packages[0]['package_name']);
-        $unzip_db = $zip->unzip($this->targetDir . $packages[0]['package_name'], $this->targetDir);
-        $ssh->exec_commands($dbSess, $unzip_db);
-        $ssh->remove_file($dbSess, $this->targetDir . $packages[0]['package_name']); 
-        $ssh->exec_command($dbSess, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $destConf->dbPass . '\' | sudo -S service apache2 restart');
-        // Sending to DMZ
-        $dmzSess = $ssh->start_session($destConf->dmzHost, $destConf->dmzUser, $destConf->dmzPass);
-        $ssh->remove_dir($dmzSess, $this->targetDir);
-        $ssh->send_file($dmzSess, $this->localDir . $packages[1]['package_name'], $this->targetDir . $packages[1]['package_name']);
-        $unzip_dmz = $zip->unzip($this->targetDir . $packages[1]['package_name'], $this->targetDir);
-        $ssh->exec_commands($dmzSess, $unzip_dmz);
-        $ssh->remove_file($dmzSess, $this->targetDir . $packages[1]['package_name']);
-        $ssh->exec_command($dmzSess, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $destConf->dmzPass . '\' | sudo -S service apache2 restart');
-        // Sending to Frontend
-        $feSess = $ssh->start_session($destConf->feHost, $destConf->feUser, $destConf->fePass);
-        $ssh->remove_dir($feSess, $this->targetDir);
-        $ssh->send_file($feSess, $this->localDir . $packages[2]['package_name'], $this->targetDir . $packages[2]['package_name']);
-        $unzip_fe = $zip->unzip($this->targetDir . $packages[2]['package_name'], $this->targetDir);
-        $ssh->exec_commands($feSess, $unzip_fe);
-        $ssh->remove_file($feSess, $this->targetDir . $packages[2]['package_name']);
-        $ssh->exec_command($feSess, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $destConf->fePass . '\' | sudo -S service apache2 restart');
+        $session = $ssh->start_session($destConf->{$package_type . 'Host'}, $destConf->{$package_type . 'User'}, $destConf->{$package_type . 'Pass'});
+        $ssh->remove_dir($session, $this->targetDir);
+        //chmod -R 777 parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . dirname($this->targetDir));
+        // change ownership of parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chown -R ' . $destConf->{$package_type . 'User'} . ':' . $destConf->{$package_type . 'User'} . ' ' . dirname($this->targetDir));
+        echo "Sending {$package['package_name']} to {$destConf->{$package_type . 'Host'}}\n";
+        $ssh->send_file($session, $this->localDir . $package['package_name'], $this->targetDir . $package['package_name']);
+        $unzip = $zip->unzip($this->targetDir . $package['package_name'], $this->targetDir);
+        $ssh->exec_commands($session, $unzip);
+        $ssh->remove_file($session, $this->targetDir . $package['package_name']);
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . dirname($this->targetDir));
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S mkdir -p ' . $this->targetDir);
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . $this->targetDir);
+        $this->send_rbmq_ini($cluster, $ssh, $session, $destConf);
+        $ssh->exec_command($session, 'cd ' . $this->targetDir . ' && composer install');
+        $this->type_commands($package_type, $ssh, $session, $destConf);
+        echo "Deployed {$package['package_name']} to {$destConf->{$package_type . 'Host'}}\n";
     }
 
-    function rollback_version($version_id)
+    function type_commands($package_type, $ssh, $session, $conf)
+    {
+        switch ($package_type) {
+            case 'fe':
+                //restart apache
+                $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S service apache2 restart');
+                break;
+            case 'dmz':
+                // TODO: place holder for dmz restart
+                $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S systemctl restart dmz_listner.service');
+                break;
+            case 'db':
+                // TODO: place holder for db restart
+                $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S systemctl restart db_listner.service');
+                $ssh->exec_command($session, 'cd ' . $this->targetDir .'&& echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S php Database/sql/init_db.php');
+                break;
+            default:
+                echo 'Invalid package type';
+                return;
+        }
+    }
+
+
+    // remove the rabbitmq ini file from the target directory
+    // and replace it with the one for it's respective cluster
+    function send_rbmq_ini($cluster, $ssh, $session, $conf)
+    {
+        $type = '';
+        if ($cluster == "dev") {
+            $type = 'qa';
+        } elseif ($cluster == "qa") {
+            $type = 'prod';
+        } else {
+            $type = 'dev';
+        }
+
+        $rbmqDir = "RabbitMQ/lib";
+        $rbMQini = "RabbitMQ/lib/rabbitMQ.ini";
+        $ssh->remove_file($session, $this->targetDir . $rbMQini);
+        $ini = "{$type}_rabbitMQ.ini";
+        echo "Local path: " . $this->localRBini . '/' . $ini . "\n"; // Add this line
+        echo "Remote path: " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . "\n"; // Modify this line
+
+        $remoteFile = $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . basename($this->localRBini . '/' . $ini);
+
+        $ssh->send_file($session, $this->localRBini . '/' . $ini, $remoteFile); // Modify this line
+        //rename the file from devRabbitMQini to just rabbitMQ.ini
+        $ssh->exec_command($session, "mv " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . $ini . " " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . "rabbitMQ.ini");
+    }
+
+
+
+
+    function rollback_version($version)
     {
         require_once __DIR__ . '/utils/get_db.php';
         $db = get_db();
         try {
-            $stmt = $db->prepare('SELECT environment, package_name FROM Packages WHERE version_id = ?');
-            $stmt->bindParam(1, $version_id);
+            $stmt = $db->prepare('SELECT environment, package_type, package_name FROM Deployments WHERE version = ?');
+            $stmt->bindParam(1, $version);
             $stmt->execute();
             $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $environment = $packages[0]['environment'];
+            $type = $packages[0]['package_type'];
             $destConf = null;
             switch ($environment) {
                 case 'dev':
@@ -181,59 +279,45 @@ class Deployer
                     echo 'Invalid environment';
                     return;
             }
-            $this->send_zips($packages, $destConf);
+            $this->send_zips($environment, $packages, $destConf);
         } catch (PDOException $e) {
             error_log("Database error: " . var_export($e, true));
-            $this == null;
         }
     }
 
-    function rollback_package($package_name){
-        $parts = explode('_', $package_name);
-        $environment = $parts[0];
-        $cluster_type = $parts[1];
-        $destConf = null;
-        switch ($environment) {
-            case 'dev':
-                $destConf = $this->devConfig;
-                break;
-            case 'qa':
-                $destConf = $this->qaConfig;
-                break;
-            default:
-                echo 'Invalid environment';
-                return;
-        }
-        $ssh = new NiceSSH();
-        $zip = new Zip();
-        $session = null;
-        $pass = null;
-        switch($cluster_type){
-            case 'db':
-                $session = $ssh->start_session($destConf->dbHost, $destConf->dbUser, $destConf->dbPass);
-                $pass = $destConf->dbPass;
-                break;
-            case 'dmz':
-                $session = $ssh->start_session($destConf->dmzHost, $destConf->dmzUser, $destConf->dmzPass);
-                $pass = $destConf->dmzPass;
-                break;
-            case 'fe':
-                $session = $ssh->start_session($destConf->feHost, $destConf->feUser, $destConf->fePass);
-                $pass = $destConf->fePass;
-                break;
-            default:
-                echo 'Invalid cluster type';
-                return;
-        }
-        $ssh->remove_dir($session, $this->targetDir); // clears out the target dir
-        $ssh->send_file($session, $this->localDir . $package_name, $this->targetDir . $package_name);
-        $unzip_package = $zip->unzip($this->targetDir . $package_name, $this->targetDir);
-        $ssh->exec_commands($session, $unzip_package);        
-        $ssh->remove_file($session, $this->targetDir . $package_name);
-        $ssh->exec_command($session, 'cd ' . $this->targetDir . ' && composer install && echo \'' . $pass . '\' | sudo -S service apache2 restart');
+    function rollback_package($id)
+    {
+        require_once __DIR__ . '/utils/get_db.php';
+        $db = get_db();
+        try {
+            $stmt = $db->prepare('SELECT environment, package_type, package_name FROM Deployments WHERE id = ?');
+            $stmt->bindParam(1, $id);
+            $stmt->execute();
+            $package = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            if (!$package) {
+                echo 'Invalid ID';
+                return;
+            }
+
+            $environment = $package['environment'];
+            $package_type = $package['package_type'];
+            $destConf = null;
+            switch ($environment) {
+                case 'dev':
+                    $destConf = $this->devConfig;
+                    break;
+                case 'qa':
+                    $destConf = $this->qaConfig;
+                    break;
+                default:
+                    echo 'Invalid environment';
+                    return;
+            }
+
+            $this->send_zip($cluster, $package, $destConf, $package_type);
+        } catch (PDOException $e) {
+            error_log("Database error: " . var_export($e, true));
+        }
     }
 }
-/*
-$deploy = new Deployer();
-$packages = $deploy->deploy_from('dev');*/

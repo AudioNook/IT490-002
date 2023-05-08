@@ -33,7 +33,7 @@ class NiceSSh{
     public function exec_command($session,$command){
         // executes a command on a remote server
         // https://www.php.net/manual/en/function.ssh2-exec.php
-        echo "executing: " . $command . "\n";
+        //echo "executing: " . $command . "\n";
         $stream = ssh2_exec($session, $command);
         // Idk how this works it just does: https://www.php.net/manual/en/function.stream-set-blocking.php
         stream_set_blocking($stream, true);
