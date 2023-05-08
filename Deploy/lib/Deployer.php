@@ -84,6 +84,11 @@ class Deployer
         $ssh = new NiceSSH();
 
         $session = $ssh->start_session($srcConf->{$package_type . 'Host'}, $srcConf->{$package_type . 'User'}, $srcConf->{$package_type . 'Pass'});
+        //chmod -R 777 parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $srcConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . dirname($this->targetDir));
+        // change ownership of parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $srcConf->{$package_type . 'Pass'} . '\' | sudo -S chown -R ' . $srcConf->{$package_type . 'User'} . ':' . $srcConf->{$package_type . 'User'} . ' ' . dirname($this->targetDir));
+
         $package = "{$cluster}_{$package_type}_{$version}.zip";
         $create_zip = $zip->create_zip($this->targetDir, $package);
         $ssh->exec_command($session, $create_zip);
@@ -181,15 +186,17 @@ class Deployer
         $session = $ssh->start_session($destConf->{$package_type . 'Host'}, $destConf->{$package_type . 'User'}, $destConf->{$package_type . 'Pass'});
         $ssh->remove_dir($session, $this->targetDir);
         //chmod -R 777 parent of target dir
-        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 775 ' . dirname($this->targetDir));
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . dirname($this->targetDir));
+        // change ownership of parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chown -R ' . $destConf->{$package_type . 'User'} . ':' . $destConf->{$package_type . 'User'} . ' ' . dirname($this->targetDir));
         echo "Sending {$package['package_name']} to {$destConf->{$package_type . 'Host'}}\n";
         $ssh->send_file($session, $this->localDir . $package['package_name'], $this->targetDir . $package['package_name']);
         $unzip = $zip->unzip($this->targetDir . $package['package_name'], $this->targetDir);
         $ssh->exec_commands($session, $unzip);
         $ssh->remove_file($session, $this->targetDir . $package['package_name']);
-        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 775 ' . dirname($this->targetDir));
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . dirname($this->targetDir));
         $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S mkdir -p ' . $this->targetDir);
-        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 775 ' . $this->targetDir);
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 777 ' . $this->targetDir);
         $this->send_rbmq_ini($cluster, $ssh, $session, $destConf);
         $ssh->exec_command($session, 'cd ' . $this->targetDir . ' && composer install');
         $this->type_commands($package_type, $ssh, $session, $destConf);
