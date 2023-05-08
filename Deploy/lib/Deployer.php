@@ -19,6 +19,7 @@ class Deployer
     private $targetDir = "/var/www/audionook/";
     // Local Folder to store on Deployment Server
     private $localDir = '';
+    private $localRBini = '';
     /**
      * Deployer constructor.
      */
@@ -28,6 +29,7 @@ class Deployer
         $this->qaConfig = new Config('qa');
         $this->prodConfig = new Config('prod');
         $this->localDir = realpath(__DIR__ . "/../builds") . '/';
+        $this->localRBini = realpath(__DIR__ . "/../cluster_inis");
     }
 
     function deploy_from($cluster, $type = null)
@@ -66,13 +68,16 @@ class Deployer
     }
     function deploy_package($cluster, $type, $srcConf, $destConf)
     {
+        $packages = [];
         //retrieve and stores zips from source
         $version = $this->get_version_num();
-        $package[] = $this->retrieve_zip($cluster, $srcConf, $type, $version);
-        $this->insert_into_db($cluster, $type, $version, $package[0]);
+        $package = $this->retrieve_zip($cluster, $srcConf, $type, $version);
+        $packages[] = ['type' => $type, 'package_name' => $package];
+        $this->insert_into_db($cluster, $packages, $version);
         // send zips and unzip at destination
-        $this->send_zip($cluster, $package, $destConf, $type);
+        $this->send_zip($cluster, $packages[0], $destConf, $type);
     }
+
     function retrieve_zip($cluster, $srcConf, $package_type, $version)
     {
         $zip = new Zip();
@@ -118,8 +123,7 @@ class Deployer
         $db = get_db();
         try {
             // Retrieve the maximum version number for the given cluster
-            $stmt = $db->prepare('SELECT MAX(version) FROM deployments WHERE environment = ?');
-            $stmt->bindParam(1, $cluster);
+            $stmt = $db->prepare('SELECT MAX(version) FROM Deployments');
             $stmt->execute();
             $max_version = $stmt->fetchColumn();
             // Increment the version number for each package being deployed
@@ -140,7 +144,7 @@ class Deployer
             $db->beginTransaction();
 
             // Insert the deployments
-            $stmt = $db->prepare('INSERT INTO deployments (environment, package_type, version, package_name) VALUES (?, ?, ?, ?)');
+            $stmt = $db->prepare('INSERT INTO Deployments (environment, package_type, version, package_name) VALUES (?, ?, ?, ?)');
             foreach ($packages as $package) {
                 $stmt->bindParam(1, $cluster);
                 $stmt->bindParam(2, $package['type']);
@@ -152,7 +156,7 @@ class Deployer
             // Commit the transaction
             $db->commit();
 
-            echo "Inserted into deployments table";
+            echo "Inserted into Deployments table \n";
         } catch (PDOException $e) {
             // Roll back the transaction
             $db->rollBack();
@@ -161,10 +165,11 @@ class Deployer
         }
     }
 
-    function send_zips($cluster,$packages, $destConf)
+
+    function send_zips($cluster, $packages, $destConf)
     {
         foreach ($packages as $package) {
-            $this->send_zip($cluster,$package, $destConf, $package['type']);
+            $this->send_zip($cluster, $package, $destConf, $package['type']);
         }
     }
 
@@ -181,16 +186,18 @@ class Deployer
         $ssh->exec_commands($session, $unzip);
         $ssh->remove_file($session, $this->targetDir . $package['package_name']);
         $ssh->exec_command($session, 'cd ' . $this->targetDir . ' && composer install');
-        $this->cluster_commands($cluster, $package_type, $ssh,$session, $destConf);
+        $this->type_commands($package_type, $ssh, $session, $destConf);
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod 755 ' . $this->targetDir . $rbmqDir);
+        $this->send_rbmq_ini($cluster, $ssh, $session, $destConf);
         echo "Deployed {$package['package_name']} to {$destConf->{$package_type . 'Host'}}\n";
     }
 
-    function cluster_commands($cluster, $package_type, $ssh,$session, $conf){
+    function type_commands($package_type, $ssh, $session, $conf)
+    {
         switch ($package_type) {
             case 'fe':
                 //restart apache
                 $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S service apache2 restart');
-                $this->send_rbmq_ini($conf,$cluster,$ssh,$session);
                 break;
             case 'dmz':
                 // TODO: place holder for dmz restart
@@ -203,21 +210,44 @@ class Deployer
                 return;
         }
     }
-    function send_rbmq_ini($cluster,$ssh,$session){
+
+
+    // remove the rabbitmq ini file from the target directory
+    // and replace it with the one for it's respective cluster
+    function send_rbmq_ini($cluster, $ssh, $session, $conf)
+    {
+        $type = '';
+        if ($cluster == "dev") {
+            $type = 'qa';
+        } elseif ($cluster == "qa") {
+            $type = 'prod';
+        } else {
+            $type = 'dev';
+        }
+    
         $rbmqDir = "RabbitMQ/lib";
         $rbMQini = "RabbitMQ/lib/rabbitMQ.ini";
         $ssh->remove_file($session, $this->targetDir . $rbMQini);
-        $ssh->send_file($session, "/cluster_inis", $rbmqDir);
+        $ini = "{$type}_rabbitMQ.ini";
+        echo "Local path: " . $this->localRBini . '/' . $ini . "\n"; // Add this line
+        echo "Remote path: " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . "\n"; // Modify this line
+        
+        $remoteFile = $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . basename($this->localRBini . '/' . $ini);
+
+        $ssh->send_file($session, $this->localRBini . '/' . $ini, $remoteFile); // Modify this line
         //rename the file from devRabbitMQini to just rabbitMQ.ini
-        $ssh->exec_command($session, "mv " . $this->targetDir . $rbmqDir . "/{$cluster}RabbitMQ.ini " . $this->targetDir . $rbmqDir . "/rabbitMQ.ini");
+        $ssh->exec_command($session, "mv " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . $ini . " " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . "rabbitMQ.ini");
     }
+    
+
+
 
     function rollback_version($version)
     {
         require_once __DIR__ . '/utils/get_db.php';
         $db = get_db();
         try {
-            $stmt = $db->prepare('SELECT environment, package_type, package_name FROM deployments WHERE version = ?');
+            $stmt = $db->prepare('SELECT environment, package_type, package_name FROM Deployments WHERE version = ?');
             $stmt->bindParam(1, $version);
             $stmt->execute();
             $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -245,7 +275,7 @@ class Deployer
         require_once __DIR__ . '/utils/get_db.php';
         $db = get_db();
         try {
-            $stmt = $db->prepare('SELECT environment, package_type, package_name FROM deployments WHERE id = ?');
+            $stmt = $db->prepare('SELECT environment, package_type, package_name FROM Deployments WHERE id = ?');
             $stmt->bindParam(1, $id);
             $stmt->execute();
             $package = $stmt->fetch(PDO::FETCH_ASSOC);

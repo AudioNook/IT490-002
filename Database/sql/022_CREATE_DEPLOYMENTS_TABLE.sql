@@ -1,5 +1,5 @@
 /* Table for Deployed packages and their versions */
-CREATE TABLE IF NOT EXISTS deployments (
+CREATE TABLE IF NOT EXISTS Deployments (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     environment ENUM('dev', 'qa') NOT NULL,
     package_type ENUM('db', 'fe', 'dmz') NOT NULL,
