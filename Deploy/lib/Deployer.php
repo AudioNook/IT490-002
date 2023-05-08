@@ -180,15 +180,19 @@ class Deployer
 
         $session = $ssh->start_session($destConf->{$package_type . 'Host'}, $destConf->{$package_type . 'User'}, $destConf->{$package_type . 'Pass'});
         $ssh->remove_dir($session, $this->targetDir);
+        //chmod -R 777 parent of target dir
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 775 ' . dirname($this->targetDir));
         echo "Sending {$package['package_name']} to {$destConf->{$package_type . 'Host'}}\n";
         $ssh->send_file($session, $this->localDir . $package['package_name'], $this->targetDir . $package['package_name']);
         $unzip = $zip->unzip($this->targetDir . $package['package_name'], $this->targetDir);
         $ssh->exec_commands($session, $unzip);
         $ssh->remove_file($session, $this->targetDir . $package['package_name']);
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 775 ' . dirname($this->targetDir));
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S mkdir -p ' . $this->targetDir);
+        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod -R 775 ' . $this->targetDir);
+        $this->send_rbmq_ini($cluster, $ssh, $session, $destConf);
         $ssh->exec_command($session, 'cd ' . $this->targetDir . ' && composer install');
         $this->type_commands($package_type, $ssh, $session, $destConf);
-        $ssh->exec_command($session, 'echo \'' . $destConf->{$package_type . 'Pass'} . '\' | sudo -S chmod 755 ' . $this->targetDir . $rbmqDir);
-        $this->send_rbmq_ini($cluster, $ssh, $session, $destConf);
         echo "Deployed {$package['package_name']} to {$destConf->{$package_type . 'Host'}}\n";
     }
 
@@ -201,9 +205,11 @@ class Deployer
                 break;
             case 'dmz':
                 // TODO: place holder for dmz restart
+                $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S systemctl restart dmz_listner.service');
                 break;
             case 'db':
                 // TODO: place holder for db restart
+                $ssh->exec_command($session, 'echo \'' . $conf->{$package_type . 'Pass'} . '\' | sudo -S systemctl restart db_listner.service');
                 break;
             default:
                 echo 'Invalid package type';
@@ -224,21 +230,21 @@ class Deployer
         } else {
             $type = 'dev';
         }
-    
+
         $rbmqDir = "RabbitMQ/lib";
         $rbMQini = "RabbitMQ/lib/rabbitMQ.ini";
         $ssh->remove_file($session, $this->targetDir . $rbMQini);
         $ini = "{$type}_rabbitMQ.ini";
         echo "Local path: " . $this->localRBini . '/' . $ini . "\n"; // Add this line
         echo "Remote path: " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . "\n"; // Modify this line
-        
+
         $remoteFile = $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . basename($this->localRBini . '/' . $ini);
 
         $ssh->send_file($session, $this->localRBini . '/' . $ini, $remoteFile); // Modify this line
         //rename the file from devRabbitMQini to just rabbitMQ.ini
         $ssh->exec_command($session, "mv " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . $ini . " " . $this->targetDir . $rbmqDir . DIRECTORY_SEPARATOR . "rabbitMQ.ini");
     }
-    
+
 
 
 

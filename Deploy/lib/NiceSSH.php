@@ -39,7 +39,7 @@ class NiceSSh{
         stream_set_blocking($stream, true);
         $output = stream_get_contents($stream);
         fclose($stream);
-        //echo $output;
+        echo $output;
     }
     /**
      * Execute multiple commands on a remote server
