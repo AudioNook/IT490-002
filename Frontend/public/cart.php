@@ -116,7 +116,7 @@ $subtotal = 0;
                         </div>
                         <div style="position:relative; left:100px; top:2px;">
 
-                            <button type="button" class="btn btn-dark echo get_url('checkout.php')">Continue to Check Out</button>
+                            <button type="button" onclick="location.href = 'checkout.php';" class="btn btn-dark echo get_url('checkout.php')">Continue to Check Out</button>
                         </div>
                     </div>
                 </div>
